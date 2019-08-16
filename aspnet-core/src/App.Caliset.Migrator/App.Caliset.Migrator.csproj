@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback>
+    <AssemblyName>App.Caliset.Migrator</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <PackageId>App.Caliset.Migrator</PackageId>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="appsettings.json;log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Abp.Castle.Log4Net" Version="4.8.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\App.Caliset.Core\App.Caliset.Core.csproj" />
+    <ProjectReference Include="..\App.Caliset.EntityFrameworkCore\App.Caliset.EntityFrameworkCore.csproj" />
+  </ItemGroup>
+</Project>
