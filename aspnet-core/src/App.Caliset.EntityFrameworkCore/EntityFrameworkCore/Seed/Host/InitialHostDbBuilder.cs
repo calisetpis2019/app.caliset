@@ -1,4 +1,6 @@
-﻿namespace App.Caliset.EntityFrameworkCore.Seed.Host
+﻿using App.Caliset.EntityFrameworkCore.Seed.Operations;
+
+namespace App.Caliset.EntityFrameworkCore.Seed.Host
 {
     public class InitialHostDbBuilder
     {
@@ -15,6 +17,7 @@
             new DefaultLanguagesCreator(_context).Create();
             new HostRoleAndUserCreator(_context).Create();
             new DefaultSettingsCreator(_context).Create();
+            new DefaultOperationTypesCreator(_context).Create();
 
             _context.SaveChanges();
         }
