@@ -12,7 +12,7 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Operations
         {
             _context = context;
         }
-
+        // Comentario
         public void Create()
         {
             ;
