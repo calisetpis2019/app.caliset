@@ -45,6 +45,7 @@ namespace App.Caliset.OperationTypes
         public void Update(UpdateOperationTypeInput input)
         {
             var operationType = _operationTypeManager.GetOperationTypeById(input.Id);
+            ObjectMapper.Map(input, operationType);
             _operationTypeManager.Update(operationType);
         }
     }

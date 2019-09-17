@@ -42,7 +42,7 @@ namespace App.Caliset.Clients
         public void Update(UpdateClientInput input)
         {
             var client = _clientManager.GetClientById(input.Id);
-            client.Name = input.Name;
+            ObjectMapper.Map(input, client);
             _clientManager.Update(client);
         }
     }
