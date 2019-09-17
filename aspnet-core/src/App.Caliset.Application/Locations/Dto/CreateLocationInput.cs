@@ -9,5 +9,11 @@ namespace App.Caliset.Locations.Dto
     {
         [Required]
         public string Name { get; set; }
+        [Required]
+        public float Latitude { get; set; }
+        [Required]
+        public float Longitude { get; set; }
+        [Required]
+        public float Radius { get; set; }
     }
 }

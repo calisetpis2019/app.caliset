@@ -1,14 +1,15 @@
 ﻿using Abp.Application.Services;
+using Abp.Authorization;
+using App.Caliset.Authorization;
 using App.Caliset.Models.OperationTypes;
 using App.Caliset.OperationTypes.Dto;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace App.Caliset.OperationTypes
 {
+    [AbpAuthorize(PermissionNames.Administrador)]
     public class OperationTypeAppService : ApplicationService, IOperationTypeAppService
     {
         private readonly IOperationTypeManager _operationTypeManager;

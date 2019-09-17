@@ -51,9 +51,12 @@ export const appRouters: Array<Router> = [{
     icon: '&#xe68a;',
     component: main,
     children: [
-        { path: 'user', permission: 'Pages.Users', meta: { title: 'Users' }, name: 'user', component: () => import('../views/setting/user/user.vue') },
-        { path: 'role', permission: 'Pages.Roles', meta: { title: 'Roles' }, name: 'role', component: () => import('../views/setting/role/role.vue') },
-        { path: 'tenant', permission: 'Pages.Tenants', meta: { title: 'Tenants' }, name: 'tenant', component: () => import('../views/setting/tenant/tenant.vue') }
+        { path: 'user', permission: 'Pages.Administrador', meta: { title: 'Users' }, name: 'user', component: () => import('../views/setting/user/user.vue') },
+        { path: 'role', permission: 'Pages.Administrador', meta: { title: 'Roles' }, name: 'role', component: () => import('../views/setting/role/role.vue') },
+        { path: 'operationType', permission: 'Pages.Administrador', meta: { title: 'OperationTypes' }, name: 'operationType', component: () => import('../views/operationType/operationType.vue') },
+        { path: 'operationState', permission: 'Pages.Administrador', meta: { title: 'OperationState' }, name: 'operationState', component: () => import('../views/operationState/operationState.vue') },
+        { path: 'location', permission: 'Pages.Administrador', meta: { title: 'Locations' }, name: 'location', component: () => import('../views/location/location.vue') },
+        { path: 'client', permission: 'Pages.Administrador', meta: { title: 'Client' }, name: 'client', component: () => import('../views/client/client.vue') }
     ]
 }]
 export const routers = [

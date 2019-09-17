@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Authorization;
+using App.Caliset.Authorization;
 using App.Caliset.Clients.Dto;
 using App.Caliset.Models.Clients;
 
