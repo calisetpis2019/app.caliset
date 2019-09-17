@@ -14,5 +14,9 @@ namespace App.Caliset.EntityFrameworkCore
             : base(options)
         {
         }
+
+        public virtual DbSet<Models.OperationTypes.OperationType> OperationTypes { get; set; }
+        public virtual DbSet<Models.OperationStates.OperationState> OperationStates { get; set; }
+        public virtual DbSet<Models.Locations.Location> Locations { get; set; }
     }
 }

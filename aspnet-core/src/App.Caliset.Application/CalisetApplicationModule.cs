@@ -2,6 +2,8 @@
 using Abp.Modules;
 using Abp.Reflection.Extensions;
 using App.Caliset.Authorization;
+using App.Caliset.Models.OperationTypes;
+using App.Caliset.OperationTypes.Dto;
 
 namespace App.Caliset
 {
@@ -13,6 +15,12 @@ namespace App.Caliset
         public override void PreInitialize()
         {
             Configuration.Authorization.Providers.Add<CalisetAuthorizationProvider>();
+            Configuration.Modules.AbpAutoMapper().Configurators.Add(mapper =>
+            {
+                mapper.CreateMap<CreateOperationTypeInput, OperationType>().ReverseMap();
+                mapper.CreateMap<GetOperationTypeInput, OperationType>().ReverseMap();
+                mapper.CreateMap<GetOperationTypeOutput, OperationType>().ReverseMap();
+            });
         }
 
         public override void Initialize()
