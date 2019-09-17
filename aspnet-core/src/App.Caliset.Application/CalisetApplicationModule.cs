@@ -4,6 +4,8 @@ using Abp.Reflection.Extensions;
 using App.Caliset.Authorization;
 using App.Caliset.Models.OperationTypes;
 using App.Caliset.OperationTypes.Dto;
+using App.Caliset.Clients.Dto;
+using App.Caliset.Models.Clients;
 
 namespace App.Caliset
 {
@@ -20,6 +22,11 @@ namespace App.Caliset
                 mapper.CreateMap<CreateOperationTypeInput, OperationType>().ReverseMap();
                 mapper.CreateMap<GetOperationTypeInput, OperationType>().ReverseMap();
                 mapper.CreateMap<GetOperationTypeOutput, OperationType>().ReverseMap();
+                mapper.CreateMap<CreateClientInput, Client>().ReverseMap();
+                mapper.CreateMap<GetClientInput, Client>().ReverseMap();
+                mapper.CreateMap<GetClientOutput, Client>().ReverseMap();
+                mapper.CreateMap<ClientDto, Client>().ReverseMap();
+                mapper.CreateMap<UpdateClientInput, Client>().ReverseMap();
             });
         }
 
