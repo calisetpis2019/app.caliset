@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using Abp.Auditing;
 using Abp.Authorization.Users;
@@ -43,5 +44,13 @@ namespace App.Caliset.Users.Dto
                 RoleNames = new string[0];
             }
         }
+
+        public string LastName { get; set; }
+        public int Document { get; set; }
+        public string Phone { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string City { get; set; }
+        public string Adress { get; set; }
+
     }
 }

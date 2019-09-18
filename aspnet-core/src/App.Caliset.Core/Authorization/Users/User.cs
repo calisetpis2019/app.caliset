@@ -8,6 +8,12 @@ namespace App.Caliset.Authorization.Users
     public class User : AbpUser<User>
     {
         public const string DefaultPassword = "123qwe";
+        public string LastName { get; set; }
+        public int Document { get; set; }
+        public string Phone { get; set; }
+        public DateTime BirthDate { get; set; }
+        public string City { get; set; }
+        public string Adress { get; set; }
 
         public static string CreateRandomPassword()
         {
