@@ -10,6 +10,8 @@ using App.Caliset.OperationStates.Dto;
 using App.Caliset.Models.OperationStates;
 using App.Caliset.Locations.Dto;
 using App.Caliset.Models.Locations;
+using App.Caliset.Models.Samples;
+using App.Caliset.Samples.Dto;
 
 namespace App.Caliset
 {
@@ -47,6 +49,15 @@ namespace App.Caliset
                 mapper.CreateMap<GetClientOutput, Client>().ReverseMap();
                 mapper.CreateMap<ClientDto, Client>().ReverseMap();
                 mapper.CreateMap<UpdateClientInput, Client>().ReverseMap();
+
+                //Sample
+                mapper.CreateMap<CreateSampleInput, Sample>().ReverseMap();
+                mapper.CreateMap<GetSampleInput, Sample>().ReverseMap();
+                mapper.CreateMap<GetSampleOutput, Sample>().ReverseMap();
+                mapper.CreateMap<DeleteSampleInput, Sample>().ReverseMap();
+              
+
+
             });
         }
 

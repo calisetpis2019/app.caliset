@@ -4,14 +4,16 @@ using App.Caliset.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App.Caliset.Migrations
 {
     [DbContext(typeof(CalisetDbContext))]
-    partial class CalisetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190917145051_se agregaron todos los servicios faltante")]
+    partial class seagregarontodoslosserviciosfaltante
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -944,14 +946,8 @@ namespace App.Caliset.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Adress");
-
                     b.Property<string>("AuthenticationSource")
                         .HasMaxLength(64);
-
-                    b.Property<DateTime>("BirthDate");
-
-                    b.Property<string>("City");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -964,8 +960,6 @@ namespace App.Caliset.Migrations
                     b.Property<long?>("DeleterUserId");
 
                     b.Property<DateTime?>("DeletionTime");
-
-                    b.Property<int>("Document");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
@@ -990,8 +984,6 @@ namespace App.Caliset.Migrations
 
                     b.Property<long?>("LastModifierUserId");
 
-                    b.Property<string>("LastName");
-
                     b.Property<DateTime?>("LockoutEndDateUtc");
 
                     b.Property<string>("Name")
@@ -1012,8 +1004,6 @@ namespace App.Caliset.Migrations
 
                     b.Property<string>("PasswordResetCode")
                         .HasMaxLength(328);
-
-                    b.Property<string>("Phone");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(32);
@@ -1162,33 +1152,6 @@ namespace App.Caliset.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OperationTypes");
-                });
-
-            modelBuilder.Entity("App.Caliset.Models.Samples.Sample", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Comment");
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<long?>("DeleterUserId");
-
-                    b.Property<DateTime?>("DeletionTime");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Samples");
                 });
 
             modelBuilder.Entity("App.Caliset.MultiTenancy.Tenant", b =>
