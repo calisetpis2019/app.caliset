@@ -8,7 +8,7 @@
         >
             <Form ref="roleForm"  label-position="top" :rules="roleRule" :model="role">
                 <Tabs value="detail">
-                    <TabPane :label="L('RoleDetails')" name="detail">
+                    <TabPane :label="L('Details')" name="detail">
                         <FormItem :label="L('RoleName')" prop="name">
                             <Input v-model="role.name" :maxlength="32" :minlength="2"></Input>
                         </FormItem>
@@ -19,7 +19,7 @@
                             <Input v-model="role.description" :maxlength="1024"></Input>
                         </FormItem>
                       </TabPane>
-                    <TabPane :label="L('RolePermission')" name="permission">
+                    <TabPane :label="L('Permissions')" name="permission">
                         <CheckboxGroup v-model="role.grantedPermissions">
                             <Checkbox :label="permission.name" v-for="permission in permissions" :key="permission.name"><span>{{permission.displayName}}</span></Checkbox>
                         </CheckboxGroup>

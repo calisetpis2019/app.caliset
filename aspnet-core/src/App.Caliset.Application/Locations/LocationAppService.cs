@@ -24,12 +24,14 @@ namespace App.Caliset.Locations
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public async Task Create(CreateLocationInput input)
         {
             var location = ObjectMapper.Map<Location>(input);
             await _locationManager.Create(location);
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public void Delete(DeleteLocationInput input)
         {
             _locationManager.Delete(input.Id);
@@ -42,6 +44,7 @@ namespace App.Caliset.Locations
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public void Update(UpdateLocationInput input)
         {
             var location = _locationManager.GetLocationById(input.Id);

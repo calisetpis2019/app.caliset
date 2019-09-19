@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace App.Caliset.OperationTypes
 {
-    [AbpAuthorize(PermissionNames.Administrador)]
     public class OperationTypeAppService : ApplicationService, IOperationTypeAppService
     {
         private readonly IOperationTypeManager _operationTypeManager;
@@ -25,12 +24,14 @@ namespace App.Caliset.OperationTypes
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public async Task Create(CreateOperationTypeInput input)
         {
             var operationType = ObjectMapper.Map<OperationType>(input);
             await _operationTypeManager.Create(operationType);
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public void Delete(DeleteOperationTypeInput input)
         {
             _operationTypeManager.Delete(input.Id);
@@ -43,6 +44,7 @@ namespace App.Caliset.OperationTypes
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public void Update(UpdateOperationTypeInput input)
         {
             var operationType = _operationTypeManager.GetOperationTypeById(input.Id);

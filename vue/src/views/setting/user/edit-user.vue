@@ -8,9 +8,9 @@
         >
             <Form ref="userForm"  label-position="top" :rules="userRule" :model="user">
                 <Tabs value="detail">
-                    <TabPane :label="L('UserDetails')" name="detail">
-                        <FormItem :label="L('UserName')" prop="userName">
-                            <Input v-model="user.userName" :maxlength="32" :minlength="2"></Input>
+                    <TabPane :label="L('Details')" name="detail">
+                        <FormItem :label="L('EmailAddress')" prop="emailAddress">
+                            <Input v-model="user.emailAddress" type="email" :maxlength="32"></Input>
                         </FormItem>
                         <FormItem :label="L('Name')" prop="name">
                             <Input v-model="user.name" :maxlength="32"></Input>
@@ -18,14 +18,28 @@
                         <FormItem :label="L('Surname')" prop="surname">
                             <Input v-model="user.surname" :maxlength="1024"></Input>
                         </FormItem>
-                        <FormItem :label="L('EmailAddress')" prop="emailAddress">
-                            <Input v-model="user.emailAddress" type="email" :maxlength="32"></Input>
+                        <FormItem :label="L('Document')" prop="document">
+                            <Input v-model="user.document" :maxlength="32"></Input>
+                        </FormItem>
+                        <FormItem :label="L('Phone')" prop="phone">
+                            <Input v-model="user.phone" :maxlength="32"></Input>
+                        </FormItem>
+                        <FormItem :label="L('BirthDate')" prop="birthDate">
+                            <Input v-model="user.birthDate" type="date"></Input>
+                        </FormItem>
+
+                        <FormItem :label="L('City')" prop="city">
+                            <Input v-model="user.city"></Input>
+                        </FormItem>
+
+                        <FormItem :label="L('Adress')" prop="adress">
+                            <Input v-model="user.adress"></Input>
                         </FormItem>
                         <FormItem>
                             <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
                     </TabPane>
-                    <TabPane :label="L('UserRoles')" name="roles">
+                    <TabPane :label="L('Roles')" name="roles">
                         <CheckboxGroup v-model="user.roleNames">
                             <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
                         </CheckboxGroup>
@@ -54,7 +68,8 @@
         get roles(){
             return this.$store.state.user.roles;
         }
-        save(){
+        save() {
+            this.user.userName = this.user.emailAddress;
             (this.$refs.userForm as any).validate(async (valid:boolean)=>{
                 if(valid){
                     await this.$store.dispatch({
