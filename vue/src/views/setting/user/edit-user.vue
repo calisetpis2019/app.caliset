@@ -4,8 +4,7 @@
          :title="L('EditUser')"
          :value="value"
          @on-ok="save"
-         @on-visible-change="visibleChange"
-        >
+         @on-visible-change="visibleChange"        >
             <Form ref="userForm"  label-position="top" :rules="userRule" :model="user">
                 <Tabs value="detail">
                     <TabPane :label="L('Details')" name="detail">
@@ -25,7 +24,7 @@
                             <Input v-model="user.phone" :maxlength="32"></Input>
                         </FormItem>
                         <FormItem :label="L('BirthDate')" prop="birthDate">
-                            <Input v-model="user.birthDate" type="date"></Input>
+                            <Input v-model="user.birthDate" type="datetime" ></Input>
                         </FormItem>
 
                         <FormItem :label="L('City')" prop="city">
