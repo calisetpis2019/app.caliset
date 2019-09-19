@@ -23,6 +23,7 @@ namespace App.Caliset.EntityFrameworkCore
         public virtual DbSet<Models.Locations.Location> Locations { get; set; }
         public virtual DbSet<Models.Clients.Client> Clients { get; set; }
         public virtual DbSet<Models.Samples.Sample> Samples { get; set; }
+        public virtual DbSet<Models.Comments.Comment> Comments { get; set; }
 
     }
 }

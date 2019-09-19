@@ -12,6 +12,8 @@ using App.Caliset.Locations.Dto;
 using App.Caliset.Models.Locations;
 using App.Caliset.Models.Samples;
 using App.Caliset.Samples.Dto;
+using App.Caliset.Comments.Dto;
+using App.Caliset.Models.Comments;
 
 namespace App.Caliset
 {
@@ -55,8 +57,13 @@ namespace App.Caliset
                 mapper.CreateMap<GetSampleInput, Sample>().ReverseMap();
                 mapper.CreateMap<GetSampleOutput, Sample>().ReverseMap();
                 mapper.CreateMap<DeleteSampleInput, Sample>().ReverseMap();
-              
 
+                //Comment
+                mapper.CreateMap<CreateCommentInput, Comment>().ReverseMap();
+                mapper.CreateMap<GetCommentOutput, Comment>().ReverseMap();
+                mapper.CreateMap<GetCommentInput, Comment>().ReverseMap();
+                mapper.CreateMap<DeleteCommentInput, Comment>().ReverseMap();
+                mapper.CreateMap<UpdateCommentInput, Comment>().ReverseMap();
 
             });
         }
