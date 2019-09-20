@@ -75,8 +75,8 @@
     <text name="ThisFieldIsRequired">El campo es requerido</text>
     <text name="PleaseWait">Por favor aguarde...</text>
     <text name="Administration">Administración</text>
-    <text name="ClearAll">Limpiar todo</text>
-    <text name="ClearOthers">Limpiar resto</text>
+    <text name="ClearAll">Limpiar navegación</text>
+    <text name="ClearOthers">Limpiar restantes</text>
     <text name="LabelOptions">Opciones</text>
     <text name="Permissions">Permisos</text>
     <text name="RoleDescription">Descripción del rol</text>
