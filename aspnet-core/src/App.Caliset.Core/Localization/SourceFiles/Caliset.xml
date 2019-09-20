@@ -22,7 +22,6 @@
     <text name="LogIn" value="Iniciar sesión" />
     <text name="LoginFailed" value="Falló el inicio de sesión!" />
     <text name="NameSurname" value="Nombre y apellido" />
-    <text name="UserName" value="Nombre de usuario" />
     <text name="Name" value="Nombre" />
     <text name="Surname" value="Apellido" />
     <text name="EmailAddress" value="Correo electrónico" />
@@ -47,7 +46,6 @@
     <text name="Users" value="Usuarios" />
     <text name="IsActive" value="Activo" />
     <text name="FullName" value="Nombre completo" />
-    <text name="CreateNewUser" value="Crear usuario" />
     <text name="Yes" value="Sí" />
     <text name="No" value="No" />
     <text name="Optional" value="Opcional" />
@@ -77,9 +75,9 @@
     <text name="ThisFieldIsRequired">El campo es requerido</text>
     <text name="PleaseWait">Por favor aguarde...</text>
     <text name="Administration">Administración</text>
-    <text name="ClearAll">Clear all</text>
-    <text name="ClearOthers">Clear others</text>
-    <text name="LabelOptions">Label options</text>
+    <text name="ClearAll">Limpiar todo</text>
+    <text name="ClearOthers">Limpiar resto</text>
+    <text name="LabelOptions">Opciones</text>
     <text name="Permissions">Permisos</text>
     <text name="RoleDescription">Descripción del rol</text>
     <text name="Refresh">Actualizar</text>
@@ -96,8 +94,6 @@
     <text name="Settings">Configuración</text>
     <text name="Filter">Filtro</text>
     <text name="ManageMenu">Administración</text>
-    <text name="Operations">Operaciones</text>
-    <text name="Operation">Operación</text>
     <text name="Destiny">Destino</text>
     <text name="Commodity">Mercadería</text>
     <text name="Find">Buscar</text>
@@ -115,10 +111,51 @@
     <text name="LockScreen">Bloquear pantalla</text>
     <text name="Date">Fecha</text>
     <text name="CreationDate">Fecha de Creación</text>
-    <text name="AppName">Caliset</text>
+    <text name="AppName">CalidApp</text>
     <text name="FieldIsRequired">Campo obligatorio</text>
     <text name="Details">Detalles</text>
-    <text name="OperationName">Nombre de operación</text>
-    <text name="CreateNewOperation">Crear operación</text>
+    <text name="Tips">Mensaje</text>
+
+    <!-- USERS -->
+    <text name="UserName" value="Nombre de usuario" />
+    <text name="CreateNewUser" value="Crear usuario" />
+    <text name="DeleteUserConfirm">¿Confirma eliminar el usuario?</text>
+    
+    
+    <!-- CLIENTS -->
+    <text name="Clients">Clientes</text>
+    <text name="Client">Cliente</text>
+    <text name="ClientName">Nombre de cliente</text>
+    <text name="CreateNewClient">Crear cliente</text>
+    <text name="DeleteClientConfirm">¿Confirma eliminar el cliente?</text>
+    
+    <!-- LOCATIONS -->
+    <text name="Locations">Ubicaciones</text>
+    <text name="Location">Ubicacìón</text>
+    <text name="LocationName">Nombre de ubicaciòn</text>
+    <text name="CreateNewLocation">Crear ubicación</text>
+    <text name="DeleteLocationConfirm">¿Confirma eliminar la ubicación?</text>
+    
+    <!-- OPERATION TYPES -->
+    <text name="OperationTypes">Tipos de operación</text>
+    <text name="OperationType">Tipo de operación</text>
+    <text name="OperationTypeName">Nombre de tipo operación</text>
+    <text name="CreateNewOperationType">Crear tipo de operación</text>
+    <text name="DeleteOperationTypeConfirm">¿Confirma eliminar el tipo de operación?</text>
+
+    <!-- OPERATION STATES -->
+    <text name="OperationStates">Estados de operación</text>
+    <text name="OperationState">Estado de operación</text>
+    <text name="OperationStateName">Nombre de estado</text>
+    <text name="CreateNewOperationState">Crear estado</text>
+    <text name="DeleteOperationStateConfirm">¿Confirma eliminar el estado?</text>
+
+    <!-- OPERATIONS -->
+    <text name="Operations">Operaciones</text>
+    <text name="Operation">Operación</text>
+    <text name="OperationName">Nombre de ubicación</text>
+    <text name="CreateNewOperation">Crear ubicación</text>
+    <text name="DeleteOperationConfirm">¿Confirma eliminar la operación?</text>
+    
   </texts>
 </localizationDictionary>

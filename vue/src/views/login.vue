@@ -13,30 +13,31 @@
         </div>
       </div>
       <div class="main">
-        <div v-if="!!tenant" class="tenant-title"><a @click="showChangeTenant=true">{{L('CurrentTenant')}}:{{tenant.name}}</a></div>
-        <div v-if="!tenant" class="tenant-title"><a @click="showChangeTenant=true">{{L('NotSelected')}}</a></div>
-        <Form ref="loginform" :rules="rules" :model="loginModel">
-          <FormItem prop="userNameOrEmailAddress">
-            <div class="ivu-input-wrapper ivu-input-wrapper-large ivu-input-type">
-              <i class="ivu-icon ivu-icon-ios-person-outline ivu-input-icon ivu-input-icon-normal" style="left:0"></i>
-              <input v-model="loginModel.userNameOrEmailAddress" autocomplete="off" spellcheck="false" type="text" :placeholder="L('UserNamePlaceholder')" class="ivu-input ivu-input-large" style="padding-left:32px;padding-right:0">
-            </div>
-          </FormItem>
-          <FormItem prop="password">
-            <div class="ivu-input-wrapper ivu-input-wrapper-large ivu-input-type">
-              <i class="ivu-icon ivu-icon-ios-locked-outline ivu-input-icon ivu-input-icon-normal" style="left:0"></i>
-              <input v-model="loginModel.password" autocomplete="off" spellcheck="false" type="password" :placeholder="L('PasswordPlaceholder')" class="ivu-input ivu-input-large" style="padding-left:32px;padding-right:0">
-            </div>
-          </FormItem>
-        </Form>
-        <div>
-          <Checkbox v-model="loginModel.rememberMe" size="large">{{L('RememberMe')}}</Checkbox>
-          <a style="float:right;font-size: 14px;margin-top: 3px;">{{L('ForgetPassword')}}</a>
-        </div>
-        <div style="margin-top:15px">
-          <Button type="primary" @click="login" long size="large">{{L('LogIn')}}</Button>
-        </div>
-        <language-switch></language-switch>
+          <!--  <div v-if="!!tenant" class="tenant-title"><a @click="showChangeTenant=true">{{L('CurrentTenant')}}:{{tenant.name}}</a></div>
+          <div v-if="!tenant" class="tenant-title"><a @click="showChangeTenant=true">{{L('NotSelected')}}</a></div>
+    -->
+          <Form ref="loginform" :rules="rules" :model="loginModel">
+              <FormItem prop="userNameOrEmailAddress">
+                  <div class="ivu-input-wrapper ivu-input-wrapper-large ivu-input-type">
+                      <i class="ivu-icon ivu-icon-ios-person-outline ivu-input-icon ivu-input-icon-normal" style="left:0"></i>
+                      <input v-model="loginModel.userNameOrEmailAddress" autocomplete="off" spellcheck="false" type="text" :placeholder="L('UserName')" class="ivu-input ivu-input-large" style="padding-left:32px;padding-right:0">
+                  </div>
+              </FormItem>
+              <FormItem prop="password">
+                  <div class="ivu-input-wrapper ivu-input-wrapper-large ivu-input-type">
+                      <i class="ivu-icon ivu-icon-ios-locked-outline ivu-input-icon ivu-input-icon-normal" style="left:0"></i>
+                      <input v-model="loginModel.password" autocomplete="off" spellcheck="false" type="password" :placeholder="L('PasswordPlaceholder')" class="ivu-input ivu-input-large" style="padding-left:32px;padding-right:0">
+                  </div>
+              </FormItem>
+          </Form>
+          <div>
+              <Checkbox v-model="loginModel.rememberMe" size="large">{{L('RememberMe')}}</Checkbox>
+              <a style="float:right;font-size: 14px;margin-top: 3px;">{{L('ForgetPassword')}}</a>
+          </div>
+          <div style="margin-top:15px">
+              <Button type="primary" @click="login" long size="large">{{L('LogIn')}}</Button>
+          </div>
+          <!--  <language-switch></language-switch>     -->
       </div>
     </div>
     <Footer :copyright="L('CopyRight')"></Footer>
@@ -47,11 +48,11 @@
 import { Component, Vue,Inject } from 'vue-property-decorator';
 import Footer from '../components/Footer.vue'
 import TenantSwitch from '../components/tenant-switch.vue'
-import LanguageSwitch from '../components/language-switch.vue'
+//import LanguageSwitch from '../components/language-switch.vue'
 import iView from 'iview';
 import AbpBase from '../lib/abpbase'
 @Component({
-  components:{Footer,TenantSwitch,LanguageSwitch}
+  components:{Footer,TenantSwitch/*,LanguageSwitch*/}
 })
 export default class Login extends AbpBase {
   loginModel={
