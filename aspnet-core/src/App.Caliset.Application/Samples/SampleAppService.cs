@@ -39,7 +39,7 @@ namespace App.Caliset.Samples
             return output;
         }
 
-        public GetSampleOutput GetClientById(GetSampleInput input)
+        public GetSampleOutput GetSampleById(GetSampleInput input)
         {
             var getSample = _sampleManager.GetSampleById(input.Id);
             GetSampleOutput output = ObjectMapper.Map<GetSampleOutput>(getSample);

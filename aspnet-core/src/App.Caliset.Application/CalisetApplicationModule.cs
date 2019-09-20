@@ -14,6 +14,10 @@ using App.Caliset.Models.Samples;
 using App.Caliset.Samples.Dto;
 using App.Caliset.Comments.Dto;
 using App.Caliset.Models.Comments;
+using App.Caliset.Users.Dto;
+using App.Caliset.Authorization.Users;
+using App.Caliset.Models.Operations;
+using App.Caliset.Operations.Dto;
 
 namespace App.Caliset
 {
@@ -27,6 +31,9 @@ namespace App.Caliset
             Configuration.Authorization.Providers.Add<CalisetAuthorizationProvider>();
             Configuration.Modules.AbpAutoMapper().Configurators.Add(mapper =>
             {
+                //User
+                mapper.CreateMap<UserDtoOperation, User>().ReverseMap();
+
                 //OperationType
                 mapper.CreateMap<CreateOperationTypeInput, OperationType>().ReverseMap();
                 mapper.CreateMap<GetOperationTypeInput, OperationType>().ReverseMap();
@@ -64,6 +71,13 @@ namespace App.Caliset
                 mapper.CreateMap<GetCommentInput, Comment>().ReverseMap();
                 mapper.CreateMap<DeleteCommentInput, Comment>().ReverseMap();
                 mapper.CreateMap<UpdateCommentInput, Comment>().ReverseMap();
+
+                //Operation
+                mapper.CreateMap<CreateOperationInput, Operation>().ReverseMap();
+                mapper.CreateMap<GetOperationOutput, Operation>().ReverseMap();
+                mapper.CreateMap<GetOperationInput, Operation>().ReverseMap();
+                mapper.CreateMap<DeleteOperationInput, Operation>().ReverseMap();
+                mapper.CreateMap<UpdateOperationInput, Operation>().ReverseMap();
 
             });
         }

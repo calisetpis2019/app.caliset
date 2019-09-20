@@ -13,6 +13,6 @@ namespace App.Caliset.Samples
         IEnumerable<GetSampleOutput> GetAll();
         Task Create(CreateSampleInput input);
         void Delete(DeleteSampleInput input);
-        GetSampleOutput GetClientById(GetSampleInput input);
+        GetSampleOutput GetSampleById(GetSampleInput input);
     }
 }
