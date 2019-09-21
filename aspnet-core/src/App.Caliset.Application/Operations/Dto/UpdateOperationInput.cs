@@ -16,8 +16,9 @@ namespace App.Caliset.Operations.Dto
         public string Destiny { get; set; }
         public string Line { get; set; }
         public string BookingNumber { get; set; }
-        public GetLocationInput IdLocation { get; set; }
-        public GetClientInput Nominador { get; set; }
-        public GetClientInput Cargador { get; set; }
+        public int IdLocation { get; set; }
+        public int Nominador { get; set; }
+        public int Cargador { get; set; }
+        public int OperationType { get; set; }
     }
 }

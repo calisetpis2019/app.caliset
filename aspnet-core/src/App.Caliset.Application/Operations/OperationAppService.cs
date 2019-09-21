@@ -1,5 +1,9 @@
 ﻿using Abp.Application.Services;
+using App.Caliset.Models.Clients;
+using App.Caliset.Models.Locations;
 using App.Caliset.Models.Operations;
+using App.Caliset.Models.OperationStates;
+using App.Caliset.Models.OperationTypes;
 using App.Caliset.Operations.Dto;
 using System;
 using System.Collections.Generic;
@@ -14,18 +18,44 @@ namespace App.Caliset.Operations
 
 
         private readonly IOperationManager _operationManager;
-        public OperationAppService(IOperationManager operationManager)
+        private readonly IOperationStateManager _operationStateManager;
+        private readonly ILocationManager _locationManager;
+        private readonly IClientManager _clientManager;
+        private readonly IOperationTypeManager _operationTypeManager;
+
+        public OperationAppService(IOperationManager operationManager, IOperationStateManager operationStateManager, ILocationManager locationManager
+                    , IClientManager clientManager, IOperationTypeManager operationTypeManager)
         {
             _operationManager = operationManager;
+            _operationStateManager = operationStateManager;
+            _locationManager = locationManager;
+            _clientManager = clientManager;
+            _operationTypeManager = operationTypeManager;
         }
 
 
 
         public async Task Create(CreateOperationInput input)
         {
-            input.Inspectors = null;
-            input.Comments = null;
-            var Oper = ObjectMapper.Map<Operation>(input);
+            // input.Inspectors = null;
+            //  input.Comments = null;
+            Operation Oper = new Operation
+            {
+                OperationState = _operationStateManager.GetOperationStateById(input.OperationState),
+                Location = _locationManager.GetLocationById(input.IdLocation),
+                Nominador = _clientManager.GetClientById(input.Nominador),
+                Cargador = _clientManager.GetClientById(input.Cargador),
+                OperationType = _operationTypeManager.GetOperationTypeById(input.OperationType),
+                Date = input.Date,
+                Commodity = input.Commodity,
+                Package = input.Package,
+                ShipName = input.ShipName,
+                Destiny = input.Destiny,
+                Line = input.Line,
+                BookingNumber = input.BookingNumber,
+          
+    };
+
             await _operationManager.Create(Oper);
         }
 
@@ -51,9 +81,21 @@ namespace App.Caliset.Operations
 
         public void Update(UpdateOperationInput input)
         {
-            var Opert = _operationManager.GetOperationById(input.Id);
-            ObjectMapper.Map(input, Opert);
-            _operationManager.Update(Opert);
+            var Oper = _operationManager.GetOperationById(input.Id);
+
+            Oper.Location = _locationManager.GetLocationById(input.IdLocation);
+            Oper.Nominador = _clientManager.GetClientById(input.Nominador);
+            Oper.Cargador = _clientManager.GetClientById(input.Cargador);
+            Oper.OperationType = _operationTypeManager.GetOperationTypeById(input.OperationType);
+            Oper.Date = input.Date;
+            Oper.Commodity = input.Commodity;
+            Oper.Package = input.Package;
+            Oper.ShipName = input.ShipName;
+            Oper.Destiny = input.Destiny;
+            Oper.Line = input.Line;
+            Oper.BookingNumber = input.BookingNumber;
+
+            _operationManager.Update(Oper);
         }
     }
 }

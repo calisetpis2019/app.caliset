@@ -16,7 +16,7 @@ namespace App.Caliset.Models.Operations
     [Table("Operations")]
     public class Operation:FullAuditedEntity
     {
-        protected Operation() { }
+        public Operation() { }
 
         public DateTime Date { get; set; }
         public string Commodity { get; set; }
@@ -26,13 +26,14 @@ namespace App.Caliset.Models.Operations
         public string Line { get; set; }
         public string BookingNumber { get; set; }
         public virtual Location Location{ get; set; }
-        public virtual IEnumerable<Comment> Comments { get; set; }
+       
+        // public virtual IEnumerable<Comment> Comments { get; set; }
         public virtual OperationType OperationType { get; set; }
         public virtual Client Nominador { get; set; }
         public virtual  Client Cargador { get; set; }
         public virtual OperationState OperationState { get; set; }
-        public virtual IEnumerable<Sample> Samples { get; set; }
-        public virtual IEnumerable<User> Inspectors { get; set; }
+        //public virtual IEnumerable<Sample> Samples { get; set; }
+        //public virtual IEnumerable<User> Inspectors { get; set; }
 
         //public User Operator { get; set; }
         // COMO ES FULLAUDITED YA AVISA QUIEN LO CREO

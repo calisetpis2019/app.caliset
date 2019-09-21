@@ -56,9 +56,9 @@ namespace App.Caliset.Models.Operations
                  .Include(asset => asset.Cargador)
                   .Include(asset => asset.Nominador)
                   .Include(asset => asset.Location)
-                  .Include(asset => asset.Comments)
-                  .Include(asset => asset.Samples)
-                  .Include(asset => asset.Inspectors)
+                  //.Include(asset => asset.Comments)
+                 // .Include(asset => asset.Samples)
+                 // .Include(asset => asset.Inspectors)
                 ;
         }
 

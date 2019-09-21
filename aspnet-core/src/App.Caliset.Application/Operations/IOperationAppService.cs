@@ -12,6 +12,19 @@ namespace App.Caliset.Operations
         IEnumerable<GetOperationOutput> GetAll();
         Task Create(CreateOperationInput input);
         void Update(UpdateOperationInput input);
+        // SOLO PERMITE EL CAMBIO DE LOS CAMPOS: 
+            //.Location
+            //.Nominador 
+            //.Cargador 
+            //.OperationType
+            //.Date 
+            //.Commodity 
+            //.Package 
+            //.ShipName 
+            //.Destiny 
+            //.Line 
+            //.BookingNumber 
+                
         void Delete(DeleteOperationInput input);
         GetOperationOutput GetOperationById(GetOperationInput input);
     }

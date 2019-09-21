@@ -21,13 +21,13 @@ namespace App.Caliset.Operations.Dto
         public string Destiny { get; set; }
         public string Line { get; set; }
         public string BookingNumber { get; set; }
-        public virtual GetLocationInput IdLocation { get; set; }
-        public virtual IEnumerable<GetCommentOutput> Comments { get; set; }
+        public virtual GetLocationInput Location { get; set; }
+        //public virtual IEnumerable<GetCommentOutput> Comments { get; set; }
         public  GetOperationTypeOutput OperationType { get; set; }
         public  GetClientOutput Nominador { get; set; }
         public  GetClientOutput Cargador { get; set; }
         public  GetOperationStateOutput OperationState { get; set; }
-        public  IEnumerable<GetSampleOutput> Samples { get; set; }
-        public  IEnumerable<UserDtoOperation> Inspectors { get; set; }
+       // public  IEnumerable<GetSampleOutput> Samples { get; set; }
+       // public  IEnumerable<UserDtoOperation> Inspectors { get; set; }
     }
 }
