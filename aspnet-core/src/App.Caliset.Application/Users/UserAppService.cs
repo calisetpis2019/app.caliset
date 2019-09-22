@@ -60,6 +60,7 @@ namespace App.Caliset.Users
 
             user.TenantId = AbpSession.TenantId;
             user.IsEmailConfirmed = true;
+            user.FirstLogin = true;
 
             await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
@@ -217,6 +218,20 @@ namespace App.Caliset.Users
             }
 
             return true;
+        }
+
+        public async Task<bool> SetFirstLogin(int id)
+        {
+            var user = await _userManager.GetUserByIdAsync(id);
+
+            if (user!= null)
+            {
+                user.FirstLogin = false;
+                CheckErrors(await _userManager.UpdateAsync(user));
+                return true;
+            }
+
+            return false;
         }
 
     }
