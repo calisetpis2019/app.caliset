@@ -56,7 +56,9 @@ export const appRouters: Array<Router> = [{
         { path: 'operationType', permission: 'Pages.Administrador', meta: { title: 'OperationTypes' }, name: 'operationType', component: () => import('../views/operationType/operationType.vue') },
         { path: 'operationState', permission: 'Pages.Administrador', meta: { title: 'OperationStates' }, name: 'operationState', component: () => import('../views/operationState/operationState.vue') },
         { path: 'location', permission: 'Pages.Administrador', meta: { title: 'Locations' }, name: 'location', component: () => import('../views/location/location.vue') },
-        { path: 'client', permission: 'Pages.Administrador', meta: { title: 'Clients' }, name: 'client', component: () => import('../views/client/client.vue') }
+        { path: 'client', permission: 'Pages.Administrador', meta: { title: 'Clients' }, name: 'client', component: () => import('../views/client/client.vue') },
+        { path: 'operation', permission: 'Pages.Administrador', meta: { title: 'Operation' }, name: 'operation', component: () => import('../views/operation/operation.vue') },
+        { path: 'operation', permission: 'Pages.Operador', meta: { title: 'Operation' }, name: 'operation', component: () => import('../views/operation/operation.vue') }
     ]
 }]
 export const routers = [
