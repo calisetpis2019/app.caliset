@@ -60,6 +60,7 @@ namespace App.Caliset.Users
 
             user.TenantId = AbpSession.TenantId;
             user.IsEmailConfirmed = true;
+            user.FirstLogin = true;
 
             await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 

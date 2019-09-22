@@ -45,7 +45,7 @@ namespace App.Caliset.Users.Dto
         public DateTime BirthDate { get; set; }
         public string City { get; set; }
         public string Adress { get; set; }
-
+        public bool FirstLogin { get; set; }
 
     }
 }
