@@ -24,7 +24,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.Caliset.Users
 {
-    [AbpAuthorize(PermissionNames.Pages_Users)]
     public class UserAppService : AsyncCrudAppService<User, UserDto, long, PagedUserResultRequestDto, CreateUserDto, UserDto>, IUserAppService
     {
         private readonly UserManager _userManager;
@@ -52,6 +51,7 @@ namespace App.Caliset.Users
             _logInManager = logInManager;
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public override async Task<UserDto> Create(CreateUserDto input)
         {
             CheckCreatePermission();
@@ -76,6 +76,7 @@ namespace App.Caliset.Users
             return MapToEntityDto(user);
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public override async Task<UserDto> Update(UserDto input)
         {
             CheckUpdatePermission();
@@ -94,6 +95,7 @@ namespace App.Caliset.Users
             return await Get(input);
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public override async Task Delete(EntityDto<long> input)
         {
             var user = await _userManager.GetUserByIdAsync(input.Id);
@@ -220,9 +222,14 @@ namespace App.Caliset.Users
             return true;
         }
 
-        public async Task<bool> SetFirstLogin(int id)
+        public async Task<bool> SetFirstLogin()
         {
-            var user = await _userManager.GetUserByIdAsync(id);
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Please log in before attemping to change password.");
+            }
+            long userId = _abpSession.UserId.Value;
+            var user = await _userManager.GetUserByIdAsync(userId);
 
             if (user!= null)
             {
