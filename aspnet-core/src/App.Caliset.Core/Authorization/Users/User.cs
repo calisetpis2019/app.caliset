@@ -15,6 +15,8 @@ namespace App.Caliset.Authorization.Users
         public string City { get; set; }
         public string Adress { get; set; }
 
+        public bool FirstLogin { get; set; }
+
         public static string CreateRandomPassword()
         {
             return Guid.NewGuid().ToString("N").Truncate(16);

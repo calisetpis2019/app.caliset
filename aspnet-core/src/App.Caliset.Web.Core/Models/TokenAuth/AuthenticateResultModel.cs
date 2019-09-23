@@ -9,5 +9,6 @@
         public int ExpireInSeconds { get; set; }
 
         public long UserId { get; set; }
+        public bool FirstLogin { get; set; }
     }
 }

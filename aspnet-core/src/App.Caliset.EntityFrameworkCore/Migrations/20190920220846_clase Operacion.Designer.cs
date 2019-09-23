@@ -4,14 +4,16 @@ using App.Caliset.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App.Caliset.Migrations
 {
     [DbContext(typeof(CalisetDbContext))]
-    partial class CalisetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190920220846_clase Operacion")]
+    partial class claseOperacion
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -974,8 +976,6 @@ namespace App.Caliset.Migrations
                     b.Property<string>("EmailConfirmationCode")
                         .HasMaxLength(328);
 
-                    b.Property<bool>("FirstLogin");
-
                     b.Property<bool>("IsActive");
 
                     b.Property<bool>("IsDeleted");
@@ -1007,6 +1007,8 @@ namespace App.Caliset.Migrations
                     b.Property<string>("NormalizedUserName")
                         .IsRequired()
                         .HasMaxLength(256);
+
+                    b.Property<int?>("OperationId");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -1040,6 +1042,8 @@ namespace App.Caliset.Migrations
                     b.HasIndex("DeleterUserId");
 
                     b.HasIndex("LastModifierUserId");
+
+                    b.HasIndex("OperationId");
 
                     b.HasIndex("TenantId", "NormalizedEmailAddress");
 
@@ -1098,7 +1102,11 @@ namespace App.Caliset.Migrations
 
                     b.Property<long?>("LastModifierUserId");
 
+                    b.Property<int?>("OperationId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OperationId");
 
                     b.ToTable("Comments");
                 });
@@ -1274,7 +1282,11 @@ namespace App.Caliset.Migrations
 
                     b.Property<long?>("LastModifierUserId");
 
+                    b.Property<int?>("OperationId");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("OperationId");
 
                     b.ToTable("Samples");
                 });
@@ -1477,6 +1489,17 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User", "LastModifierUser")
                         .WithMany()
                         .HasForeignKey("LastModifierUserId");
+
+                    b.HasOne("App.Caliset.Models.Operations.Operation")
+                        .WithMany("Inspectors")
+                        .HasForeignKey("OperationId");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Comments.Comment", b =>
+                {
+                    b.HasOne("App.Caliset.Models.Operations.Operation")
+                        .WithMany("Comments")
+                        .HasForeignKey("OperationId");
                 });
 
             modelBuilder.Entity("App.Caliset.Models.Operations.Operation", b =>
@@ -1500,6 +1523,13 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Models.OperationTypes.OperationType", "OperationType")
                         .WithMany()
                         .HasForeignKey("OperationTypeId");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Samples.Sample", b =>
+                {
+                    b.HasOne("App.Caliset.Models.Operations.Operation")
+                        .WithMany("Samples")
+                        .HasForeignKey("OperationId");
                 });
 
             modelBuilder.Entity("App.Caliset.MultiTenancy.Tenant", b =>

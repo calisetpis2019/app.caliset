@@ -65,7 +65,8 @@ namespace App.Caliset.Controllers
                 AccessToken = accessToken,
                 EncryptedAccessToken = GetEncryptedAccessToken(accessToken),
                 ExpireInSeconds = (int)_configuration.Expiration.TotalSeconds,
-                UserId = loginResult.User.Id
+                UserId = loginResult.User.Id,
+                FirstLogin = loginResult.User.FirstLogin
             };
         }
 
