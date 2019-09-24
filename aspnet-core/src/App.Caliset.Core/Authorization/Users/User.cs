@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using Abp.Authorization.Users;
 using Abp.Extensions;
+using App.Caliset.Models.Assignations;
+using App.Caliset.Models.Operations;
 
 namespace App.Caliset.Authorization.Users
 {
@@ -16,6 +18,8 @@ namespace App.Caliset.Authorization.Users
         public string Adress { get; set; }
 
         public bool FirstLogin { get; set; }
+
+        public virtual ICollection<Assignation> Assignations { get; set; }
 
         public static string CreateRandomPassword()
         {

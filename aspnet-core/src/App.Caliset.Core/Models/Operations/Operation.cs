@@ -1,5 +1,6 @@
 ﻿using Abp.Domain.Entities.Auditing;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Models.Assignations;
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Comments;
 using App.Caliset.Models.Locations;
@@ -8,15 +9,13 @@ using App.Caliset.Models.OperationTypes;
 using App.Caliset.Models.Samples;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace App.Caliset.Models.Operations
 {
-    [Table("Operations")]
     public class Operation:FullAuditedEntity
     {
-        public Operation() { }
+        public Operation() {}
 
         public DateTime Date { get; set; }
         public string Commodity { get; set; }
@@ -33,7 +32,7 @@ namespace App.Caliset.Models.Operations
         public virtual  Client Cargador { get; set; }
         public virtual OperationState OperationState { get; set; }
         //public virtual IEnumerable<Sample> Samples { get; set; }
-        //public virtual IEnumerable<User> Inspectors { get; set; }
+        public virtual ICollection<Assignation> Assignations { get; set; }
 
         //public User Operator { get; set; }
         // COMO ES FULLAUDITED YA AVISA QUIEN LO CREO
