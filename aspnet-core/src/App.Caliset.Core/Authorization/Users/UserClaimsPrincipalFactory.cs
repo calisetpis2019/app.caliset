@@ -19,3 +19,4 @@ namespace App.Caliset.Authorization.Users
         }
     }
 }
+

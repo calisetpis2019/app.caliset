@@ -3,6 +3,7 @@ using Abp.Domain.Services;
 using Abp.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -58,6 +59,15 @@ namespace App.Caliset.Models.Samples
         public void Update(Sample entity)
         {
             _repositorySample.Update(entity);
+        }
+
+        public IEnumerable<Sample> GetSamplesByOperation(int operationId)
+        {
+            var samples = from Sample in this.GetAll()
+                           where Sample.OperationId == operationId
+                           select Sample;
+
+            return samples;
         }
     }
 }

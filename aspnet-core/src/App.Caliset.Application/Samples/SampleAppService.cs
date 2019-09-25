@@ -45,5 +45,12 @@ namespace App.Caliset.Samples
             GetSampleOutput output = ObjectMapper.Map<GetSampleOutput>(getSample);
             return output;
         }
+
+        public IEnumerable<GetSampleOutput> GetSamplesByOperation(int operationId)
+        {
+            List<GetSampleOutput> output = ObjectMapper.Map<List<GetSampleOutput>>(_sampleManager.GetSamplesByOperation(operationId));
+
+            return output;
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace App.Caliset.Samples
         Task Create(CreateSampleInput input);
         void Delete(DeleteSampleInput input);
         GetSampleOutput GetSampleById(GetSampleInput input);
+        IEnumerable<GetSampleOutput> GetSamplesByOperation(int operationId);
     }
 }

@@ -10,5 +10,6 @@ namespace App.Caliset.Samples.Dto
     public class CreateSampleInput
     {
         public string Comment { get; set; }
+        public int OperationId { get; set; }
     }
 }

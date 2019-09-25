@@ -3,6 +3,7 @@ using Abp.Domain.Services;
 using Abp.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,6 +56,15 @@ namespace App.Caliset.Models.Comments
         public void Update(Comment entity)
         {
             _repositoryComments.Update(entity);
+        }
+
+        public IEnumerable<Comment> GetCommentsByOperation(int operationId)
+        {
+            var comments = from Comment in this.GetAll()
+                              where Comment.OperationId == operationId
+                              select Comment;
+
+            return comments;
         }
     }
 }

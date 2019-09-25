@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using App.Caliset.Models.Operations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace App.Caliset.Models.Samples
@@ -8,7 +9,12 @@ namespace App.Caliset.Models.Samples
     {
         protected Sample() {}
 
+        public string IdSample { get; set; }
         public string Comment { get; set; }
+        public int OperationId { get; set; }
+
+        [ForeignKey("OperationId")]
+        public virtual Operation Operation { get; set; }
 
     }
 }

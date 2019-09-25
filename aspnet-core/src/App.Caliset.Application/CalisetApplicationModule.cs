@@ -18,6 +18,8 @@ using App.Caliset.Users.Dto;
 using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Operations;
 using App.Caliset.Operations.Dto;
+using App.Caliset.Assignations.Dto;
+using App.Caliset.Models.Assignations;
 
 namespace App.Caliset
 {
@@ -78,6 +80,12 @@ namespace App.Caliset
                 mapper.CreateMap<GetOperationInput, Operation>().ReverseMap();
                 mapper.CreateMap<DeleteOperationInput, Operation>().ReverseMap();
                 mapper.CreateMap<UpdateOperationInput, Operation>().ReverseMap();
+
+                //Assignation
+                mapper.CreateMap<CreateAssignationInput, Assignation>().ReverseMap();
+                mapper.CreateMap<GetAssignationOutput, Assignation>().ReverseMap();
+                mapper.CreateMap<GetAssignationInput, Assignation>().ReverseMap();
+                mapper.CreateMap<DeleteAssignationInput, Assignation>().ReverseMap();
 
             });
         }

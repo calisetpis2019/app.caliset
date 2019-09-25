@@ -14,5 +14,6 @@ namespace App.Caliset.Comments
         void Delete(DeleteCommentInput input);
         void Update(UpdateCommentInput input);
         GetCommentOutput GetCommentById(GetCommentInput input);
+        IEnumerable<GetCommentOutput> GetCommentsByOperation(int operationId);
     }
 }

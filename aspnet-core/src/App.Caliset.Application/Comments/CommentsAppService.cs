@@ -44,6 +44,13 @@ namespace App.Caliset.Comments
             return output;
         }
 
+        public IEnumerable<GetCommentOutput> GetCommentsByOperation(int operationId)
+        {
+            List<GetCommentOutput> output = ObjectMapper.Map<List<GetCommentOutput>>(_commentManager.GetCommentsByOperation(operationId));
+
+            return output;
+        }
+
         public void Update(UpdateCommentInput input)
         {
             var Comment = _commentManager.GetCommentById(input.Id);
