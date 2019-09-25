@@ -2,6 +2,7 @@
 using Abp.Domain.Services;
 using Abp.UI;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Models.Operations;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,14 @@ namespace App.Caliset.Models.Assignations
     {
 
         private readonly IRepository<Assignation> _repositoryAssignation;
+        private readonly UserManager _userManager;
+        private readonly OperationManager _operationManager;
 
-        public AssignationManager(IRepository<Assignation> repositoryAssignation, UserManager userManager)
+        public AssignationManager(IRepository<Assignation> repositoryAssignation, UserManager userManager, OperationManager operationManager)
         {
             _repositoryAssignation = repositoryAssignation;
+            _userManager = userManager;
+            _operationManager = operationManager;
         }
 
 
@@ -78,5 +83,27 @@ namespace App.Caliset.Models.Assignations
 
             return assignatios;
         }
+        public IEnumerable<Assignation> GetAssignmentsByUserAndOperation(long userId, int operationId)
+        {
+            var assignatios = from Assign in this.GetAll()
+                              where Assign.InspectorId == userId && Assign.OperationId == operationId
+                              select Assign;
+
+            return assignatios;
+        }
+
+        public IEnumerable<Operation> GetOperationsByUser(long userId)
+        {
+            var operations = from Oper in _operationManager.GetAll() 
+                             join Assign in this.GetAll()
+                             on Oper.Id equals Assign.OperationId
+                             where Assign.Id == userId
+                             select Oper;
+
+            return operations;
+        }
+        
+
+
     }
 }

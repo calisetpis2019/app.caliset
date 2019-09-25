@@ -9,6 +9,7 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Authorization;
 using App.Caliset.Authorization;
+using App.Caliset.Operations.Dto;
 
 namespace App.Caliset.Assignations
 {
@@ -67,15 +68,38 @@ namespace App.Caliset.Assignations
             return output;
         }
 
-        public IEnumerable<GetAssignationOutput> GetAssignments()
+        public IEnumerable<GetAssignationOutput> GetMyAssignments()
         {
             if (_abpSession.UserId == null)
             {
                 throw new UserFriendlyException("Please log in before it.");
             }
             long userId = _abpSession.UserId.Value;
-            var assign = _assignationManager.GetAssignmentsByUser(userId);
-            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(assign);
+            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUser(userId));
+
+            return output;
+        }
+
+        public IEnumerable<GetAssignationOutput> GetMyAssignmentsByOperation(int operationId)
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Please log in before it.");
+            }
+            long userId = _abpSession.UserId.Value;
+            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUserAndOperation(userId, operationId));
+
+            return output;
+        }
+
+        public IEnumerable<GetOperationOutput> GetMyOperations()
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Please log in before it.");
+            }
+            long userId = _abpSession.UserId.Value;
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId));
 
             return output;
         }
