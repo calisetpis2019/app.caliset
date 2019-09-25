@@ -25,6 +25,7 @@ namespace App.Caliset.Assignations
             _abpSession = abpSession;
         }
 
+    
 
         public async Task Create(CreateAssignationInput input)
         {
@@ -102,6 +103,15 @@ namespace App.Caliset.Assignations
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId));
 
             return output;
+        }
+
+        public void RefuseAssignation(int AssignationId)
+        {
+            _assignationManager.RefuseAssignation(AssignationId);
+        }
+        public void AceptAssignation(int AssignationId)
+        {
+            _assignationManager.ConfirmAssignation(AssignationId);
         }
     }
 }

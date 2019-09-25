@@ -20,5 +20,7 @@ namespace App.Caliset.Assignations
         IEnumerable<GetAssignationOutput> GetMyAssignmentsByOperation(int OperationId);
 
         IEnumerable<GetOperationOutput> GetMyOperations();
+        void AceptAssignation(int AssignationId);
+        void RefuseAssignation(int AssignationId);
     }
 }

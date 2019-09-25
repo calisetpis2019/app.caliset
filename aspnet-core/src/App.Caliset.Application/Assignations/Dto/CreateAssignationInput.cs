@@ -10,6 +10,6 @@ namespace App.Caliset.Assignations.Dto
         public int OperationId { get; set; }
         public int InspectorId { get; set; }
         public DateTime Date { get; set; }
-        public bool Aware { get; set; }
+
     }
 }

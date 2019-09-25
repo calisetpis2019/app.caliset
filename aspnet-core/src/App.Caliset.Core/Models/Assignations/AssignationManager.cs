@@ -34,6 +34,7 @@ namespace App.Caliset.Models.Assignations
             }
             else
             {
+                entity.Aware = null;
                 return await _repositoryAssignation.InsertAsync(entity);
             }
         }
@@ -102,8 +103,20 @@ namespace App.Caliset.Models.Assignations
 
             return operations;
         }
-        
 
+        public void ConfirmAssignation(int idAssignation)
+        {
+            var Asign = _repositoryAssignation.FirstOrDefault(x => x.Id == idAssignation);
+            Asign.Aware = true;
+            _repositoryAssignation.Update(Asign);
 
+        }
+
+        public void RefuseAssignation(int idAssignation)
+        {
+            var Asign = _repositoryAssignation.FirstOrDefault(x => x.Id == idAssignation);
+            Asign.Aware = false;
+            _repositoryAssignation.Update(Asign);
+        }
     }
 }

@@ -11,6 +11,8 @@ namespace App.Caliset.Models.Assignations
         Task<Assignation> Create(Assignation entity);
         void Update(Assignation entity);
         void Delete(int id);
+        void ConfirmAssignation(int idAssignation);
+        void RefuseAssignation(int idAssignation);
     }
 }
 
