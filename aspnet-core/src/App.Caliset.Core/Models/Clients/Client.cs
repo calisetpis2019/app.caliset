@@ -12,6 +12,6 @@ namespace App.Caliset.Models.Clients
     {
         protected Client() { }
         [Required]
-            public string Name { get; set; }
+        public string Name { get; set; }
     }
 }
