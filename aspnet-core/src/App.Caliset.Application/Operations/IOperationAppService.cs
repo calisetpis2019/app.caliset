@@ -10,6 +10,7 @@ namespace App.Caliset.Operations
     public interface IOperationAppService: IApplicationService
     {
         IEnumerable<GetOperationOutput> GetAll();
+        IEnumerable<GetOperationOutput> GetAllByState(String State);
         Task Create(CreateOperationInput input);
         void Update(UpdateOperationInput input);
         // SOLO PERMITE EL CAMBIO DE LOS CAMPOS: 

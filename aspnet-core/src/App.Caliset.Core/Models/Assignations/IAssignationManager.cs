@@ -8,6 +8,7 @@ namespace App.Caliset.Models.Assignations
     {
         IEnumerable<Assignation> GetAll();
         Assignation GetAssignationById(int id);
+
         Task<Assignation> Create(Assignation entity);
         void Update(Assignation entity);
         void Delete(int id);

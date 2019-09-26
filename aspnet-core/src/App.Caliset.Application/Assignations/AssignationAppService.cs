@@ -10,6 +10,7 @@ using Abp.UI;
 using Abp.Authorization;
 using App.Caliset.Authorization;
 using App.Caliset.Operations.Dto;
+using App.Caliset.Auxiliares;
 
 namespace App.Caliset.Assignations
 {
@@ -19,10 +20,13 @@ namespace App.Caliset.Assignations
         private readonly AssignationManager _assignationManager;
         private readonly IAbpSession _abpSession;
 
-        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession)
+        private readonly IFiltros _filtros;
+
+        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession, IFiltros filtros )
         {
             _assignationManager = assignationManager;
             _abpSession = abpSession;
+            _filtros = filtros;
         }
 
     
@@ -64,7 +68,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetAssignationOutput> GetAssignmentsByUser(long userId)
         {
-            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUser(userId));
+            // List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUser(userId));
+
+            List<Assignation> aux = _assignationManager.GetAll().ToList() ;
+            List<GetAssignationOutput> output = ObjectMapper.Map < List < GetAssignationOutput >>(_filtros.FAssignationUser(aux, userId));
 
             return output;
         }

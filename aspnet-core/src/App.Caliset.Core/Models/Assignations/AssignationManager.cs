@@ -118,5 +118,6 @@ namespace App.Caliset.Models.Assignations
             Asign.Aware = false;
             _repositoryAssignation.Update(Asign);
         }
+
     }
 }
