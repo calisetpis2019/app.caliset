@@ -62,11 +62,6 @@ namespace App.Caliset.Models.Assignations
             return _repositoryAssignation.Get(id);
         }
 
-        public void Update(Assignation entity)
-        {
-            _repositoryAssignation.Update(entity);
-        }
-
         public IEnumerable<Assignation> GetAssignmentsByUser(long userId)
         {   
             var assignatios = from Assign in this.GetAll()

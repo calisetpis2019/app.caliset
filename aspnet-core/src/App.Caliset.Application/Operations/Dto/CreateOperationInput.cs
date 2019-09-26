@@ -24,9 +24,10 @@ namespace App.Caliset.Operations.Dto
         public string Package { get; set; }
         public string ShipName { get; set; }
         public string Destiny { get; set; }
+        public string ClientReference { get; set; }
         public string Line { get; set; }
         public string BookingNumber { get; set; }
-        public string ClientReference { get; set; }
+        public string Notes { get; set; }
 
         [Required]
         public  int LocationId { get; set; }

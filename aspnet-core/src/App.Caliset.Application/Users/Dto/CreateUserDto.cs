@@ -45,7 +45,6 @@ namespace App.Caliset.Users.Dto
             }
         }
 
-        public string LastName { get; set; }
         public int Document { get; set; }
         public string Phone { get; set; }
         public DateTime BirthDate { get; set; }
