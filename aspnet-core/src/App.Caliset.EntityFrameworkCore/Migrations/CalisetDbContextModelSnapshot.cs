@@ -1013,8 +1013,7 @@ namespace App.Caliset.Migrations
                     b.Property<string>("PasswordResetCode")
                         .HasMaxLength(328);
 
-                    b.Property<string>("Phone")
-                        .IsRequired();
+                    b.Property<string>("Phone");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(32);

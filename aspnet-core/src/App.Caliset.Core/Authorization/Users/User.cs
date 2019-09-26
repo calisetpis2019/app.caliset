@@ -12,7 +12,6 @@ namespace App.Caliset.Authorization.Users
     {
         public const string DefaultPassword = "123qwe";
 
-        [Required]
         public string Phone { get; set; }
         public int? Document { get; set; }
         public DateTime? BirthDate { get; set; }

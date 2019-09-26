@@ -367,7 +367,7 @@ namespace App.Caliset.Migrations
                     NormalizedUserName = table.Column<string>(maxLength: 256, nullable: false),
                     NormalizedEmailAddress = table.Column<string>(maxLength: 256, nullable: false),
                     ConcurrencyStamp = table.Column<string>(maxLength: 128, nullable: true),
-                    Phone = table.Column<string>(nullable: false),
+                    Phone = table.Column<string>(nullable: true),
                     Document = table.Column<int>(nullable: true),
                     BirthDate = table.Column<DateTime>(nullable: true),
                     City = table.Column<string>(nullable: true),

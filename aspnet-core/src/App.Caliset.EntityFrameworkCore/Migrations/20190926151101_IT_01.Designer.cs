@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Caliset.Migrations
 {
     [DbContext(typeof(CalisetDbContext))]
-    [Migration("20190926144153_IT_01")]
+    [Migration("20190926151101_IT_01")]
     partial class IT_01
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1015,8 +1015,7 @@ namespace App.Caliset.Migrations
                     b.Property<string>("PasswordResetCode")
                         .HasMaxLength(328);
 
-                    b.Property<string>("Phone")
-                        .IsRequired();
+                    b.Property<string>("Phone");
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(32);
