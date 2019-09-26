@@ -53,12 +53,13 @@ namespace App.Caliset.Models.Operations
             return _repositoryOperation.GetAll()
                 .Include(asset=> asset.OperationType)
                  .Include(asset => asset.OperationState)
-                 .Include(asset => asset.Cargador)
-                  .Include(asset => asset.Nominador)
+                 .Include(asset => asset.Charger)
+                  .Include(asset => asset.Nominator)
                   .Include(asset => asset.Location)
-                  //.Include(asset => asset.Comments)
-                 // .Include(asset => asset.Samples)
-                 // .Include(asset => asset.Inspectors)
+                  .Include(asset => asset.Manager)
+                //.Include(asset => asset.Comments)
+                // .Include(asset => asset.Samples)
+                // .Include(asset => asset.Inspectors)
                 ;
         }
 

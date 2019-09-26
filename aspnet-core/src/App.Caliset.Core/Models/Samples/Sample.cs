@@ -12,9 +12,9 @@ namespace App.Caliset.Models.Samples
 
         public string IdSample { get; set; }
         public string Comment { get; set; }
+
         [Required]
         public int OperationId { get; set; }
-
         [ForeignKey("OperationId")]
         public virtual Operation Operation { get; set; }
 

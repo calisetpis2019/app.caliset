@@ -22,12 +22,11 @@ namespace App.Caliset.Operations.Dto
         public string Line { get; set; }
         public string BookingNumber { get; set; }
         public virtual GetLocationInput Location { get; set; }
-        //public virtual IEnumerable<GetCommentOutput> Comments { get; set; }
-        public  GetOperationTypeOutput OperationType { get; set; }
-        public  GetClientOutput Nominador { get; set; }
-        public  GetClientOutput Cargador { get; set; }
-        public  GetOperationStateOutput OperationState { get; set; }
-       // public  IEnumerable<GetSampleOutput> Samples { get; set; }
-       // public  IEnumerable<UserDtoOperation> Inspectors { get; set; }
+        public virtual GetOperationTypeOutput OperationType { get; set; }
+        public virtual GetClientOutput Nominator { get; set; }
+        public virtual GetClientOutput Charger { get; set; }
+        public virtual GetOperationStateOutput OperationState { get; set; }
+        public virtual UserDtoOperation Manager { get; set; }
+
     }
 }

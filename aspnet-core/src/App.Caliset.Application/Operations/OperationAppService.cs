@@ -46,26 +46,9 @@ namespace App.Caliset.Operations
 
         public async Task Create(CreateOperationInput input)
         {
-            // input.Inspectors = null;
-            //  input.Comments = null;
-            Operation Oper = new Operation
-            {
-                OperationState = _operationStateManager.GetOperationStateById(input.OperationState),
-                Location = _locationManager.GetLocationById(input.IdLocation),
-                Nominador = _clientManager.GetClientById(input.Nominador),
-                Cargador = _clientManager.GetClientById(input.Cargador),
-                OperationType = _operationTypeManager.GetOperationTypeById(input.OperationType),
-                Date = input.Date,
-                Commodity = input.Commodity,
-                Package = input.Package,
-                ShipName = input.ShipName,
-                Destiny = input.Destiny,
-                Line = input.Line,
-                BookingNumber = input.BookingNumber,
-          
-    };
+            var operation = ObjectMapper.Map<Operation>(input);
 
-            await _operationManager.Create(Oper);
+            await _operationManager.Create(operation);
         }
 
         public void Delete(DeleteOperationInput input)
@@ -98,21 +81,9 @@ namespace App.Caliset.Operations
 
         public void Update(UpdateOperationInput input)
         {
-            var Oper = _operationManager.GetOperationById(input.Id);
-
-            Oper.Location = _locationManager.GetLocationById(input.IdLocation);
-            Oper.Nominador = _clientManager.GetClientById(input.Nominador);
-            Oper.Cargador = _clientManager.GetClientById(input.Cargador);
-            Oper.OperationType = _operationTypeManager.GetOperationTypeById(input.OperationType);
-            Oper.Date = input.Date;
-            Oper.Commodity = input.Commodity;
-            Oper.Package = input.Package;
-            Oper.ShipName = input.ShipName;
-            Oper.Destiny = input.Destiny;
-            Oper.Line = input.Line;
-            Oper.BookingNumber = input.BookingNumber;
-
-            _operationManager.Update(Oper);
+            var operation = _operationManager.GetOperationById(input.Id);
+            ObjectMapper.Map(input, operation);
+            _operationManager.Update(operation);
         }
     }
 }

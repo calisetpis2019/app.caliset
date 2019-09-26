@@ -10,14 +10,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace App.Caliset.Migrations
 {
     [DbContext(typeof(CalisetDbContext))]
-    [Migration("20180731132139_Upgrade_ABP_3.8.1")]
-    partial class Upgrade_ABP_381
+    [Migration("20190926144153_IT_01")]
+    partial class IT_01
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.1-rtm-30846")
+                .HasAnnotation("ProductVersion", "2.2.4-servicing-10062")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -119,6 +119,8 @@ namespace App.Caliset.Migrations
                     b.Property<string>("Parameters")
                         .HasMaxLength(1024);
 
+                    b.Property<string>("ReturnValue");
+
                     b.Property<string>("ServiceName")
                         .HasMaxLength(256);
 
@@ -213,8 +215,6 @@ namespace App.Caliset.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastLoginTime");
 
                     b.Property<DateTime?>("LastModificationTime");
 
@@ -399,6 +399,8 @@ namespace App.Caliset.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<DateTime?>("ExpireDate");
+
                     b.Property<string>("LoginProvider")
                         .HasMaxLength(128);
 
@@ -485,7 +487,8 @@ namespace App.Caliset.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("TenantId", "Name");
+                    b.HasIndex("TenantId", "Name", "UserId")
+                        .IsUnique();
 
                     b.ToTable("AbpSettings");
                 });
@@ -620,7 +623,7 @@ namespace App.Caliset.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(10);
+                        .HasMaxLength(128);
 
                     b.Property<int?>("TenantId");
 
@@ -647,7 +650,7 @@ namespace App.Caliset.Migrations
 
                     b.Property<string>("LanguageName")
                         .IsRequired()
-                        .HasMaxLength(10);
+                        .HasMaxLength(128);
 
                     b.Property<DateTime?>("LastModificationTime");
 
@@ -850,6 +853,33 @@ namespace App.Caliset.Migrations
                     b.ToTable("AbpOrganizationUnits");
                 });
 
+            modelBuilder.Entity("Abp.Organizations.OrganizationUnitRole", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<long>("OrganizationUnitId");
+
+                    b.Property<int>("RoleId");
+
+                    b.Property<int?>("TenantId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId", "OrganizationUnitId");
+
+                    b.HasIndex("TenantId", "RoleId");
+
+                    b.ToTable("AbpOrganizationUnitRoles");
+                });
+
             modelBuilder.Entity("App.Caliset.Authorization.Roles.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -916,8 +946,14 @@ namespace App.Caliset.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Address");
+
                     b.Property<string>("AuthenticationSource")
                         .HasMaxLength(64);
+
+                    b.Property<DateTime?>("BirthDate");
+
+                    b.Property<string>("City");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -931,12 +967,16 @@ namespace App.Caliset.Migrations
 
                     b.Property<DateTime?>("DeletionTime");
 
+                    b.Property<int?>("Document");
+
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<string>("EmailConfirmationCode")
                         .HasMaxLength(328);
+
+                    b.Property<bool>("FirstLogin");
 
                     b.Property<bool>("IsActive");
 
@@ -950,8 +990,6 @@ namespace App.Caliset.Migrations
 
                     b.Property<bool>("IsTwoFactorEnabled");
 
-                    b.Property<DateTime?>("LastLoginTime");
-
                     b.Property<DateTime?>("LastModificationTime");
 
                     b.Property<long?>("LastModifierUserId");
@@ -960,7 +998,7 @@ namespace App.Caliset.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(32);
+                        .HasMaxLength(64);
 
                     b.Property<string>("NormalizedEmailAddress")
                         .IsRequired()
@@ -977,6 +1015,9 @@ namespace App.Caliset.Migrations
                     b.Property<string>("PasswordResetCode")
                         .HasMaxLength(328);
 
+                    b.Property<string>("Phone")
+                        .IsRequired();
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(32);
 
@@ -985,7 +1026,7 @@ namespace App.Caliset.Migrations
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(32);
+                        .HasMaxLength(64);
 
                     b.Property<int?>("TenantId");
 
@@ -1006,6 +1047,295 @@ namespace App.Caliset.Migrations
                     b.HasIndex("TenantId", "NormalizedUserName");
 
                     b.ToTable("AbpUsers");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Assignations.Assignation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool?>("Aware");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<long>("InspectorId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<int>("OperationId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InspectorId");
+
+                    b.HasIndex("OperationId");
+
+                    b.ToTable("Assignations");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Clients.Client", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Comments.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Commentary")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<int>("OperationId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Locations.Location", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<float>("Latitude");
+
+                    b.Property<float>("Longitude");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.Property<float>("Radius");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Locations");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.OperationStates.OperationState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OperationStates");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.OperationTypes.OperationType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Name")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OperationTypes");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Operations.Operation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("BookingNumber");
+
+                    b.Property<int>("ChargerId");
+
+                    b.Property<string>("ClientReference");
+
+                    b.Property<string>("Commodity")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<string>("Destiny");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<string>("Line");
+
+                    b.Property<int>("LocationId");
+
+                    b.Property<long>("ManagerId");
+
+                    b.Property<int>("NominatorId");
+
+                    b.Property<string>("Notes");
+
+                    b.Property<int>("OperationStateId");
+
+                    b.Property<int>("OperationTypeId");
+
+                    b.Property<string>("Package")
+                        .IsRequired();
+
+                    b.Property<string>("ShipName");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChargerId");
+
+                    b.HasIndex("LocationId");
+
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("NominatorId");
+
+                    b.HasIndex("OperationStateId");
+
+                    b.HasIndex("OperationTypeId");
+
+                    b.ToTable("Operations");
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Samples.Sample", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Comment");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<long?>("DeleterUserId");
+
+                    b.Property<DateTime?>("DeletionTime");
+
+                    b.Property<string>("IdSample");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime?>("LastModificationTime");
+
+                    b.Property<long?>("LastModifierUserId");
+
+                    b.Property<int>("OperationId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OperationId");
+
+                    b.ToTable("Samples");
                 });
 
             modelBuilder.Entity("App.Caliset.MultiTenancy.Tenant", b =>
@@ -1075,7 +1405,6 @@ namespace App.Caliset.Migrations
                 {
                     b.HasBaseType("Abp.Application.Features.FeatureSetting");
 
-
                     b.HasIndex("TenantId", "Name");
 
                     b.ToTable("AbpFeatures");
@@ -1114,7 +1443,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Roles.Role")
                         .WithMany("Claims")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserClaim", b =>
@@ -1122,7 +1451,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserLogin", b =>
@@ -1130,7 +1459,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Logins")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserRole", b =>
@@ -1138,7 +1467,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserToken", b =>
@@ -1146,14 +1475,15 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Tokens")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Configuration.Setting", b =>
                 {
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Settings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.EntityHistory.EntityChange", b =>
@@ -1161,7 +1491,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("Abp.EntityHistory.EntityChangeSet")
                         .WithMany("EntityChanges")
                         .HasForeignKey("EntityChangeSetId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.EntityHistory.EntityPropertyChange", b =>
@@ -1169,29 +1499,33 @@ namespace App.Caliset.Migrations
                     b.HasOne("Abp.EntityHistory.EntityChange")
                         .WithMany("PropertyChanges")
                         .HasForeignKey("EntityChangeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Organizations.OrganizationUnit", b =>
                 {
                     b.HasOne("Abp.Organizations.OrganizationUnit", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.Authorization.Roles.Role", b =>
                 {
                     b.HasOne("App.Caliset.Authorization.Users.User", "CreatorUser")
                         .WithMany()
-                        .HasForeignKey("CreatorUserId");
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "DeleterUser")
                         .WithMany()
-                        .HasForeignKey("DeleterUserId");
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "LastModifierUser")
                         .WithMany()
-                        .HasForeignKey("LastModifierUserId");
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.Authorization.Users.User", b =>
@@ -1209,23 +1543,89 @@ namespace App.Caliset.Migrations
                         .HasForeignKey("LastModifierUserId");
                 });
 
+            modelBuilder.Entity("App.Caliset.Models.Assignations.Assignation", b =>
+                {
+                    b.HasOne("App.Caliset.Authorization.Users.User", "Inspector")
+                        .WithMany("Assignations")
+                        .HasForeignKey("InspectorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Caliset.Models.Operations.Operation", "Operation")
+                        .WithMany("Assignations")
+                        .HasForeignKey("OperationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Comments.Comment", b =>
+                {
+                    b.HasOne("App.Caliset.Models.Operations.Operation", "Operation")
+                        .WithMany("Comments")
+                        .HasForeignKey("OperationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Operations.Operation", b =>
+                {
+                    b.HasOne("App.Caliset.Models.Clients.Client", "Charger")
+                        .WithMany()
+                        .HasForeignKey("ChargerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Caliset.Models.Locations.Location", "Location")
+                        .WithMany()
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Caliset.Authorization.Users.User", "Manager")
+                        .WithMany()
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Caliset.Models.Clients.Client", "Nominator")
+                        .WithMany()
+                        .HasForeignKey("NominatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Caliset.Models.OperationStates.OperationState", "OperationState")
+                        .WithMany()
+                        .HasForeignKey("OperationStateId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Caliset.Models.OperationTypes.OperationType", "OperationType")
+                        .WithMany()
+                        .HasForeignKey("OperationTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("App.Caliset.Models.Samples.Sample", b =>
+                {
+                    b.HasOne("App.Caliset.Models.Operations.Operation", "Operation")
+                        .WithMany("Samples")
+                        .HasForeignKey("OperationId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("App.Caliset.MultiTenancy.Tenant", b =>
                 {
                     b.HasOne("App.Caliset.Authorization.Users.User", "CreatorUser")
                         .WithMany()
-                        .HasForeignKey("CreatorUserId");
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "DeleterUser")
                         .WithMany()
-                        .HasForeignKey("DeleterUserId");
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Abp.Application.Editions.Edition", "Edition")
                         .WithMany()
-                        .HasForeignKey("EditionId");
+                        .HasForeignKey("EditionId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "LastModifierUser")
                         .WithMany()
-                        .HasForeignKey("LastModifierUserId");
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Application.Features.EditionFeatureSetting", b =>
@@ -1233,7 +1633,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("Abp.Application.Editions.Edition", "Edition")
                         .WithMany()
                         .HasForeignKey("EditionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Roles.RolePermissionSetting", b =>
@@ -1241,7 +1641,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Roles.Role")
                         .WithMany("Permissions")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserPermissionSetting", b =>
@@ -1249,7 +1649,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Permissions")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }

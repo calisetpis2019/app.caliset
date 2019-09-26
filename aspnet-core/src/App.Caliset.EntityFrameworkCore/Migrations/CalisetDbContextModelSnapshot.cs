@@ -944,12 +944,12 @@ namespace App.Caliset.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
-                    b.Property<string>("Adress");
+                    b.Property<string>("Address");
 
                     b.Property<string>("AuthenticationSource")
                         .HasMaxLength(64);
 
-                    b.Property<DateTime>("BirthDate");
+                    b.Property<DateTime?>("BirthDate");
 
                     b.Property<string>("City");
 
@@ -965,7 +965,7 @@ namespace App.Caliset.Migrations
 
                     b.Property<DateTime?>("DeletionTime");
 
-                    b.Property<int>("Document");
+                    b.Property<int?>("Document");
 
                     b.Property<string>("EmailAddress")
                         .IsRequired()
@@ -992,8 +992,6 @@ namespace App.Caliset.Migrations
 
                     b.Property<long?>("LastModifierUserId");
 
-                    b.Property<string>("LastName");
-
                     b.Property<DateTime?>("LockoutEndDateUtc");
 
                     b.Property<string>("Name")
@@ -1015,7 +1013,8 @@ namespace App.Caliset.Migrations
                     b.Property<string>("PasswordResetCode")
                         .HasMaxLength(328);
 
-                    b.Property<string>("Phone");
+                    b.Property<string>("Phone")
+                        .IsRequired();
 
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(32);
@@ -1243,9 +1242,12 @@ namespace App.Caliset.Migrations
 
                     b.Property<string>("BookingNumber");
 
-                    b.Property<int?>("CargadorId");
+                    b.Property<int>("ChargerId");
 
-                    b.Property<string>("Commodity");
+                    b.Property<string>("ClientReference");
+
+                    b.Property<string>("Commodity")
+                        .IsRequired();
 
                     b.Property<DateTime>("CreationTime");
 
@@ -1267,25 +1269,32 @@ namespace App.Caliset.Migrations
 
                     b.Property<string>("Line");
 
-                    b.Property<int?>("LocationId");
+                    b.Property<int>("LocationId");
 
-                    b.Property<int?>("NominadorId");
+                    b.Property<long>("ManagerId");
 
-                    b.Property<int?>("OperationStateId");
+                    b.Property<int>("NominatorId");
 
-                    b.Property<int?>("OperationTypeId");
+                    b.Property<string>("Notes");
 
-                    b.Property<string>("Package");
+                    b.Property<int>("OperationStateId");
+
+                    b.Property<int>("OperationTypeId");
+
+                    b.Property<string>("Package")
+                        .IsRequired();
 
                     b.Property<string>("ShipName");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CargadorId");
+                    b.HasIndex("ChargerId");
 
                     b.HasIndex("LocationId");
 
-                    b.HasIndex("NominadorId");
+                    b.HasIndex("ManagerId");
+
+                    b.HasIndex("NominatorId");
 
                     b.HasIndex("OperationStateId");
 
@@ -1432,7 +1441,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Roles.Role")
                         .WithMany("Claims")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserClaim", b =>
@@ -1440,7 +1449,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Claims")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserLogin", b =>
@@ -1448,7 +1457,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Logins")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserRole", b =>
@@ -1456,7 +1465,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Roles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserToken", b =>
@@ -1464,14 +1473,15 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Tokens")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Configuration.Setting", b =>
                 {
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Settings")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.EntityHistory.EntityChange", b =>
@@ -1479,7 +1489,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("Abp.EntityHistory.EntityChangeSet")
                         .WithMany("EntityChanges")
                         .HasForeignKey("EntityChangeSetId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.EntityHistory.EntityPropertyChange", b =>
@@ -1487,29 +1497,33 @@ namespace App.Caliset.Migrations
                     b.HasOne("Abp.EntityHistory.EntityChange")
                         .WithMany("PropertyChanges")
                         .HasForeignKey("EntityChangeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Organizations.OrganizationUnit", b =>
                 {
                     b.HasOne("Abp.Organizations.OrganizationUnit", "Parent")
                         .WithMany("Children")
-                        .HasForeignKey("ParentId");
+                        .HasForeignKey("ParentId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.Authorization.Roles.Role", b =>
                 {
                     b.HasOne("App.Caliset.Authorization.Users.User", "CreatorUser")
                         .WithMany()
-                        .HasForeignKey("CreatorUserId");
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "DeleterUser")
                         .WithMany()
-                        .HasForeignKey("DeleterUserId");
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "LastModifierUser")
                         .WithMany()
-                        .HasForeignKey("LastModifierUserId");
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.Authorization.Users.User", b =>
@@ -1532,70 +1546,84 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User", "Inspector")
                         .WithMany("Assignations")
                         .HasForeignKey("InspectorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Models.Operations.Operation", "Operation")
                         .WithMany("Assignations")
                         .HasForeignKey("OperationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.Models.Comments.Comment", b =>
                 {
                     b.HasOne("App.Caliset.Models.Operations.Operation", "Operation")
-                        .WithMany()
+                        .WithMany("Comments")
                         .HasForeignKey("OperationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.Models.Operations.Operation", b =>
                 {
-                    b.HasOne("App.Caliset.Models.Clients.Client", "Cargador")
+                    b.HasOne("App.Caliset.Models.Clients.Client", "Charger")
                         .WithMany()
-                        .HasForeignKey("CargadorId");
+                        .HasForeignKey("ChargerId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Models.Locations.Location", "Location")
                         .WithMany()
-                        .HasForeignKey("LocationId");
+                        .HasForeignKey("LocationId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("App.Caliset.Models.Clients.Client", "Nominador")
+                    b.HasOne("App.Caliset.Authorization.Users.User", "Manager")
                         .WithMany()
-                        .HasForeignKey("NominadorId");
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("App.Caliset.Models.Clients.Client", "Nominator")
+                        .WithMany()
+                        .HasForeignKey("NominatorId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Models.OperationStates.OperationState", "OperationState")
                         .WithMany()
-                        .HasForeignKey("OperationStateId");
+                        .HasForeignKey("OperationStateId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Models.OperationTypes.OperationType", "OperationType")
                         .WithMany()
-                        .HasForeignKey("OperationTypeId");
+                        .HasForeignKey("OperationTypeId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.Models.Samples.Sample", b =>
                 {
                     b.HasOne("App.Caliset.Models.Operations.Operation", "Operation")
-                        .WithMany()
+                        .WithMany("Samples")
                         .HasForeignKey("OperationId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("App.Caliset.MultiTenancy.Tenant", b =>
                 {
                     b.HasOne("App.Caliset.Authorization.Users.User", "CreatorUser")
                         .WithMany()
-                        .HasForeignKey("CreatorUserId");
+                        .HasForeignKey("CreatorUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "DeleterUser")
                         .WithMany()
-                        .HasForeignKey("DeleterUserId");
+                        .HasForeignKey("DeleterUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Abp.Application.Editions.Edition", "Edition")
                         .WithMany()
-                        .HasForeignKey("EditionId");
+                        .HasForeignKey("EditionId")
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("App.Caliset.Authorization.Users.User", "LastModifierUser")
                         .WithMany()
-                        .HasForeignKey("LastModifierUserId");
+                        .HasForeignKey("LastModifierUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Application.Features.EditionFeatureSetting", b =>
@@ -1603,7 +1631,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("Abp.Application.Editions.Edition", "Edition")
                         .WithMany()
                         .HasForeignKey("EditionId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Roles.RolePermissionSetting", b =>
@@ -1611,7 +1639,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Roles.Role")
                         .WithMany("Permissions")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 
             modelBuilder.Entity("Abp.Authorization.Users.UserPermissionSetting", b =>
@@ -1619,7 +1647,7 @@ namespace App.Caliset.Migrations
                     b.HasOne("App.Caliset.Authorization.Users.User")
                         .WithMany("Permissions")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
                 });
 #pragma warning restore 612, 618
         }
