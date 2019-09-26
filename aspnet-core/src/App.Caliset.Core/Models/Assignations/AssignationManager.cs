@@ -95,11 +95,11 @@ namespace App.Caliset.Models.Assignations
 
         public IEnumerable<Operation> GetOperationsByUser(long userId)
         {
-            var operations = from Oper in _operationManager.GetAll() 
+            var operations = (from Oper in _operationManager.GetAll() 
                              join Assign in this.GetAll()
                              on Oper.Id equals Assign.OperationId
-                             where Assign.Id == userId
-                             select Oper;
+                             where Assign.InspectorId == userId
+                             select Oper).Distinct();
 
             return operations;
         }
