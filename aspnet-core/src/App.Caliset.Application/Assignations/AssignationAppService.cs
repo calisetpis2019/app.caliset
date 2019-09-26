@@ -58,6 +58,17 @@ namespace App.Caliset.Assignations
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
+        public IEnumerable<GetAssignationOutput> GetAssignmentsByUser(long userId)
+        {
+            // List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUser(userId));
+
+            List<Assignation> aux = _assignationManager.GetAll().ToList() ;
+            List<GetAssignationOutput> output = ObjectMapper.Map < List < GetAssignationOutput >>(_filtros.FAssignationUser(aux, userId));
+
+            return output;
+        }
+
+        [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetAssignationOutput> GetAssignmentsByOperation(int operationId)
         {
             List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByOperation(operationId));
@@ -66,12 +77,9 @@ namespace App.Caliset.Assignations
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
-        public IEnumerable<GetAssignationOutput> GetAssignmentsByUser(long userId)
+        public IEnumerable<GetOperationOutput> GetOperationsByUser(int userId)
         {
-            // List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUser(userId));
-
-            List<Assignation> aux = _assignationManager.GetAll().ToList() ;
-            List<GetAssignationOutput> output = ObjectMapper.Map < List < GetAssignationOutput >>(_filtros.FAssignationUser(aux, userId));
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId));
 
             return output;
         }
