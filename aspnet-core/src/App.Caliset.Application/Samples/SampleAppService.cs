@@ -41,9 +41,8 @@ namespace App.Caliset.Samples
             else
                 aux = oper2.Samples.Count();
 
-            input.IdSample = "Operation"  + oper2.Id.ToString() + "Sample" + aux.ToString() ;
-
             var Sample = ObjectMapper.Map<Sample>(input);
+            Sample.IdSample = "Operation" + oper2.Id.ToString() + "Sample" + aux.ToString();
 
             await _sampleManager.Create(Sample);
           
