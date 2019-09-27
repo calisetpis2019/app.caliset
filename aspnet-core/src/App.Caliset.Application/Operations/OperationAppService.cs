@@ -47,6 +47,7 @@ namespace App.Caliset.Operations
         public async Task Create(CreateOperationInput input)
         {
             var operation = ObjectMapper.Map<Operation>(input);
+            operation.OperationStateId = 1;
 
             await _operationManager.Create(operation);
         }

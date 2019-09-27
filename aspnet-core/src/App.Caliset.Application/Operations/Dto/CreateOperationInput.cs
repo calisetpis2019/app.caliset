@@ -38,8 +38,6 @@ namespace App.Caliset.Operations.Dto
         [Required]
         public int ChargerId { get; set; }
         [Required]
-        public int OperationStateId { get; set; }
-        [Required]
         public long ManagerId { get; set; }
         
     }
