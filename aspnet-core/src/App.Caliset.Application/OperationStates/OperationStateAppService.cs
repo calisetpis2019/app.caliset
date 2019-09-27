@@ -24,19 +24,6 @@ namespace App.Caliset.OperationStates
             return output;
         }
 
-        [AbpAuthorize(PermissionNames.Administrador)]
-        public async Task Create(CreateOperationStateInput input)
-        {
-            var operationState = ObjectMapper.Map<OperationState>(input);
-            await _operationStateManager.Create(operationState);
-        }
-
-        [AbpAuthorize(PermissionNames.Administrador)]
-        public void Delete(DeleteOperationStateInput input)
-        {
-            _operationStateManager.Delete(input.Id);
-        }
-
         public GetOperationStateOutput GetOperationStateById(GetOperationStateInput input)
         {
             var getOperationState = _operationStateManager.GetOperationStateById(input.Id);
