@@ -89,9 +89,9 @@ namespace App.Caliset.Models.Assignations
             return assignatios;
         }
 
-        public IEnumerable<Operation> GetOperationsByUser(long userId)
+        public IEnumerable<Operation> GetOperationsByUser(long userId, int? operationStateId = null)
         {
-            var operations = (from Oper in _operationManager.GetAll()
+            var operations = (from Oper in _operationManager.GetOperationsFilter(operationStateId)
                               join Assign in this.GetAll()
                               on Oper.Id equals Assign.OperationId
                               where Assign.InspectorId == userId

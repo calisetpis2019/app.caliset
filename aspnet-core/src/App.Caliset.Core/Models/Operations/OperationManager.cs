@@ -57,7 +57,7 @@ namespace App.Caliset.Models.Operations
                .Include(w => w.Charger)
                .Include(q => q.Nominator)
                .Include(a => a.Location)
-                 //.Include(z => z.Manager);
+                 .Include(z => z.Manager)
                  .Include(asset => asset.Comments)
                  .Include(asset => asset.Samples);
                 //.Include(asset => asset.Inspectors);
@@ -76,6 +76,11 @@ namespace App.Caliset.Models.Operations
         public void Update(Operation entity)
         {
             _repositoryOperation.Update(entity);
+        }
+
+        public IEnumerable<Operation> GetOperationsFilter(int? operationstateId)
+        {
+            return _repositoryOperation.GetAll().WhereIf(operationstateId.HasValue, oper => oper.OperationStateId == operationstateId);
         }
     }
 }

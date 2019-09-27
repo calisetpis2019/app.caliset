@@ -22,6 +22,7 @@ namespace App.Caliset.Assignations
         IEnumerable<GetAssignationOutput> GetMyAssignments();
         IEnumerable<GetAssignationOutput> GetMyAssignmentsByOperation(int OperationId);
         IEnumerable<GetOperationOutput> GetMyOperations();
+        IEnumerable<GetOperationOutput> GetMyOperationsByState(int? operationStateId);
 
         void AceptAssignation(int AssignationId);
         void RefuseAssignation(int AssignationId);

@@ -119,6 +119,18 @@ namespace App.Caliset.Assignations
             return output;
         }
 
+        public IEnumerable<GetOperationOutput> GetMyOperationsByState(int? operationStateId = null)
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Please log in before it.");
+            }
+            long userId = _abpSession.UserId.Value;
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, operationStateId));
+
+            return output;
+        }
+
         public void RefuseAssignation(int AssignationId)
         {
             _assignationManager.RefuseAssignation(AssignationId);
