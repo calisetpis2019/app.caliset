@@ -4,7 +4,6 @@ using App.Caliset.Assignations.Dto;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Abp.Collections.Extensions;
 using Abp.Runtime.Session;
 using Abp.UI;
 using Abp.Authorization;

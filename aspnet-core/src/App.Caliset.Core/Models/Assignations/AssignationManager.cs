@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Collections.Extensions;
+using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.UI;
 using App.Caliset.Authorization.Users;
@@ -90,11 +91,11 @@ namespace App.Caliset.Models.Assignations
 
         public IEnumerable<Operation> GetOperationsByUser(long userId)
         {
-            var operations = (from Oper in _operationManager.GetAll() 
-                             join Assign in this.GetAll()
-                             on Oper.Id equals Assign.OperationId
-                             where Assign.InspectorId == userId
-                             select Oper).Distinct();
+            var operations = (from Oper in _operationManager.GetAll()
+                              join Assign in this.GetAll()
+                              on Oper.Id equals Assign.OperationId
+                              where Assign.InspectorId == userId
+                              select Oper).Distinct();
 
             return operations;
         }

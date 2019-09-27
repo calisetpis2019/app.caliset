@@ -4,6 +4,7 @@ using App.Caliset.Authorization.Roles;
 using App.Caliset.Authorization.Users;
 using App.Caliset.MultiTenancy;
 using System.Linq;
+using System;
 
 namespace App.Caliset.EntityFrameworkCore
 {
@@ -34,6 +35,12 @@ namespace App.Caliset.EntityFrameworkCore
             }
 
             base.OnModelCreating(modelbuilder);
+
+            modelbuilder.Entity<Models.OperationStates.OperationState>().HasData(
+                new { Id = 1, Name = "Futura", CreationTime = DateTime.Today, IsDeleted = false},
+                new { Id = 2, Name = "Activa", CreationTime = DateTime.Today, IsDeleted = false },
+                new { Id = 3, Name = "Finalizada", CreationTime = DateTime.Today, IsDeleted = false }
+            );
         }
     }
 }
