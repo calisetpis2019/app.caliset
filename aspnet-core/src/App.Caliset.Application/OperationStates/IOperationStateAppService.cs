@@ -9,9 +9,7 @@ namespace App.Caliset.OperationStates
     public interface IOperationStateAppService : IApplicationService
     {
         IEnumerable<GetOperationStateOutput> GetAll();
-        Task Create(CreateOperationStateInput input);
         void Update(UpdateOperationStateInput input);
-        void Delete(DeleteOperationStateInput input);
         GetOperationStateOutput GetOperationStateById(GetOperationStateInput input);
 
     }

@@ -43,7 +43,7 @@ namespace App.Caliset
                 mapper.CreateMap<UpdateOperationTypeInput, OperationType>().ReverseMap();
 
                 //OperationState
-                mapper.CreateMap<CreateOperationStateInput, OperationState>().ReverseMap();
+                //mapper.CreateMap<CreateOperationStateInput, OperationState>().ReverseMap();
                 mapper.CreateMap<GetOperationStateInput, OperationState>().ReverseMap();
                 mapper.CreateMap<GetOperationStateOutput, OperationState>().ReverseMap();
                 mapper.CreateMap<UpdateOperationStateInput, OperationState>().ReverseMap();
