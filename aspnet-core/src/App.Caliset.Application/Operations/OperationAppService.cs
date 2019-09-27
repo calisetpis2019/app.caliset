@@ -60,6 +60,7 @@ namespace App.Caliset.Operations
         {
             var getAll = _operationManager.GetAll().ToList();
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(getAll);
+
             return output;
         }
 

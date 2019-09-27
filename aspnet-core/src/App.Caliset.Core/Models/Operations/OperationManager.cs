@@ -50,22 +50,26 @@ namespace App.Caliset.Models.Operations
 
         public IEnumerable<Operation> GetAll()
         {
-            return _repositoryOperation.GetAll()
-               .Include(asset=> asset.OperationType)
-               .Include(asset => asset.OperationState)
-               .Include(asset => asset.Charger)
-               .Include(asset => asset.Nominator)
-               .Include(asset => asset.Location)
-               .Include(asset => asset.Manager)
-                //.Include(asset => asset.Comments)
-                // .Include(asset => asset.Samples)
-                // .Include(asset => asset.Inspectors)
-                ;
+            var aux = _repositoryOperation.GetAll()
+               .Include(x => x.OperationType)
+               .Include(y => y.OperationState)
+               .Include(w => w.Charger)
+               .Include(q => q.Nominator)
+               .Include(a => a.Location)
+                 //.Include(z => z.Manager);
+                 .Include(asset => asset.Comments)
+                 .Include(asset => asset.Samples);
+                //.Include(asset => asset.Inspectors);
+
+            return aux
+            ;
         }
 
         public Operation GetOperationById(int id)
         {
-            return _repositoryOperation.FirstOrDefault(x => x.Id == id);
+            var oper = _repositoryOperation.Get(id) ;
+          
+            return oper;
         }
 
         public void Update(Operation entity)

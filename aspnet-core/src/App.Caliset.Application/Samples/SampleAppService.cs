@@ -1,6 +1,8 @@
 ﻿using Abp.Application.Services;
 using Abp.Domain.Repositories;
+using App.Caliset.Models.Operations;
 using App.Caliset.Models.Samples;
+using App.Caliset.Operations;
 using App.Caliset.Samples.Dto;
 using System;
 using System.Collections.Generic;
@@ -14,17 +16,37 @@ namespace App.Caliset.Samples
     {
 
         private readonly SampleManager _sampleManager;
+        private readonly OperationManager _operationManager;
+        private readonly IOperationAppService _operationService;
+        private int IdActual;
 
-        public SampleAppService(SampleManager sampleManager)
+        public SampleAppService(SampleManager sampleManager, OperationManager operationManager, IOperationAppService operationService)
         {
             _sampleManager = sampleManager;
+            _operationManager = operationManager;
+            _operationService = operationService;
+
+
         }
 
 
         public async Task Create(CreateSampleInput input)
         {
+            var oper = _operationManager.GetAll();
+            var oper2 = oper.FirstOrDefault(x => x.Id == input.OperationId);
+            int aux;
+
+            if (oper2.Samples == null)
+                aux = 0;
+            else
+                aux = oper2.Samples.Count();
+
+            input.IdSample = "Operation"  + oper2.Id.ToString() + "Sample" + aux.ToString() ;
+
             var Sample = ObjectMapper.Map<Sample>(input);
+
             await _sampleManager.Create(Sample);
+          
         }
 
         public void Delete(DeleteSampleInput input)
@@ -52,5 +74,17 @@ namespace App.Caliset.Samples
 
             return output;
         }
+
+        public async Task<string> AddSampleOperation(GetSampleInput input)
+        {
+
+            var smp = _sampleManager.GetAll();
+            var smp2 = smp.FirstOrDefault(x => x.IdSample == input.IdSample);
+            var oper = _operationManager.GetOperationById(smp2.OperationId);
+            return _sampleManager.AddSampleToOperation(input.IdSample, oper);
+
+        }
+
+      
     }
 }

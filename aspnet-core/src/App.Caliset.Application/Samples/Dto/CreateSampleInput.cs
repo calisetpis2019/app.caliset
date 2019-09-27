@@ -11,5 +11,6 @@ namespace App.Caliset.Samples.Dto
     {
         public string Comment { get; set; }
         public int OperationId { get; set; }
+        public string IdSample { get; set; }
     }
 }

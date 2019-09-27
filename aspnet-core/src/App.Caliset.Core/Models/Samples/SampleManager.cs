@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.UI;
+using App.Caliset.Models.Operations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +21,9 @@ namespace App.Caliset.Models.Samples
         }
 
 
-        public async Task<Sample> Create(Sample entity)
+         public async  Task<Sample> Create(Sample entity)
         {
+            
             var Sample = _repositorySample.FirstOrDefault(x => x.Id == entity.Id);
             if (Sample != null)
             {
@@ -30,6 +32,7 @@ namespace App.Caliset.Models.Samples
             else
             {
                 return await _repositorySample.InsertAsync(entity);
+               
             }
         }
 
@@ -68,6 +71,13 @@ namespace App.Caliset.Models.Samples
                            select Sample;
 
             return samples;
+        }
+
+        public string AddSampleToOperation(string IdSample, Operation Oper)
+        {
+            var sample = _repositorySample.FirstOrDefault(x => x.IdSample == IdSample);
+            Oper.Samples.Append(sample);
+            return sample.IdSample;
         }
     }
 }

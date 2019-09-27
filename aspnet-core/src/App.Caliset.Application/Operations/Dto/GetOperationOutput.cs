@@ -29,6 +29,7 @@ namespace App.Caliset.Operations.Dto
         public virtual GetClientOutput Charger { get; set; }
         public virtual GetOperationStateOutput OperationState { get; set; }
         public virtual UserDtoOperation Manager { get; set; }
+        public List<GetSampleOutput> Samples { get; set; }
 
     }
 }
