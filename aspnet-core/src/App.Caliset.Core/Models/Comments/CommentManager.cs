@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.UI;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,7 +46,7 @@ namespace App.Caliset.Models.Comments
 
         public IEnumerable<Comment> GetAll()
         {
-            return _repositoryComments.GetAll();
+            return _repositoryComments.GetAll().Include(asset => asset.CreatorUser);
         }
 
         public Comment GetCommentById(int id)

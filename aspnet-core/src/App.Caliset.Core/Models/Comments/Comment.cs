@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Operations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,5 +16,8 @@ namespace App.Caliset.Models.Comments
         public int OperationId { get; set; }
         [ForeignKey("OperationId")]
         public virtual Operation Operation { get; set; }
+
+        [ForeignKey("CreatorUserId")]
+        public virtual User CreatorUser { get; set; }
     }
 }
