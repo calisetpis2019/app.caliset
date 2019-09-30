@@ -55,7 +55,13 @@ namespace App.Caliset.Models.Assignations
 
         public IEnumerable<Assignation> GetAll()
         {
-            return _repositoryAssignation.GetAll().Include(asset => asset.Operation).Include(asset => asset.Inspector);
+            return _repositoryAssignation.GetAll().Include(asset => asset.Inspector)
+                                                  .Include(asset => asset.Operation).ThenInclude(oper => oper.Location)
+                                                  .Include(asset => asset.Operation).ThenInclude(oper => oper.OperationType)
+                                                  .Include(asset => asset.Operation).ThenInclude(oper => oper.Nominator)
+                                                  .Include(asset => asset.Operation).ThenInclude(oper => oper.Charger)
+                                                  .Include(asset => asset.Operation).ThenInclude(oper => oper.OperationState)
+                                                  .Include(asset => asset.Operation).ThenInclude(oper => oper.Manager);
         }
 
         public Assignation GetAssignationById(int id)
