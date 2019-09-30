@@ -1,4 +1,7 @@
 ﻿using Abp.Application.Services;
+using Abp.Authorization;
+using Abp.UI;
+using App.Caliset.Authorization;
 using App.Caliset.Auxiliares;
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Locations;
@@ -43,7 +46,7 @@ namespace App.Caliset.Operations
         }
 
 
-
+        [AbpAuthorize(PermissionNames.Operador)]
         public async Task Create(CreateOperationInput input)
         {
             var operation = ObjectMapper.Map<Operation>(input);
@@ -55,11 +58,20 @@ namespace App.Caliset.Operations
             await _operationManager.Create(operation);
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public void Delete(DeleteOperationInput input)
         {
-            _operationManager.Delete(input.Id);
+            var operation = _operationManager.GetOperationById(input.Id);
+            if (operation.OperationStateId == 3)
+            {
+                throw new UserFriendlyException("Operación finalizada, no se puede modificar.");
+            } else
+            {
+                _operationManager.Delete(input.Id);
+            }
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetOperationOutput> GetAll()
         {
             var getAll = _operationManager.GetAll().ToList();
@@ -76,6 +88,7 @@ namespace App.Caliset.Operations
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetOperationOutput> GetAllFilters(GetOperationFiltersInput input)
         {
             var operations = _operationManager.GetAllFilters(input.OperationStateId, input.OperationTypeId, input.LocationId, input.NominatorId, input.ChargerId, input.ManagerId);
@@ -92,9 +105,14 @@ namespace App.Caliset.Operations
             return ret;
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public void Update(UpdateOperationInput input)
         {
             var operation = _operationManager.GetOperationById(input.Id);
+            if (operation.OperationStateId == 3)
+            {
+                throw new UserFriendlyException("Operación finalizada, no se puede modificar.");
+            }
             ObjectMapper.Map(input, operation);
             _operationManager.Update(operation);
         }
