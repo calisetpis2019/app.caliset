@@ -13,5 +13,6 @@ namespace App.Caliset.Models.Operations
         Task<Operation> Create(Operation entity);
         void Update(Operation entity);
         void Delete(int id);
+        IEnumerable<Operation> GetAllFilters(int? operationstateId, int? operationTypeId, int? locationId, int? nominatorId, int? chargerId, int? managerId);
     }
 }

@@ -26,7 +26,6 @@ namespace App.Caliset.Models.Assignations
             _operationManager = operationManager;
         }
 
-
         public async Task<Assignation> Create(Assignation entity)
         {
             var Assignation = _repositoryAssignation.FirstOrDefault(x => x.Id == entity.Id);
@@ -69,32 +68,6 @@ namespace App.Caliset.Models.Assignations
         public Assignation GetAssignationById(int id)
         {
             return _repositoryAssignation.Get(id);
-        }
-
-        public IEnumerable<Assignation> GetAssignmentsByUser(long userId)
-        {   
-            var assignatios = from Assign in this.GetAll()
-                              where Assign.InspectorId == userId
-                              select Assign;
-
-            return assignatios;
-        }
-
-        public IEnumerable<Assignation> GetAssignmentsByOperation(int operationId)
-        {
-            var assignatios = from Assign in this.GetAll()
-                              where Assign.OperationId == operationId
-                              select Assign;
-
-            return assignatios;
-        }
-        public IEnumerable<Assignation> GetAssignmentsByUserAndOperation(long userId, int operationId)
-        {
-            var assignatios = from Assign in this.GetAll()
-                              where Assign.InspectorId == userId && Assign.OperationId == operationId
-                              select Assign;
-
-            return assignatios;
         }
 
         public IEnumerable<Assignation> GetAssignmentsFilter(long? userId = null, int? operationId = null, DateTime? date = null, bool ? aware = null, bool ? pending = null)

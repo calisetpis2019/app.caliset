@@ -78,9 +78,9 @@ namespace App.Caliset.Models.Operations
             _repositoryOperation.Update(entity);
         }
 
-        public IEnumerable<Operation> GetOperationsFilter(int? operationstateId = null, int? operationTypeId = null, int? locationId = null, int? nominatorId = null, int? chargerId = null, int? managerId = null)
+        public IEnumerable<Operation> GetAllFilters(int? operationstateId = null, int? operationTypeId = null, int? locationId = null, int? nominatorId = null, int? chargerId = null, int? managerId = null)
         {
-            return _repositoryOperation.GetAll().WhereIf(operationstateId.HasValue, oper => oper.OperationStateId == operationstateId)
+            return this.GetAll().WhereIf(operationstateId.HasValue, oper => oper.OperationStateId == operationstateId)
                 .WhereIf(operationTypeId.HasValue, oper => oper.OperationTypeId == operationTypeId)
                 .WhereIf(locationId.HasValue, oper => oper.LocationId == locationId)
                 .WhereIf(nominatorId.HasValue, oper => oper.NominatorId == nominatorId)

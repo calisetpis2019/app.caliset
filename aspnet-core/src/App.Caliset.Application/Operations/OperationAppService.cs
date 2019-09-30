@@ -76,6 +76,14 @@ namespace App.Caliset.Operations
             return output;
         }
 
+        public IEnumerable<GetOperationOutput> GetAllFilters(GetOperationFiltersInput input)
+        {
+            var operations = _operationManager.GetAllFilters(input.OperationStateId, input.OperationTypeId, input.LocationId, input.NominatorId, input.ChargerId, input.ManagerId);
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(operations);
+
+            return output;
+        }
+
         public GetOperationOutput GetOperationById(GetOperationInput input)
         {
             var Oper = _operationManager.GetAll().FirstOrDefault(x => x.Id == input.Id);
