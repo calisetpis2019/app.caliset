@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
@@ -62,8 +63,7 @@ namespace App.Caliset.Models.Operations
                  .Include(asset => asset.Samples);
                 //.Include(asset => asset.Inspectors);
 
-            return aux
-            ;
+            return aux;
         }
 
         public Operation GetOperationById(int id)
@@ -78,9 +78,21 @@ namespace App.Caliset.Models.Operations
             _repositoryOperation.Update(entity);
         }
 
-        public IEnumerable<Operation> GetOperationsFilter(int? operationstateId)
+        public IEnumerable<Operation> GetOperationsFilter(int? operationstateId = null, int? operationTypeId = null, int? locationId = null, int? nominatorId = null, int? chargerId = null, int? managerId = null)
         {
-            return _repositoryOperation.GetAll().WhereIf(operationstateId.HasValue, oper => oper.OperationStateId == operationstateId);
+            return _repositoryOperation.GetAll().WhereIf(operationstateId.HasValue, oper => oper.OperationStateId == operationstateId)
+                .WhereIf(operationTypeId.HasValue, oper => oper.OperationTypeId == operationTypeId)
+                .WhereIf(locationId.HasValue, oper => oper.LocationId == locationId)
+                .WhereIf(nominatorId.HasValue, oper => oper.NominatorId == nominatorId)
+                .WhereIf(chargerId.HasValue, oper => oper.ChargerId == chargerId)
+                .WhereIf(managerId.HasValue, oper => oper.ManagerId == managerId);
+        }
+
+        public IEnumerable<Operation> GetCurrentOperations()
+        {
+            return from Oper in this.GetAll()
+                        where Oper.OperationStateId != 3
+                        select Oper;
         }
     }
 }

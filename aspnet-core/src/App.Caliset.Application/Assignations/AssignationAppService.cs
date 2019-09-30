@@ -59,10 +59,7 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetAssignationOutput> GetAssignmentsByUser(long userId)
         {
-            // List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUser(userId));
-
-            List<Assignation> aux = _assignationManager.GetAll().ToList() ;
-            List<GetAssignationOutput> output = ObjectMapper.Map < List < GetAssignationOutput >>(_filtros.FAssignationUser(aux, userId));
+            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(userId));
 
             return output;
         }
@@ -70,15 +67,31 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetAssignationOutput> GetAssignmentsByOperation(int operationId)
         {
-            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByOperation(operationId));
+            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(null, operationId));
 
             return output;
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
-        public IEnumerable<GetOperationOutput> GetOperationsByUser(int userId)
+        public IEnumerable<GetOperationOutput> GetOperationsByUser(long userId)
         {
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId));
+
+            return output;
+        }
+
+        [AbpAuthorize(PermissionNames.Operador)]
+        public IEnumerable<GetOperationOutput> GetOperationsConfirmedByUser(long userId)
+        {
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, true));
+
+            return output;
+        }
+
+        [AbpAuthorize(PermissionNames.Operador)]
+        public IEnumerable<GetOperationOutput> GetOperationsPendingByUser(long userId)
+        {
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, null, true));
 
             return output;
         }
@@ -90,7 +103,7 @@ namespace App.Caliset.Assignations
                 throw new UserFriendlyException("Please log in before it.");
             }
             long userId = _abpSession.UserId.Value;
-            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUser(userId));
+            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(userId));
 
             return output;
         }
@@ -102,7 +115,7 @@ namespace App.Caliset.Assignations
                 throw new UserFriendlyException("Please log in before it.");
             }
             long userId = _abpSession.UserId.Value;
-            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsByUserAndOperation(userId, operationId));
+            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(userId, operationId));
 
             return output;
         }
@@ -119,14 +132,26 @@ namespace App.Caliset.Assignations
             return output;
         }
 
-        public IEnumerable<GetOperationOutput> GetMyOperationsByState(int? operationStateId = null)
+        public IEnumerable<GetOperationOutput> GetMyOperationsConfirmed()
         {
             if (_abpSession.UserId == null)
             {
                 throw new UserFriendlyException("Please log in before it.");
             }
             long userId = _abpSession.UserId.Value;
-            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, operationStateId));
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, true));
+
+            return output;
+        }
+
+        public IEnumerable<GetOperationOutput> GetMyOperationsPending()
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Please log in before it.");
+            }
+            long userId = _abpSession.UserId.Value;
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, null, true));
 
             return output;
         }

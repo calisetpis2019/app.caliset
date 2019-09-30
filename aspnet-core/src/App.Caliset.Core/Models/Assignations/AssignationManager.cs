@@ -5,6 +5,7 @@ using Abp.UI;
 using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Operations;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -96,12 +97,21 @@ namespace App.Caliset.Models.Assignations
             return assignatios;
         }
 
-        public IEnumerable<Operation> GetOperationsByUser(long userId, int? operationStateId = null)
+        public IEnumerable<Assignation> GetAssignmentsFilter(long? userId = null, int? operationId = null, DateTime? date = null, bool ? aware = null, bool ? pending = null)
         {
-            var operations = (from Oper in _operationManager.GetOperationsFilter(operationStateId)
-                              join Assign in this.GetAll()
+            return this.GetAll()
+                    .WhereIf(userId.HasValue, assign => assign.InspectorId == userId)
+                    .WhereIf(operationId.HasValue, assign => assign.OperationId == operationId)
+                    .WhereIf(date.HasValue, assign => assign.Date == date)
+                    .WhereIf(aware.HasValue, assign => assign.Aware == aware)
+                    .WhereIf(pending.HasValue, assign => assign.Aware == null);
+        }
+
+        public IEnumerable<Operation> GetOperationsByUser(long userId, bool? aware = null, bool? pending = null)
+        {
+            var operations = (from Oper in _operationManager.GetCurrentOperations()
+                              join Assign in this.GetAssignmentsFilter(userId, null, null, aware, pending)
                               on Oper.Id equals Assign.OperationId
-                              where Assign.InspectorId == userId
                               select Oper).Distinct();
 
             return operations;

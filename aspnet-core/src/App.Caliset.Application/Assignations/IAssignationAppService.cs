@@ -16,13 +16,16 @@ namespace App.Caliset.Assignations
         //WEB
         IEnumerable<GetAssignationOutput> GetAssignmentsByUser(long UserId);
         IEnumerable<GetAssignationOutput> GetAssignmentsByOperation(int OperationId);
-        IEnumerable<GetOperationOutput> GetOperationsByUser(int userId);
+        IEnumerable<GetOperationOutput> GetOperationsByUser(long userId);
+        IEnumerable<GetOperationOutput> GetOperationsConfirmedByUser(long userId);
+        IEnumerable<GetOperationOutput> GetOperationsPendingByUser(long userId);
 
         //MOBILE
         IEnumerable<GetAssignationOutput> GetMyAssignments();
         IEnumerable<GetAssignationOutput> GetMyAssignmentsByOperation(int OperationId);
         IEnumerable<GetOperationOutput> GetMyOperations();
-        IEnumerable<GetOperationOutput> GetMyOperationsByState(int? operationStateId);
+        IEnumerable<GetOperationOutput> GetMyOperationsConfirmed();
+        IEnumerable<GetOperationOutput> GetMyOperationsPending();
 
         void AceptAssignation(int AssignationId);
         void RefuseAssignation(int AssignationId);
