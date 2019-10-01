@@ -10,6 +10,7 @@ using Abp.Authorization;
 using App.Caliset.Authorization;
 using App.Caliset.Operations.Dto;
 using App.Caliset.Auxiliares;
+using Abp.Collections.Extensions;
 
 namespace App.Caliset.Assignations
 {
@@ -28,8 +29,8 @@ namespace App.Caliset.Assignations
             _filtros = filtros;
         }
 
-    
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public async Task Create(CreateAssignationInput input)
         {
             var assignation = ObjectMapper.Map<Assignation>(input);
@@ -37,11 +38,13 @@ namespace App.Caliset.Assignations
             await _assignationManager.Create(assignation);
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public void Delete(DeleteAssignationInput input)
         {
             _assignationManager.Delete(input.Id);
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetAssignationOutput> GetAll()
         {
             var getAll = _assignationManager.GetAll().ToList();
@@ -132,14 +135,14 @@ namespace App.Caliset.Assignations
             return output;
         }
 
-        public IEnumerable<GetOperationOutput> GetMyOperationsConfirmed()
+        public IEnumerable<GetOperationOutput> GetMyOperationsConfirmed(int? operationStateId = null)
         {
             if (_abpSession.UserId == null)
             {
                 throw new UserFriendlyException("Please log in before it.");
             }
             long userId = _abpSession.UserId.Value;
-            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, true));
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, true).WhereIf(operationStateId.HasValue, oper => oper.OperationStateId == operationStateId));
 
             return output;
         }
