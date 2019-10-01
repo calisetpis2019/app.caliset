@@ -18,7 +18,7 @@ namespace App.Caliset.Models.OperationStates
         public async Task<OperationState> Create(OperationState entity)
         {
             var operationState = _repositoryOperationState.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
-            if (operationState != null)
+            if (operationState.Count() > 0)
             {
                 throw new UserFriendlyException("Ya existe estado.");
             }

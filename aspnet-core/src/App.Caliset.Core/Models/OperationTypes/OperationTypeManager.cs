@@ -18,7 +18,7 @@ namespace App.Caliset.Models.OperationTypes
         public async Task<OperationType> Create(OperationType entity)
         {
             var operationType = _repositoryOperationType.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
-            if (operationType != null)
+            if (operationType.Count() > 0)
             {
                 throw new UserFriendlyException("Ya existe tipo de operación.");
             }

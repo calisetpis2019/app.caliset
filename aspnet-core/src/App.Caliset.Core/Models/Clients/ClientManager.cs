@@ -1,4 +1,5 @@
-﻿using Abp.Domain.Repositories;
+﻿using Abp.Collections.Extensions;
+using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.UI;
 using System;
@@ -20,8 +21,8 @@ namespace App.Caliset.Models.Clients
 
         public async Task<Client> Create(Client entity)
         {
-            var client = _repositoryClient.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
-            if (client != null)
+            var client = _repositoryClient.GetAll().Where(x => (x.Id == entity.Id || x.Name == entity.Name));
+            if (client.Count() > 0)
             {
                 throw new UserFriendlyException("Ya existe cliente.");
             }

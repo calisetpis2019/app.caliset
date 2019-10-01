@@ -18,7 +18,7 @@ namespace App.Caliset.Models.Locations
         public async Task<Location> Create(Location entity)
         {
             var location = _repositoryLocation.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
-            if (location != null)
+            if (location.Count() > 0)
             {
                 throw new UserFriendlyException("Ya existe ubicación.");
             }
