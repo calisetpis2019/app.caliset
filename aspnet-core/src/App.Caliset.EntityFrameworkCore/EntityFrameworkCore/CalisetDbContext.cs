@@ -41,6 +41,11 @@ namespace App.Caliset.EntityFrameworkCore
                 new { Id = 2, Name = "Activa", CreationTime = DateTime.Today, IsDeleted = false },
                 new { Id = 3, Name = "Finalizada", CreationTime = DateTime.Today, IsDeleted = false }
             );
+
+            modelbuilder.Entity<Models.OperationStates.OperationState>().HasIndex(e => e.Name).IsUnique();
+            modelbuilder.Entity<Models.OperationTypes.OperationType>().HasIndex(e => e.Name).IsUnique();
+            modelbuilder.Entity<Models.Locations.Location>().HasIndex(e => e.Name).IsUnique();
+            modelbuilder.Entity<Models.Clients.Client>().HasIndex(e => e.Name).IsUnique();
         }
     }
 }
