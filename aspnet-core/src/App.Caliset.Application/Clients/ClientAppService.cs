@@ -18,6 +18,7 @@ namespace App.Caliset.Clients
         {
             var client = ObjectMapper.Map<Client>(input);
             await _clientManager.Create(client);
+
         }
 
         public void Delete(DeleteClientInput input)

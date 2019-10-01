@@ -2,6 +2,7 @@
 using Abp.Domain.Services;
 using Abp.UI;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Caliset.Models.OperationTypes
@@ -16,10 +17,10 @@ namespace App.Caliset.Models.OperationTypes
 
         public async Task<OperationType> Create(OperationType entity)
         {
-            var operationType = _repositoryOperationType.FirstOrDefault(x => x.Id == entity.Id);
+            var operationType = _repositoryOperationType.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
             if (operationType != null)
             {
-                throw new UserFriendlyException("Already Exist");
+                throw new UserFriendlyException("Ya existe tipo de operación.");
             }
             else
             {

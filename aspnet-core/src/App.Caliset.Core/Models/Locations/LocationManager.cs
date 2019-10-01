@@ -2,6 +2,7 @@
 using Abp.Domain.Services;
 using Abp.UI;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Caliset.Models.Locations
@@ -16,10 +17,10 @@ namespace App.Caliset.Models.Locations
 
         public async Task<Location> Create(Location entity)
         {
-            var location = _repositoryLocation.FirstOrDefault(x => x.Id == entity.Id);
+            var location = _repositoryLocation.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
             if (location != null)
             {
-                throw new UserFriendlyException("Already Exist");
+                throw new UserFriendlyException("Ya existe ubicación.");
             }
             else
             {

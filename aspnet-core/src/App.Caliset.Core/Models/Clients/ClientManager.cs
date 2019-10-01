@@ -3,7 +3,7 @@ using Abp.Domain.Services;
 using Abp.UI;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Caliset.Models.Clients
@@ -20,14 +20,23 @@ namespace App.Caliset.Models.Clients
 
         public async Task<Client> Create(Client entity)
         {
-            var client = _repositoryClient.FirstOrDefault(x => x.Id == entity.Id);
+            var client = _repositoryClient.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
             if (client != null)
             {
-                throw new UserFriendlyException("Already Exist");
+                throw new UserFriendlyException("Ya existe cliente.");
             }
             else
-            {
-                return await _repositoryClient.InsertAsync(entity);
+            {                
+                try
+                {
+                    return await _repositoryClient.InsertAsync(entity);
+                }
+                catch (Exception e)
+                {
+                    throw new UserFriendlyException(e.Message);
+
+                }
+                
             }
         }
 

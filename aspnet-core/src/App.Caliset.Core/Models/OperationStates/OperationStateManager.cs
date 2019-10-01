@@ -2,6 +2,7 @@
 using Abp.Domain.Services;
 using Abp.UI;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace App.Caliset.Models.OperationStates
@@ -16,10 +17,10 @@ namespace App.Caliset.Models.OperationStates
 
         public async Task<OperationState> Create(OperationState entity)
         {
-            var operationState = _repositoryOperationState.FirstOrDefault(x => x.Id == entity.Id);
+            var operationState = _repositoryOperationState.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
             if (operationState != null)
             {
-                throw new UserFriendlyException("Already Exist");
+                throw new UserFriendlyException("Ya existe estado.");
             }
             else
             {
