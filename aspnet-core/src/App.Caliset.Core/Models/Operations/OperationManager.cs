@@ -61,7 +61,8 @@ namespace App.Caliset.Models.Operations
                  .Include(z => z.Manager)
                  .Include(asset => asset.Comments)
                  .Include(asset => asset.Samples);
-                //.Include(asset => asset.Inspectors);
+         
+
 
             return aux;
         }

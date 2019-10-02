@@ -9,7 +9,7 @@ using Abp.UI;
 using Abp.Authorization;
 using App.Caliset.Authorization;
 using App.Caliset.Operations.Dto;
-using App.Caliset.Auxiliares;
+
 using Abp.Collections.Extensions;
 
 namespace App.Caliset.Assignations
@@ -20,13 +20,13 @@ namespace App.Caliset.Assignations
         private readonly AssignationManager _assignationManager;
         private readonly IAbpSession _abpSession;
 
-        private readonly IFiltros _filtros;
 
-        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession, IFiltros filtros )
+
+        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession)
         {
             _assignationManager = assignationManager;
             _abpSession = abpSession;
-            _filtros = filtros;
+ 
         }
 
 
