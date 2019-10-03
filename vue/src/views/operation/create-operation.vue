@@ -8,36 +8,36 @@
                 <Tabs value="detail">
                     <TabPane :label="L('Details')" name="detail">
 
-                        <FormItem :label="L('Tipo')" prop="operationType">
+                        <FormItem :label="L('Tipo')" prop="operationTypeId">
                             <Select v-model="operation.operationTypeId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfOperationTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
-                        <FormItem :label="L('Nominador')" prop="nominator">
+                        <FormItem :label="L('Nominador')" prop="nominatorId">
                             <Select v-model="operation.nominatorId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
-                        <FormItem :label="L('Cargador')" prop="loader">
+                        <FormItem :label="L('Cargador')" prop="chargerId">
                             <Select v-model="operation.chargerId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
 
-                        <FormItem :label="L('Lugar')" prop="location">
+                        <FormItem :label="L('Lugar')" prop="locationId">
                             <Select v-model="operation.locationId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
                         <FormItem :label="L('Fecha y hora de inicio')" prop="date">
-                            <VueCtkDateTimePicker v-model="operation.date" locale="es" right=true />
+                            <VueCtkDateTimePicker v-model="operation.date" locale="es" v-bind:right="true" />
                         </FormItem>
 
-                        <FormItem :label="L('Responsable')" prop="manager">
+                        <FormItem :label="L('Responsable')" prop="managerId">
                             <Select v-model="operation.managerId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
@@ -56,28 +56,28 @@
                             <Input v-model="operation.shipName" :maxlength="32"></Input>
                         </FormItem>
 
-                        <span>Destino</span>
-                        <FormItem :label="Destino" prop="destination">
+                        
+                        <FormItem label="Destino" prop="destination">
                             <Input v-model="operation.destiny" :maxlength="32"></Input>
                         </FormItem>
 
-                        <span>Referencia del Cliente</span>
-                        <FormItem :label="Cliente" prop="clientReference">
+                        
+                        <FormItem label="Cliente" prop="clientReference">
                             <Input v-model="operation.clientReference" :maxlength="32"></Input>
                         </FormItem>
 
-                        <span>Linea</span>
-                        <FormItem :label="Linea" prop="line">
+                        
+                        <FormItem label="Linea" prop="line">
                             <Input v-model="operation.line" :maxlength="32"></Input>
                         </FormItem>
 
-                        <span>Numero del Booking</span>
-                        <FormItem :label="Booking" prop="bookingNumber">
+                        
+                        <FormItem label="Booking" prop="bookingNumber">
                             <Input v-model="operation.bookingNumber" :maxlength="32"></Input>
                         </FormItem>
                         
-                        <span>Notas</span>
-                        <FormItem :label="Notas" prop="notes">
+                        
+                        <FormItem label="Notas" prop="notes">
                             <Input v-model="operation.notes" :maxlength="32"></Input>
                         </FormItem>
                         
@@ -196,24 +196,24 @@
         }
 
         operationRule={
-            // operationType :[
-            //     { required: true,message:this.L('FieldIsRequired',undefined,this.L('Tipo')), trigger: 'blur' }
-            // ],
-            // nominator     :[
-            //     {required: true,message:this.L('FieldIsRequired',undefined,this.L('Nominador')),trigger: 'blur'}
-            // ],
-            // loader        :[
-            //     {required: true,message:this.L('FieldIsRequired',undefined,this.L('Cargador')),trigger: 'blur'}
-            // ],
-            // location      :[
-            //     {required: true,message:this.L('FieldIsRequired',undefined,this.L('Lugar')),trigger: 'blur'}
-            // ],
-            // date          :[
-            //     {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
-            // ],
-            // manager       :[
-            //     {required: true,message:this.L('FieldIsRequired',undefined,this.L('Responsable')),trigger: 'blur'}
-            // ],
+            operationTypeId :[
+                { type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Tipo')), trigger: 'blur' }
+            ],
+            nominatorId     :[
+                {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Nominador')),trigger: 'blur'}
+            ],
+            chargerId        :[
+                {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Cargador')),trigger: 'blur'}
+            ],
+            locationId      :[
+                {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Lugar')),trigger: 'blur'}
+            ],
+            date          :[
+                {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
+            ],
+            managerId       :[
+                {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Responsable')),trigger: 'blur'}
+            ],
             commodity     :[
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Commodity')),trigger: 'blur'}
             ],
