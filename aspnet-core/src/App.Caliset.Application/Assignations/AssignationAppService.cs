@@ -103,7 +103,7 @@ namespace App.Caliset.Assignations
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before it.");
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             long userId = _abpSession.UserId.Value;
             List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(userId));
@@ -115,7 +115,7 @@ namespace App.Caliset.Assignations
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before it.");
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             long userId = _abpSession.UserId.Value;
             List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(userId, operationId));
@@ -127,7 +127,7 @@ namespace App.Caliset.Assignations
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before it.");
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             long userId = _abpSession.UserId.Value;
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId));
@@ -139,7 +139,7 @@ namespace App.Caliset.Assignations
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before it.");
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             long userId = _abpSession.UserId.Value;
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, true).WhereIf(operationStateId.HasValue, oper => oper.OperationStateId == operationStateId));
@@ -151,7 +151,7 @@ namespace App.Caliset.Assignations
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before it.");
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             long userId = _abpSession.UserId.Value;
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, null, true));

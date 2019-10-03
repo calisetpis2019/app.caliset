@@ -28,7 +28,7 @@ namespace App.Caliset.Models.Operations
             var oper = _repositoryOperation.FirstOrDefault(x => x.Id == entity.Id);
             if (oper != null)
             {
-                throw new UserFriendlyException("Already Exist");
+                throw new UserFriendlyException("Error", "Ya existe operación.");
             }
             else
             {
@@ -42,7 +42,7 @@ namespace App.Caliset.Models.Operations
             var oper = _repositoryOperation.FirstOrDefault(x => x.Id == id);
             if (oper == null)
             {
-                throw new UserFriendlyException("No Data Found");
+                throw new UserFriendlyException("Error", "No existe operación.");
             }
             else
             {

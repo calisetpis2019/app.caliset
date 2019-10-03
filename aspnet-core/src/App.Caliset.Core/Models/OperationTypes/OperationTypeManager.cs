@@ -20,7 +20,7 @@ namespace App.Caliset.Models.OperationTypes
             var operationType = _repositoryOperationType.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
             if (operationType.Count() > 0)
             {
-                throw new UserFriendlyException("Ya existe tipo de operación.");
+                throw new UserFriendlyException("Error", "Ya existe tipo de operación.");
             }
             else
             {
@@ -33,7 +33,7 @@ namespace App.Caliset.Models.OperationTypes
             var operationType = _repositoryOperationType.FirstOrDefault(x => x.Id == id);
             if (operationType == null)
             {
-                throw new UserFriendlyException("No Data Found");
+                throw new UserFriendlyException("Error", "No existe tipo de operación.");
             }
             else
             {

@@ -20,7 +20,7 @@ namespace App.Caliset.Models.OperationStates
             var operationState = _repositoryOperationState.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
             if (operationState.Count() > 0)
             {
-                throw new UserFriendlyException("Ya existe estado.");
+                throw new UserFriendlyException("Error", "Ya existe estado.");
             }
             else
             {
@@ -33,7 +33,7 @@ namespace App.Caliset.Models.OperationStates
             var operationState = _repositoryOperationState.FirstOrDefault(x => x.Id == id);
             if (operationState == null)
             {
-                throw new UserFriendlyException("No Data Found");
+                throw new UserFriendlyException("Error", "No existe estado.");
             }
             else
             {

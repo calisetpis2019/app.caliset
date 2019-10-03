@@ -24,7 +24,7 @@ namespace App.Caliset.Models.Clients
             var client = _repositoryClient.GetAll().Where(x => (x.Id == entity.Id || x.Name == entity.Name));
             if (client.Count() > 0)
             {
-                throw new UserFriendlyException("Ya existe cliente.");
+                throw new UserFriendlyException("Error", "Ya existe cliente.");
             }
             else
             {                
@@ -46,7 +46,7 @@ namespace App.Caliset.Models.Clients
             var client = _repositoryClient.FirstOrDefault(x => x.Id == id);
             if (client == null)
             {
-                throw new UserFriendlyException("No Data Found");
+                throw new UserFriendlyException("Error", "No existe cliente.");
             }
             else
             {
