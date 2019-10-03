@@ -17,16 +17,13 @@ namespace App.Caliset.Samples
 
         private readonly SampleManager _sampleManager;
         private readonly OperationManager _operationManager;
-        private readonly IOperationAppService _operationService;
-        private int IdActual;
+  
 
-        public SampleAppService(SampleManager sampleManager, OperationManager operationManager, IOperationAppService operationService)
+        public SampleAppService(SampleManager sampleManager, OperationManager operationManager)
         {
             _sampleManager = sampleManager;
             _operationManager = operationManager;
-            _operationService = operationService;
-
-
+ 
         }
 
 
@@ -75,16 +72,6 @@ namespace App.Caliset.Samples
 
             return output;
         }
-
-        //public async Task<string> AddSampleOperation(GetSampleInput input)
-        //{
-
-        //    var smp = _sampleManager.GetAll();
-        //    var smp2 = smp.FirstOrDefault(x => x.IdSample == input.IdSample);
-        //    var oper = _operationManager.GetOperationById(smp2.OperationId);
-        //    return _sampleManager.AddSampleToOperation(input.IdSample, oper);
-
-        //}
 
       
     }
