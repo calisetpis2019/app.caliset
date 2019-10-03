@@ -11,10 +11,10 @@ namespace App.Caliset.Samples
     public interface ISampleAppService: IApplicationService
     {
         IEnumerable<GetSampleOutput> GetAll();
-        Task Create(CreateSampleInput input);
+        Task<string> Create(CreateSampleInput input);
         void Delete(DeleteSampleInput input);
         GetSampleOutput GetSampleById(GetSampleInput input);
         IEnumerable<GetSampleOutput> GetSamplesByOperation(int operationId);
-        Task<string> AddSampleOperation(GetSampleInput input);
+        //Task<string> AddSampleOperation(GetSampleInput input);
     }
 }

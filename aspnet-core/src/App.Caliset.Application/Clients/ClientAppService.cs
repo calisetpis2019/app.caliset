@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
@@ -24,6 +25,7 @@ namespace App.Caliset.Clients
         public void Delete(DeleteClientInput input)
         {
             _clientManager.Delete(input.Id);
+
         }
 
         public IEnumerable<GetClientOutput> GetAll()
@@ -32,6 +34,7 @@ namespace App.Caliset.Clients
             List<GetClientOutput> output = ObjectMapper.Map<List<GetClientOutput>>(getAll);
             return output;
         }
+
 
         public GetClientOutput GetClientById(GetClientInput input)
         {

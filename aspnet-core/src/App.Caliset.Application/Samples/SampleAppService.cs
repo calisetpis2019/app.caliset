@@ -30,7 +30,7 @@ namespace App.Caliset.Samples
         }
 
 
-        public async Task Create(CreateSampleInput input)
+        public async Task<string> Create(CreateSampleInput input)
         {
             var oper = _operationManager.GetAll();
             var oper2 = oper.FirstOrDefault(x => x.Id == input.OperationId);
@@ -44,8 +44,10 @@ namespace App.Caliset.Samples
             var Sample = ObjectMapper.Map<Sample>(input);
             Sample.IdSample = "Operation" + oper2.Id.ToString() + "Sample" + aux.ToString();
 
+            
             await _sampleManager.Create(Sample);
-          
+            return Sample.IdSample;
+
         }
 
         public void Delete(DeleteSampleInput input)
@@ -74,15 +76,15 @@ namespace App.Caliset.Samples
             return output;
         }
 
-        public async Task<string> AddSampleOperation(GetSampleInput input)
-        {
+        //public async Task<string> AddSampleOperation(GetSampleInput input)
+        //{
 
-            var smp = _sampleManager.GetAll();
-            var smp2 = smp.FirstOrDefault(x => x.IdSample == input.IdSample);
-            var oper = _operationManager.GetOperationById(smp2.OperationId);
-            return _sampleManager.AddSampleToOperation(input.IdSample, oper);
+        //    var smp = _sampleManager.GetAll();
+        //    var smp2 = smp.FirstOrDefault(x => x.IdSample == input.IdSample);
+        //    var oper = _operationManager.GetOperationById(smp2.OperationId);
+        //    return _sampleManager.AddSampleToOperation(input.IdSample, oper);
 
-        }
+        //}
 
       
     }
