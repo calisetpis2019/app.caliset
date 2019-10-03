@@ -20,7 +20,7 @@ namespace App.Caliset.Models.Locations
             var location = _repositoryLocation.GetAll().Where(x => x.Id == entity.Id || x.Name == entity.Name);
             if (location.Count() > 0)
             {
-                throw new UserFriendlyException("Ya existe ubicación.");
+                throw new UserFriendlyException("Error", "Ya existe ubicación.");
             }
             else
             {
@@ -33,7 +33,7 @@ namespace App.Caliset.Models.Locations
             var location = _repositoryLocation.FirstOrDefault(x => x.Id == id);
             if (location == null)
             {
-                throw new UserFriendlyException("No Data Found");
+                throw new UserFriendlyException("Error", "No existe ubicación.");
             }
             else
             {

@@ -23,7 +23,7 @@ namespace App.Caliset.Models.Comments
             var Sample = _repositoryComments.FirstOrDefault(x => x.Id == entity.Id);
             if (Sample != null)
             {
-                throw new UserFriendlyException("Already Exist");
+                throw new UserFriendlyException("Error", "Ya existe comentario.");
             }
             else
             {
@@ -36,7 +36,7 @@ namespace App.Caliset.Models.Comments
             var Comment = _repositoryComments.FirstOrDefault(x => x.Id == id);
             if (Comment == null)
             {
-                throw new UserFriendlyException("No Data Found");
+                throw new UserFriendlyException("Error", "No existe comentario.");
             }
             else
             {

@@ -31,7 +31,7 @@ namespace App.Caliset.Models.Assignations
             var Assignation = _repositoryAssignation.FirstOrDefault(x => x.Id == entity.Id);
             if (Assignation != null)
             {
-                throw new UserFriendlyException("Already Exist");
+                throw new UserFriendlyException("Error", "Ya existe asignación.");
             }
             else
             {
@@ -45,7 +45,7 @@ namespace App.Caliset.Models.Assignations
             var Assignation = _repositoryAssignation.FirstOrDefault(x => x.Id == id);
             if (Assignation == null)
             {
-                throw new UserFriendlyException("No Data Found");
+                throw new UserFriendlyException("Error", "No se encuentra asignación.");
             }
             else
             {

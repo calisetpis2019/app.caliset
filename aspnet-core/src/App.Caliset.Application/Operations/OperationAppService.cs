@@ -64,7 +64,7 @@ namespace App.Caliset.Operations
             var operation = _operationManager.GetOperationById(input.Id);
             if (operation.OperationStateId == 3)
             {
-                throw new UserFriendlyException("Operación finalizada, no se puede modificar.");
+                throw new UserFriendlyException("Error", "Operación finalizada, no se puede eliminar.");
             } else
             {
                 _operationManager.Delete(input.Id);
@@ -103,7 +103,7 @@ namespace App.Caliset.Operations
             var operation = _operationManager.GetOperationById(input.Id);
             if (operation.OperationStateId == 3)
             {
-                throw new UserFriendlyException("Operación finalizada, no se puede modificar.");
+                throw new UserFriendlyException("Error", "Operación finalizada, no se puede modificar.");
             }
             ObjectMapper.Map(input, operation);
             _operationManager.Update(operation);

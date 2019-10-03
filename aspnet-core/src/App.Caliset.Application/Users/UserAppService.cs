@@ -57,7 +57,7 @@ namespace App.Caliset.Users
             CheckCreatePermission();
 
             if (input.Document.ToString().Length > 8)
-                throw new UserFriendlyException("Documento invalido","Maximo 8 digitos") ;
+                throw new UserFriendlyException("Error", "Documento inválido, máximo 8 dígitos") ;
 
             var user = ObjectMapper.Map<User>(input);
 
@@ -174,18 +174,18 @@ namespace App.Caliset.Users
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before attemping to change password.");
+                throw new UserFriendlyException("Error", "Debe iniciar sesión para realizar esta acción.");
             }
             long userId = _abpSession.UserId.Value;
             var user = await _userManager.GetUserByIdAsync(userId);
             var loginAsync = await _logInManager.LoginAsync(user.UserName, input.CurrentPassword, shouldLockout: false);
             if (loginAsync.Result != AbpLoginResultType.Success)
             {
-                throw new UserFriendlyException("Your 'Existing Password' did not match the one on record.  Please try again or contact an administrator for assistance in resetting your password.");
+                throw new UserFriendlyException("Error", "La contraseña actual no es correcta.");
             }
             if (!new Regex(AccountAppService.PasswordRegex).IsMatch(input.NewPassword))
             {
-                throw new UserFriendlyException("Passwords must be at least 8 characters, contain a lowercase, uppercase, and number.");
+                throw new UserFriendlyException("La contraseña debe ser mayor de 8 caracteres, contener mayúscula, minúscula, y número.");
             }
             user.Password = _passwordHasher.HashPassword(user, input.NewPassword);
             CurrentUnitOfWork.SaveChanges();
@@ -196,14 +196,14 @@ namespace App.Caliset.Users
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before attemping to reset password.");
+                throw new UserFriendlyException("Error", "Debe iniciar sesión para realizar esta acción.");
             }
             long currentUserId = _abpSession.UserId.Value;
             var currentUser = await _userManager.GetUserByIdAsync(currentUserId);
             var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
             if (loginAsync.Result != AbpLoginResultType.Success)
             {
-                throw new UserFriendlyException("Your 'Admin Password' did not match the one on record.  Please try again.");
+                throw new UserFriendlyException("Error", "La contraseña de administrador no es correcta.");
             }
             if (currentUser.IsDeleted || !currentUser.IsActive)
             {
@@ -212,7 +212,7 @@ namespace App.Caliset.Users
             var roles = await _userManager.GetRolesAsync(currentUser);
             if (!roles.Contains(StaticRoleNames.Tenants.Admin))
             {
-                throw new UserFriendlyException("Only administrators may reset passwords.");
+                throw new UserFriendlyException("Error", "Solo usuarios administradores pueden realizar esta acción.");
             }
 
             var user = await _userManager.GetUserByIdAsync(input.UserId);
@@ -229,7 +229,7 @@ namespace App.Caliset.Users
         {
             if (_abpSession.UserId == null)
             {
-                throw new UserFriendlyException("Please log in before it.");
+                throw new UserFriendlyException("Error", "Inicie sesión.");
             }
             long userId = _abpSession.UserId.Value;
             var user = await _userManager.GetUserByIdAsync(userId);
