@@ -34,7 +34,7 @@
                         </FormItem>
 
                         <FormItem :label="L('Fecha y hora de inicio')" prop="date">
-                            <VueCtkDateTimePicker v-model="operation.date" locale="es" right=true />
+                            <VueCtkDateTimePicker v-model="operation.date" locale="es" v-bind:right="true" />
                         </FormItem>
 
                         <FormItem :label="L('Responsable')" prop="manager">
@@ -57,27 +57,27 @@
                         </FormItem>
 
                         <span>Destino</span>
-                        <FormItem :label="Destino" prop="destination">
+                        <FormItem label="Destino" prop="destination">
                             <Input v-model="operation.destiny" :maxlength="32"></Input>
                         </FormItem>
 
                         <span>Referencia del Cliente</span>
-                        <FormItem :label="Cliente" prop="clientReference">
+                        <FormItem label="Cliente" prop="clientReference">
                             <Input v-model="operation.clientReference" :maxlength="32"></Input>
                         </FormItem>
 
                         <span>Linea</span>
-                        <FormItem :label="Linea" prop="line">
+                        <FormItem label="Linea" prop="line">
                             <Input v-model="operation.line" :maxlength="32"></Input>
                         </FormItem>
 
                         <span>Numero del Booking</span>
-                        <FormItem :label="Booking" prop="bookingNumber">
+                        <FormItem label="Booking" prop="bookingNumber">
                             <Input v-model="operation.bookingNumber" :maxlength="32"></Input>
                         </FormItem>
                         
                         <span>Notas</span>
-                        <FormItem :label="Notas" prop="notes">
+                        <FormItem label="Notas" prop="notes">
                             <Input v-model="operation.notes" :maxlength="32"></Input>
                         </FormItem>
                         
