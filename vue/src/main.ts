@@ -7,7 +7,8 @@ import './theme.less';
 import Ajax from './lib/ajax';
 import Util from './lib/util';
 import SignalRAspNetCoreHelper from './lib/SignalRAspNetCoreHelper';
-Vue.use(iView);
+import locale from 'iview/dist/locale/es-ES';
+Vue.use(iView, { locale });
 import store from './store/index';
 Vue.config.productionTip = false;
 import { appRouters,otherRouters} from './router/router';
@@ -52,3 +53,7 @@ Ajax.get('/AbpUserConfiguration/GetAll').then(data=>{
   }).$mount('#app')
 })
 
+import VueCtkDateTimePicker from 'vue-ctk-date-time-picker';
+import 'vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css';
+
+Vue.component('VueCtkDateTimePicker', VueCtkDateTimePicker);

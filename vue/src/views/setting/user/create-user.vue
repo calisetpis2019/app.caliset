@@ -27,21 +27,21 @@
                             <Input v-model="user.confirmPassword" type="password" :maxlength="32"></Input>
                         </FormItem>
 
-                        <FormItem :label="L('Document')" prop="document">
-                            <Input v-model="user.document" :maxlength="32"></Input>
+                        <FormItem :label="L('Documento')" prop="document">
+                            <Input v-model="user.document" type=number></Input>
                         </FormItem>
-                        <FormItem :label="L('Phone')" prop="phone">
+                        <FormItem :label="L('Número de contacto')" prop="phone">
                             <Input v-model="user.phone" :maxlength="32"></Input>
                         </FormItem>
-                        <FormItem :label="L('BirthDate')" prop="birthDate">
+                        <FormItem :label="L('Fecha de nacimiento')" prop="birthDate">
                             <Input v-model="user.birthDate" type="date"></Input>
                         </FormItem>
 
-                        <FormItem :label="L('City')" prop="city">
+                        <FormItem :label="L('Ciudad')" prop="city">
                             <Input v-model="user.city"></Input>
                         </FormItem>
 
-                        <FormItem :label="L('Adress')" prop="adress">
+                        <FormItem :label="L('Dirección')" prop="adress">
                             <Input v-model="user.adress"></Input>
                         </FormItem>
 
@@ -49,11 +49,12 @@
                             <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
 
-                    </TabPane>
-                    <TabPane :label="L('Roles')" name="roles">
-                        <CheckboxGroup v-model="user.roleNames">
-                            <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
-                        </CheckboxGroup>
+                        <FormItem label="Rol" prop="roles" >
+                            <CheckboxGroup v-model="user.roleNames">
+                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
+                            </CheckboxGroup>
+                        </FormItem>
+
                     </TabPane>
                 </Tabs>
             </Form>
@@ -101,20 +102,39 @@
         }
         validatePassCheck = (rule:any, value:any, callback:any) => {
             if (!value) {
-                callback(new Error(this.L('ConfirmPasswordMsg')));
+                callback(new Error(this.L('Campo obligatorio')));
             } else if (value !== this.user.password) {
-                callback(new Error(this.L('ConfirmPasswordNotMatch')));
+                callback(new Error(this.L('La confirmación no coincide con la contraseña')));
             } else {
                 callback();
             }
         };
         userRule={
             //userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],
-            name:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Name')),trigger: 'blur'}],
-            surname:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}],
-            emailAddress:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},{type: 'email'}],
-            password:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Password')),trigger: 'blur'}],
-            confirmPassword:{validator:this.validatePassCheck,trigger: 'blur'}
+            name:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Name')),trigger: 'blur'}
+            ],
+            surname:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
+            ],
+            document:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
+            ],
+            emailAddress:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},{type: 'email'}
+            ],
+            phone:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
+            ],
+            password:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Password')),trigger: 'blur'}
+            ],
+            confirmPassword:[
+                {required:true,validator:this.validatePassCheck,trigger: 'blur'}
+            ]
+            // roles:[
+            //     { required: true, type: 'array', min: 1, message: 'Seleccionar mínimo uno', trigger: 'change' }
+            // ]
         }
     }
 </script>

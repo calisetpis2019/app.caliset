@@ -33,8 +33,23 @@
     import PageRequest from '@/store/entities/page-request'
     import CreateOperation from './create-operation.vue'
     import EditOperation from './edit-operation.vue'
+    import Operation from '../../store/entities/operation'
+    import Location from '../../store/entities/location'
 
     class PageOperationRequest extends PageRequest {
+    }
+
+    class OperationForListing {
+        location: string;
+        date: Date;
+        operationState: string;
+        commodity: string;
+        constructor(l: string, d: Date, s: string, c: string) {
+            this.location = l;
+            this.date = d;
+            this.operationState = s;
+            this.commodity = c;
+        }
     }
 
     @Component({
@@ -48,8 +63,25 @@
         
         createModalShow: boolean = false;
         editModalShow:boolean=false;
+        // get list() {
+        //     return this.$store.state.operation.list;
+        // };
         get list() {
-            return this.$store.state.operation.list;
+            var auxOperations:Operation[];
+            var auxLocations:Location[];
+            let result:Array<OperationForListing> = [];
+
+            auxOperations = this.$store.state.operation.list;
+            auxLocations = this.$store.state.location.list;
+            auxOperations.forEach( (element) => {
+                 result.push(new OperationForListing(auxLocations[+element["location"]["id"] - 1]["name"],
+                                                    element["date"],
+                                                    element["operationState"]["name"],
+                                                    element["commodity"]));
+            })
+
+            return result;
+            // return this.$store.state.operation.list;
         };
         get loading() {
             return this.$store.state.operation.loading;
@@ -68,6 +100,11 @@
         }
 
         async getpage() {
+
+            await this.$store.dispatch({
+                type: 'location/getAll',
+                data: this.pagerequest
+            })
 
             await this.$store.dispatch({
                 type: 'operation/getAll',
@@ -89,15 +126,15 @@
                 key: 'date'
             },
             {
-                title: this.L('Location'),
+                title: this.L('Ubicación'),
                 key: 'location'
             },
             {
-                title: this.L('State'),
-                key: 'state'
+                title: this.L('Estado'),
+                key: 'operationState'
             },
             {
-                title: this.L('Commodity'),
+                title: this.L('Mercadería'),
                 key: 'commodity'
             },{
             title:this.L('Actions'),
