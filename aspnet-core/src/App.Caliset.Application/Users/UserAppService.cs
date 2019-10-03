@@ -57,7 +57,7 @@ namespace App.Caliset.Users
             CheckCreatePermission();
 
             if (input.Document.ToString().Length > 8)
-                throw new UserFriendlyException("Maximo 8 digitos");
+                throw new UserFriendlyException("Documento invalido","Maximo 8 digitos") ;
 
             var user = ObjectMapper.Map<User>(input);
 

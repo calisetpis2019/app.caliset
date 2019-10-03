@@ -23,7 +23,7 @@ namespace App.Caliset.Users.Dto
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="asdsadas")]
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
@@ -45,6 +45,7 @@ namespace App.Caliset.Users.Dto
             }
         }
 
+        //[MaxLength(3, ErrorMessage = "sdlki.fhew-gil")]
         public int Document { get; set; }
         public string Phone { get; set; }
         public DateTime BirthDate { get; set; }
