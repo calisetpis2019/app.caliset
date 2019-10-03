@@ -9,7 +9,7 @@ using App.Caliset.Authorization.Users;
 namespace App.Caliset.Users.Dto
 {
     [AutoMapTo(typeof(User))]
-    public class CreateUserDto : IShouldNormalizeC:\Users\Vicky\Desktop\Fing\app.caliset\aspnet-core\src\App.Caliset.Application\Users\Dto\CreateUserDto.cs
+    public class CreateUserDto : IShouldNormalize
     {
         [Required]
         [StringLength(AbpUserBase.MaxUserNameLength)]
@@ -23,7 +23,7 @@ namespace App.Caliset.Users.Dto
         [StringLength(AbpUserBase.MaxSurnameLength)]
         public string Surname { get; set; }
 
-
+        [Required]
         [EmailAddress]
         [StringLength(AbpUserBase.MaxEmailAddressLength)]
         public string EmailAddress { get; set; }
@@ -44,6 +44,7 @@ namespace App.Caliset.Users.Dto
                 RoleNames = new string[0];
             }
         }
+
         public int Document { get; set; }
         public string Phone { get; set; }
         public DateTime? BirthDate { get; set; }
