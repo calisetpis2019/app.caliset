@@ -2,7 +2,7 @@
 using Abp.Authorization;
 using Abp.UI;
 using App.Caliset.Authorization;
-using App.Caliset.Auxiliares;
+
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Locations;
 using App.Caliset.Models.Operations;
@@ -27,14 +27,14 @@ namespace App.Caliset.Operations
         private readonly IClientManager _clientManager;
         private readonly IOperationTypeManager _operationTypeManager;
 
-        private readonly IFiltros _filtroManager;
+
 
         public OperationAppService(IOperationManager operationManager
                                     ,IOperationStateManager operationStateManager
                                     ,ILocationManager locationManager
                                     ,IClientManager clientManager
                                     ,IOperationTypeManager operationTypeManager
-                                    ,IFiltros filtroManager
+                          
             )
         {
             _operationManager = operationManager;
@@ -42,7 +42,7 @@ namespace App.Caliset.Operations
             _locationManager = locationManager;
             _clientManager = clientManager;
             _operationTypeManager = operationTypeManager;
-            _filtroManager = filtroManager;
+  
         }
 
 
@@ -77,14 +77,6 @@ namespace App.Caliset.Operations
             var getAll = _operationManager.GetAll().ToList();
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(getAll);
 
-            return output;
-        }
-
-        public IEnumerable<GetOperationOutput> GetAllByState(String State)
-        {
-            var getAll = _operationManager.GetAll().ToList();
-            List<Operation> aux = _filtroManager.FOperationsState(getAll, State);
-            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(aux);
             return output;
         }
 

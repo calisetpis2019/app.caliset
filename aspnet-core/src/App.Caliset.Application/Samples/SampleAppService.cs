@@ -17,20 +17,17 @@ namespace App.Caliset.Samples
 
         private readonly SampleManager _sampleManager;
         private readonly OperationManager _operationManager;
-        private readonly IOperationAppService _operationService;
-        private int IdActual;
+  
 
-        public SampleAppService(SampleManager sampleManager, OperationManager operationManager, IOperationAppService operationService)
+        public SampleAppService(SampleManager sampleManager, OperationManager operationManager)
         {
             _sampleManager = sampleManager;
             _operationManager = operationManager;
-            _operationService = operationService;
-
-
+ 
         }
 
 
-        public async Task Create(CreateSampleInput input)
+        public async Task<string> Create(CreateSampleInput input)
         {
             var oper = _operationManager.GetAll();
             var oper2 = oper.FirstOrDefault(x => x.Id == input.OperationId);
@@ -44,8 +41,10 @@ namespace App.Caliset.Samples
             var Sample = ObjectMapper.Map<Sample>(input);
             Sample.IdSample = "Operation" + oper2.Id.ToString() + "Sample" + aux.ToString();
 
+            
             await _sampleManager.Create(Sample);
-          
+            return Sample.IdSample;
+
         }
 
         public void Delete(DeleteSampleInput input)
@@ -72,16 +71,6 @@ namespace App.Caliset.Samples
             List<GetSampleOutput> output = ObjectMapper.Map<List<GetSampleOutput>>(_sampleManager.GetSamplesByOperation(operationId));
 
             return output;
-        }
-
-        public async Task<string> AddSampleOperation(GetSampleInput input)
-        {
-
-            var smp = _sampleManager.GetAll();
-            var smp2 = smp.FirstOrDefault(x => x.IdSample == input.IdSample);
-            var oper = _operationManager.GetOperationById(smp2.OperationId);
-            return _sampleManager.AddSampleToOperation(input.IdSample, oper);
-
         }
 
       

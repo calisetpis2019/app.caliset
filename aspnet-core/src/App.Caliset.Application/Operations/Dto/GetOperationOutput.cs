@@ -30,6 +30,7 @@ namespace App.Caliset.Operations.Dto
         public virtual GetOperationStateOutput OperationState { get; set; }
         public virtual UserDtoOperation Manager { get; set; }
         public List<GetSampleOutput> Samples { get; set; }
+        public List<GetCommentOutput> Comments { get; set; }
 
     }
 }
