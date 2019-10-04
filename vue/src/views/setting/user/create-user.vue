@@ -49,7 +49,7 @@
                             <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
 
-                        <FormItem label="Rol" prop="roles" >
+                        <FormItem label="Rol" prop="roleNames" >
                             <CheckboxGroup v-model="user.roleNames">
                                 <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
                             </CheckboxGroup>
@@ -121,7 +121,7 @@
                 {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
             ],
             emailAddress:[
-                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},{type: 'email'}
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},{type: 'email',message: 'El formato del email es incorrecto'}
             ],
             phone:[
                 {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
@@ -131,10 +131,10 @@
             ],
             confirmPassword:[
                 {required:true,validator:this.validatePassCheck,trigger: 'blur'}
+            ],
+            roleNames:[
+                {type: "array", required: true, min: 1, message: 'Seleccionar mínimo uno', trigger: 'change' }
             ]
-            // roles:[
-            //     { required: true, type: 'array', min: 1, message: 'Seleccionar mínimo uno', trigger: 'change' }
-            // ]
         }
     }
 </script>

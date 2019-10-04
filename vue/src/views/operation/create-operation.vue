@@ -6,53 +6,53 @@
                @on-visible-change="visibleChange">
             <Form ref="operationForm" label-position="top" :rules="operationRule" :model="operation">
                 <Tabs value="detail">
-                    <TabPane :label="L('Details')" name="detail">
+                    <TabPane label="Details" name="detail">
 
-                        <FormItem :label="L('Tipo')" prop="operationTypeId">
+                        <FormItem label="Tipo" prop="operationTypeId">
                             <Select v-model="operation.operationTypeId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfOperationTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
-                        <FormItem :label="L('Nominador')" prop="nominatorId">
+                        <FormItem label="Nominador" prop="nominatorId">
                             <Select v-model="operation.nominatorId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
-                        <FormItem :label="L('Cargador')" prop="chargerId">
+                        <FormItem label="Cargador" prop="chargerId">
                             <Select v-model="operation.chargerId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
 
-                        <FormItem :label="L('Lugar')" prop="locationId">
+                        <FormItem label="Lugar" prop="locationId">
                             <Select v-model="operation.locationId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
-                        <FormItem :label="L('Fecha y hora de inicio')" prop="date">
+                        <FormItem label="Fecha y hora de inicio" prop="date">
                             <VueCtkDateTimePicker v-model="operation.date" locale="es" v-bind:right="true" />
                         </FormItem>
 
-                        <FormItem :label="L('Responsable')" prop="managerId">
+                        <FormItem label="Responsable" prop="managerId">
                             <Select v-model="operation.managerId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
                                 <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
                         
-                        <FormItem :label="L('Mercaderia')" prop="commodity">
+                        <FormItem label="Mercaderia" prop="commodity">
                             <Input v-model="operation.commodity" :maxlength="32"></Input>
                         </FormItem>
 
-                        <FormItem :label="L('Paquete')" prop="package">
+                        <FormItem label="Paquete" prop="package">
                             <Input v-model="operation.package" :maxlength="32"></Input>
                         </FormItem>
 
-                        <FormItem :label="L('Nombre del Barco')" prop="ship">
+                        <FormItem label="Nombre del Barco" prop="ship">
                             <Input v-model="operation.shipName" :maxlength="32"></Input>
                         </FormItem>
 
