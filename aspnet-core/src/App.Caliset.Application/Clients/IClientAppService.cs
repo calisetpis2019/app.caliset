@@ -14,5 +14,6 @@ namespace App.Caliset.Clients
         void Update(UpdateClientInput input);
         void Delete(DeleteClientInput input);
         GetClientOutput GetClientById(GetClientInput input);
+    
     }
 }

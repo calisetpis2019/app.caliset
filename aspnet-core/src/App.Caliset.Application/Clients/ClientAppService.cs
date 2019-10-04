@@ -3,18 +3,29 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Runtime.Session;
+using Abp.UI;
 using App.Caliset.Clients.Dto;
 using App.Caliset.Models.Clients;
+using App.Caliset.Models.Notifications;
 
 namespace App.Caliset.Clients
 {
     public class ClientAppService : ApplicationService, IClientAppService
     {
         private readonly IClientManager _clientManager;
-        public ClientAppService(IClientManager clientManager)
+
+        private readonly IAbpSession _abpSession;
+        public ClientAppService(IClientManager clientManager
+            , IAbpSession abpSession)
         {
             _clientManager = clientManager;
+       
+            _abpSession = abpSession;
         }
+
+        public IAbpSession AbpSession1 => _abpSession;
+
         public async Task Create(CreateClientInput input)
         {
             var client = ObjectMapper.Map<Client>(input);
@@ -42,6 +53,8 @@ namespace App.Caliset.Clients
             GetClientOutput output = ObjectMapper.Map<GetClientOutput>(getClient);
             return output;
         }
+
+
 
         public void Update(UpdateClientInput input)
         {
