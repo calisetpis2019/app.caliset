@@ -29,19 +29,19 @@
                             <Input v-model="operation.bookingNumber" :maxlength="32"></Input>
                         </FormItem>
                         <FormItem :label="L('Location')" prop="location">
-                            <Input v-model="operation.idLocation" type="number"></Input>
+                            <Input v-model="operation.idLocation"></Input>
                         </FormItem>
                         <FormItem :label="L('Type')" prop="type">
-                            <Input v-model="operation.operationType" type="number"></Input>
+                            <Input v-model="operation.operationType"></Input>
                         </FormItem>
                         <FormItem :label="L('Nominator')" prop="nominator">
-                            <Input v-model="operation.nominador" type="number"></Input>
+                            <Input v-model="operation.nominador"></Input>
                         </FormItem>
                         <FormItem :label="L('Loader')" prop="loader">
-                            <Input v-model="operation.cargador" type="number"></Input>
+                            <Input v-model="operation.cargador"></Input>
                         </FormItem>
                         <FormItem :label="L('State')" prop="state">
-                            <Input v-model="operation.operationState" type="number"></Input>
+                            <Input v-model="operation.operationState"></Input>
                         </FormItem>
                     </TabPane>
                 </Tabs>
