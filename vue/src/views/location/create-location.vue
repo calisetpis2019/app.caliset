@@ -10,13 +10,13 @@
                         <FormItem :label="L('Name')" prop="name">
                             <Input v-model="location.name" :maxlength="32"></Input>
                         </FormItem>
-                        <FormItem :label="L('Latitude')" prop="latitude">
+                        <FormItem label="Latitud" prop="latitude">
                             <Input v-model="location.latitude" type="number"></Input>
                         </FormItem>
-                        <FormItem :label="L('Longitude')" prop="longitude">
+                        <FormItem label="Longitud" prop="longitude">
                             <Input v-model="location.longitude" type="number"></Input>
                         </FormItem>
-                        <FormItem :label="L('Radius')" prop="radius">
+                        <FormItem label="Radio" prop="radius">
                             <Input v-model="location.radius"  type="number"></Input>
                         </FormItem>
                     </TabPane>
@@ -66,6 +66,9 @@
 
         locationRule={
             name:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('Name')),trigger: 'blur'}]
+            latitude:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}],
+            longitude:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}],
+            radius:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}]
         }
     }
 </script>
