@@ -28,26 +28,21 @@ namespace App.Caliset.Models.Notifications
             httpWebRequest.Headers.Add("Authorization: Key=AAAAEENtp_Q:APA91bEgvANU3DOnaMuFjJsr04LgEDPU2kE8cwyOS82oBfyJY9ewB8dA5fpGXOhtIpr0ZdoBR0IcylHnJQByo3j46oogpkfJjcfbde44GLQTkHOW1UOcA32o0zRM1DxMtOGMzTQ41s5f");
             httpWebRequest.Method = "POST";
 
-     
 
-            byte[] postBytes = Encoding.UTF8.GetBytes("{\"notification\": { " +
-                                                                        "\"title\": " + Title + "," +
-                                                                        "\"text\": " + Text + "," +
-                                                                        "\"sound\": \"default\"" +
-                                                                        "}," +
-                                                                        "\"priority\": \"High\"," +
-                                                                        "\"to\":" + deviceToken +
-                                                                        "}");
+            string cuerpo = "{\"notification\": { " +
+                                                                       "\"title\": \"" + Title + "\"," +
+                                                                       "\"text\": \"" + Text + "\"," +
+                                                                       "\"sound\": \"default\"" +
+                                                                       "}," +
+                                                                       "\"priority\": \"High\"," +
+                                                                       "\"to\": \"" + deviceToken +
+                                                                       "\"}";
+
+            byte[] postBytes = Encoding.UTF8.GetBytes(cuerpo);
 
             Stream dataStream = httpWebRequest.GetRequestStream();
             dataStream.Write(postBytes, 0, postBytes.Length);
             dataStream.Close();
-            
-            //using (var stream = httpWebRequest.GetRequestStream())
-            //{
-            //    stream.Write(byte2, 0, byte2.Length);
-            //}
-
             var response = (HttpWebResponse)httpWebRequest.GetResponse();
             Console.WriteLine();
         }
