@@ -167,5 +167,17 @@ namespace App.Caliset.Assignations
         {
             _assignationManager.ConfirmAssignation(AssignationId);
         }
+
+        public IEnumerable<GetOperationOutput> GetMyFutureOperations()
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+            long userId = _abpSession.UserId.Value;
+            List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetFutureOperationsByUser(userId));
+
+            return output;
+        }
     }
 }

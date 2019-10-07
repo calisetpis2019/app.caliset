@@ -23,6 +23,7 @@ namespace App.Caliset.Models.Assignations
 
         [Required]
         public DateTime Date { get; set; }
+        public DateTime DateFin { get; set; }
 
         public bool? Aware { get; set; }
     }

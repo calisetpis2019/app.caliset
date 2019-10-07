@@ -27,6 +27,7 @@ namespace App.Caliset.Operations
                 
         void Delete(DeleteOperationInput input);
         GetOperationOutput GetOperationById(GetOperationInput input);
+        void EndOperation(GetOperationInput input);
         IEnumerable<GetOperationOutput> GetAllFilters(GetOperationFiltersInput input);
     }
 }

@@ -90,6 +90,20 @@ namespace App.Caliset.Models.Assignations
 
             return operations;
         }
+        public IEnumerable<Operation> GetFutureOperationsByUser(long userId)
+        {
+            var operations = (from Oper in _operationManager.GetCurrentOperations()
+                              join Assign in this.GetAll()
+                                    .Where(assign => assign.InspectorId == userId)
+                                    .Where(assign => assign.Operation.OperationStateId == 1)
+                              on Oper.Id equals Assign.OperationId
+                              select Oper).Distinct();
+
+            return operations;
+        }
+
+          
+        
 
         public void ConfirmAssignation(int idAssignation)
         {

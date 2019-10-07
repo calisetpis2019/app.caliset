@@ -14,6 +14,7 @@ namespace App.Caliset.Assignations.Dto
         public int OperationId { get; set; }
         public GetOperationOutput Operation { get; set; }
         public DateTime Date { get; set; }
+        public DateTime? DateFin { get; set; }
         public bool? Aware { get; set; }
     }
 }

@@ -72,6 +72,18 @@ namespace App.Caliset.Operations
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
+        public void EndOperation(GetOperationInput input)
+        {
+            var operation = _operationManager.GetOperationById(input.Id);
+            if (operation.OperationStateId == 3)
+            {
+                throw new UserFriendlyException("Error", "Operación finalizada, no se puede modificar.");
+            }
+            operation.OperationStateId = 3;
+            _operationManager.Update(operation);
+        }
+
+        [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetOperationOutput> GetAll()
         {
             var getAll = _operationManager.GetAll().ToList();
