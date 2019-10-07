@@ -1,5 +1,12 @@
 .DS_Store
-node_modules
+node_modules/*
+!node_modules/iview
+node_modules/iview/*
+!node_modules/iview/dist
+node_modules/iview/dist/*
+!node_modules/iview/dist/locale
+node_modules/iview/dist/locale/*
+!node_modules/iview/dist/locale/es-ES.js
 /dist
 
 # local env files
