@@ -67,8 +67,15 @@ namespace App.Caliset.Users
 
             await _userManager.InitializeOptionsAsync(AbpSession.TenantId);
 
-            CheckErrors(await _userManager.CreateAsync(user, input.Password));
+            try
+            {
+                var crearUsuario = await _userManager.CreateAsync(user, input.Password);
+            }
+            catch (System.Exception e)            {
 
+                throw new UserFriendlyException("Falló la creación del Usuario", e.Message);
+            }       
+          
             if (input.RoleNames != null)
             {
                 CheckErrors(await _userManager.SetRoles(user, input.RoleNames));
