@@ -24,6 +24,7 @@
         </Card>
         <create-operation v-model="createModalShow" @save-success="getpage"></create-operation>
         <edit-operation v-model="editModalShow" @save-success="getpage"></edit-operation>
+        <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
     </div>
 </template>
 <script lang="ts">
@@ -33,6 +34,7 @@
     import PageRequest from '@/store/entities/page-request'
     import CreateOperation from './create-operation.vue'
     import EditOperation from './edit-operation.vue'
+    import ViewOperation from './view-operation.vue'
     import Operation from '../../store/entities/operation'
     import Location from '../../store/entities/location'
 
@@ -53,7 +55,7 @@
     }
 
     @Component({
-        components: { CreateOperation, EditOperation }
+        components: { CreateOperation, EditOperation, ViewOperation }
     })
     export default class Operations extends AbpBase {
         edit(){
@@ -63,28 +65,51 @@
         
         createModalShow: boolean = false;
         editModalShow:boolean=false;
+        viewModalShow: boolean = false;
         // get list() {
         //     return this.$store.state.operation.list;
         // };
         get list() {
             var auxOperations:Operation[];
             var auxLocations:Location[];
-            let result:Array<OperationForListing> = [];
+            var result = [];
 
             auxOperations = this.$store.state.operation.list;
             auxLocations = this.$store.state.location.list;
+            // console.log(auxOperations);
             auxOperations.forEach( (element) => {
-                 result.push(new OperationForListing(auxLocations[+element["location"]["id"] - 1]["name"],
-                                                    element["date"],
-                                                    element["operationState"]["name"],
-                                                    element["commodity"]));
+                result.push({
+                                id: element["id"],
+                                bookingNumber: element["bookingNumber"],
+                                chargerName: element["charger"]["name"],
+                                clientReference: element["clientReference"],
+                                commodity: element["commodity"],
+                                date: element["date"],
+                                destination: element["destiny"],
+                                line: element["line"],
+                                location: auxLocations[+element["location"]["id"] - 1]["name"],
+                                locationId: element["location"]["id"],
+                                managerId: element["manager"]["id"],
+                                managerName: element["manager"]["name"],
+                                nominatorId: element["nominator"]["id"],
+                                nominatorName: element["nominator"]["name"],
+                                notes: element["notes"],
+                                operationState: element["operationState"]["name"],
+                                operationTypeId: element["operationType"]["id"],
+                                operationType: element["operationType"]["name"],
+                                package: element["package"],
+                                shipName: element["shipName"]
+                });
             })
-
             return result;
             // return this.$store.state.operation.list;
         };
         get loading() {
             return this.$store.state.operation.loading;
+        }
+
+        view() {
+            this.viewModalShow = true;
         }
 
         create() {
@@ -139,7 +164,7 @@
             },{
             title:this.L('Actions'),
             key:'Actions',
-            width:150,
+            width:200,
             render:(h:any,params:any)=>{
                 return h('div',[
                     h('Button',{
@@ -162,6 +187,9 @@
                             type:'error',
                             size:'small'
                         },
+                        style:{
+                            marginRight:'5px'
+                        },
                         on:{
                             click:async ()=>{
                                 this.$Modal.confirm({
@@ -179,7 +207,19 @@
                                 })
                             }
                         }
-                    },this.L('Delete'))
+                    },this.L('Delete')),
+                    h('Button',{
+                        props:{
+                            type:'primary',
+                            size:'small'
+                        },
+                        on:{
+                            click:()=>{
+                                this.$store.commit('operation/view',params.row);
+                                this.view();
+                            }
+                        }
+                    },'Ver')
                 ])
             }
         }]

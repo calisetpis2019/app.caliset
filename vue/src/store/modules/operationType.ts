@@ -29,8 +29,6 @@ class OperationTypeModule extends ListModule<OperationTypeState, any, OperationT
             await Ajax.post('/api/services/app/OperationType/Create', payload.data);
         },
         async update(context: ActionContext<OperationTypeState, any>, payload: any) {
-            console.log("update: ");
-            console.log(payload.data);
             await Ajax.put('/api/services/app/OperationType/Update', payload.data);
         },
         async delete(context: ActionContext<OperationTypeState, any>, payload: any) {

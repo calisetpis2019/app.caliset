@@ -117,7 +117,6 @@
         };
 
         get listOfOperationTypes() {
-            console.log(this.$store.state.operationType.list);
             return this.$store.state.operationType.list;
         };
 

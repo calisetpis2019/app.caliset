@@ -37,7 +37,7 @@ class LocationModule extends ListModule<LocationState, any, Location>{
             await Ajax.delete('/api/services/app/Location/Delete?Id=' + payload.data.id);
         },
         async get(context: ActionContext<LocationState, any>, payload: any) {
-            let reponse = await Ajax.get('/api/services/app/Location/GetLocationById?Id=' + payload.id);
+            let reponse = await Ajax.get('/api/services/app/Location/GetLocationById?Id=' + payload.data.id);
             return reponse.data.result as Location;
         }
     };

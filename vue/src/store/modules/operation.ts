@@ -7,6 +7,7 @@ import PageResult from '@/store/entities/page-result';
 import ListMutations from './list-mutations'
 interface OperationState extends ListState<Operation> {
     editOperation: Operation;
+    viewOperation: Object;
 }
 class OperationModule extends ListModule<OperationState, any, Operation>{
     state = {
@@ -15,7 +16,8 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         pageSize: 10,
         list: new Array<Operation>(),
         loading: false,
-        editOperation: new Operation()
+        editOperation: new Operation(),
+        viewOperation: new Object()
     }
     actions = {
         async getAll(context: ActionContext<OperationState, any>) {
@@ -29,15 +31,13 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
             await Ajax.post('/api/services/app/Operation/Create', payload.data);
         },
         async update(context: ActionContext<OperationState, any>, payload: any) {
-            console.log("update: ");
-            console.log(payload.data);
             await Ajax.put('/api/services/app/Operation/Update', payload.data);
         },
         async delete(context: ActionContext<OperationState, any>, payload: any) {
             await Ajax.delete('/api/services/app/Operation/Delete?Id=' + payload.data.id);
         },
         async get(context: ActionContext<OperationState, any>, payload: any) {
-            let reponse = await Ajax.get('/api/services/app/Operation/GetOperationById?Id=' + payload.id);
+            let reponse = await Ajax.get('/api/services/app/Operation/GetOperationById?Id=' + payload.data.id);
             return reponse.data.result as Operation;
         }
     };
@@ -50,7 +50,11 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         },
         edit(state: OperationState, operation: Operation) {
             state.editOperation = operation;
+        },
+        view(state: OperationState, operation: Object) {
+            state.viewOperation = operation;
         }
+
     }
 }
 const operationModule = new OperationModule();
