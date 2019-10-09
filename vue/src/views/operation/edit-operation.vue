@@ -25,7 +25,7 @@
 
                         <FormItem label="Responsable" prop="managerId">
                             <Select v-model="operation.managerId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.managerId">
-                                <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.id }}</Option>
+                                <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
                             </Select>
                         </FormItem>
 
@@ -126,7 +126,6 @@
         }
 
         async getUsers() {
-            console.log(this.pagerequest);
             await this.$store.dispatch({
                 type: 'user/getAll',
                 data: this.pagerequest

@@ -1,37 +1,68 @@
 <template>
     <div>
-        <Modal :title="L('Ver Operación')"
+        <Modal :title="L('Datos de la Operación')"
                :value="value"
-               @on-ok="save"
+               :width="500"
                @on-visible-change="visibleChange">
-            <Divider> Tipo de operación </Divider>
-            <Span>{{ this.operation.operationType }}</Span>
-            <Divider> Nominador </Divider>
-            <Span>{{ this.operation.nominatorName }}</Span>
-            <Divider> Cargador </Divider>
-            <Span>{{ this.operation.chargerName }}</Span>
-            <Divider> Lugar </Divider>
-            <Span>{{ this.location.name }}</Span>
-            <Divider> Fecha y hora de inicio </Divider>
-            <Span>{{ this.operation.date }}</Span>
-            <Divider> Responsable de la operación </Divider>
-            <Span>{{ this.operation.managerName }}</Span>
-            <Divider> Mercaderia </Divider>
-            <Span>{{ this.operation.commodity }}</Span>
-            <Divider> Empaque </Divider>
-            <Span>{{ this.operation.package }}</Span>
-            <Divider> Nombre del barco </Divider>
-            <Span>{{ this.operation.shipName }}</Span>
-            <Divider> Destino </Divider>
-            <Span>{{ this.operation.destination }}</Span>
-            <Divider> Referencia del cliente </Divider>
-            <Span>{{ this.operation.clientReference }}</Span>
-            <Divider> Línea </Divider>
-            <Span>{{ this.operation.line }}</Span>
-            <Divider> Número de Booking</Divider>
-            <Span>{{ this.operation.bookingNumber }}</Span>
-            <Divider> Notas </Divider>
-            <Span>{{ this.operation.notes }}</Span>
+               <Row>
+                   <Col span="12">
+                       Tipo de operación: {{ this.operation.operationType }} 
+                   </Col>
+                   <Col span="12">
+                       Nominador: {{ this.operation.nominatorName }} 
+                   </Col>
+               </Row>
+               <Row>
+                   <Col span="12">
+                       Cargador: {{ this.operation.chargerName }} 
+                   </Col>
+                   <Col span="12">
+                       Lugar: {{ this.location.name }} 
+                   </Col>
+               </Row>
+               <Row>
+                   <Col span="12">
+                       Fecha y hora de inicio: {{ this.operation.date }} 
+                   </Col>
+                   <Col span="12">
+                       Responsable de la operación: {{ this.operation.managerName }} 
+                   </Col>
+               </Row>
+               <Row>
+                   <Col span="12">
+                       Mercaderia: {{ this.operation.commodity }} 
+                   </Col>
+                   <Col span="12">
+                       Empaque: {{ this.operation.package }} 
+                   </Col>
+               </Row>
+               <Row>
+                   <Col span="12">
+                       Nombre del barco: {{ this.operation.shipName }} 
+                   </Col>
+                   <Col span="12">
+                       Destino: {{ this.operation.destination }} 
+                   </Col>
+               </Row>
+               <Row>
+                   <Col span="12">
+                       Referencia del cliente: {{ this.operation.clientReference }} 
+                   </Col>
+                   <Col span="12">
+                       Línea: {{ this.operation.line }} 
+                   </Col>
+               </Row>
+               <Row>
+                   <Col span="12">
+                       Número de Booking: {{ this.operation.bookingNumber }} 
+                   </Col>
+                   <Col span="12">
+                       Notas: {{ this.operation.notes }} 
+                   </Col>
+               </Row>
+               <Button type="info" :long="true" v-if="operatorRenderOnly">{{L('Usuarios asignados')}}</Button>
+            <div slot="footer">
+            </div>
         </Modal>
     </div>
 </template>
@@ -55,16 +86,9 @@
         @Prop({type:Boolean,default:false}) value:boolean;
         operation:Operation=new Operation();
 
-        pagerequest: PageViewOperationRequest = new PageViewOperationRequest();
-        nominatorRequest: PageViewOperationRequest = new PageViewOperationRequest();
-        chargerRequest: PageViewOperationRequest = new PageViewOperationRequest();
-        managerRequest: PageViewOperationRequest = new PageViewOperationRequest();
         locationRequest: PageViewOperationRequest = new PageViewOperationRequest();
-        
-        response:Operation = new Operation();
-        nominator:Client = new Client();
-        charger:Client = new Client();
-        manager:User = new User();
+        operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
+
         location:Location = new Location();
 
         visibleChange(value:boolean){
@@ -82,7 +106,6 @@
 
 
         async getLocation() {
-            console.log(this.locationRequest);
             this.location = await this.$store.dispatch({
                 type: 'location/get',
                 data: this.locationRequest

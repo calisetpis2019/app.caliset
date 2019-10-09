@@ -11,7 +11,7 @@
                         </Col>
                     </Row>
                     <Row>
-                        <Button @click="create" icon="android-add" type="primary" size="large">{{L('Add')}}</Button>
+                        <Button @click="create" icon="android-add" type="primary" size="large" v-if="operatorRenderOnly">{{L('Add')}}</Button>
                         <Button icon="ios-search" type="primary" size="large" @click="getpage" class="toolbar-btn">{{L('Find')}}</Button>
                     </Row>
                 </Form>
@@ -22,8 +22,8 @@
                 </div>
             </div>
         </Card>
-        <create-operation v-model="createModalShow" @save-success="getpage"></create-operation>
-        <edit-operation v-model="editModalShow" @save-success="getpage"></edit-operation>
+        <create-operation v-model="createModalShow"  @save-success="getpage"></create-operation>
+        <edit-operation v-model="editModalShow"  @save-success="getpage"></edit-operation>
         <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
     </div>
 </template>
@@ -37,6 +37,8 @@
     import ViewOperation from './view-operation.vue'
     import Operation from '../../store/entities/operation'
     import Location from '../../store/entities/location'
+
+
 
     class PageOperationRequest extends PageRequest {
     }
@@ -62,14 +64,14 @@
             this.editModalShow=true;
         }
         pagerequest: PageOperationRequest = new PageOperationRequest();
-        
+        operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
+
         createModalShow: boolean = false;
         editModalShow:boolean=false;
         viewModalShow: boolean = false;
-        // get list() {
-        //     return this.$store.state.operation.list;
-        // };
+
         get list() {
+
             var auxOperations:Operation[];
             var auxLocations:Location[];
             var result = [];
@@ -78,6 +80,12 @@
             auxLocations = this.$store.state.location.list;
             // console.log(auxOperations);
             auxOperations.forEach( (element) => {
+                let locationName = "";
+                auxLocations.forEach( (location) =>{
+                    if (location.id == element["location"]["id"]){
+                        locationName = location.name;
+                    }
+                })
                 result.push({
                                 id: element["id"],
                                 bookingNumber: element["bookingNumber"],
@@ -87,7 +95,7 @@
                                 date: element["date"],
                                 destination: element["destiny"],
                                 line: element["line"],
-                                location: auxLocations[+element["location"]["id"] - 1]["name"],
+                                location: locationName,
                                 locationId: element["location"]["id"],
                                 managerId: element["manager"]["id"],
                                 managerName: element["manager"]["name"],
@@ -166,61 +174,66 @@
             key:'Actions',
             width:200,
             render:(h:any,params:any)=>{
-                return h('div',[
-                    h('Button',{
-                        props:{
-                            type:'primary',
-                            size:'small'
-                        },
-                        style:{
-                            marginRight:'5px'
-                        },
-                        on:{
-                            click:()=>{
-                                this.$store.commit('operation/edit',params.row);
-                                this.edit();
+                var toRender = [
+                        h('Button',{
+                            props:{
+                                type: 'info',
+                                size:'small'
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:()=>{
+                                    this.$store.commit('operation/view',params.row);
+                                    this.view();
+                                }
                             }
-                        }
-                    },this.L('Edit')),
-                    h('Button',{
-                        props:{
-                            type:'error',
-                            size:'small'
-                        },
-                        style:{
-                            marginRight:'5px'
-                        },
-                        on:{
-                            click:async ()=>{
-                                this.$Modal.confirm({
-                                        title:this.L('Tips'),
-                                        content:this.L('DeleteOperationConfirm'),
-                                        okText:this.L('Yes'),
-                                        cancelText:this.L('No'),
-                                        onOk:async()=>{
-                                            await this.$store.dispatch({
-                                                type:'operation/delete',
-                                                data:params.row
-                                            })
-                                            await this.getpage();
-                                        }
-                                })
+                        },'Ver')];
+                if( this.operatorRenderOnly == true){ 
+                    toRender.push(h('Button',{
+                            props:{
+                                type:'primary',
+                                size:'small'
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:()=>{
+                                    this.$store.commit('operation/edit',params.row);
+                                    this.edit();
+                                }
                             }
-                        }
-                    },this.L('Delete')),
-                    h('Button',{
-                        props:{
-                            type:'primary',
-                            size:'small'
-                        },
-                        on:{
-                            click:()=>{
-                                this.$store.commit('operation/view',params.row);
-                                this.view();
+                        },this.L('Edit')),
+                        h('Button',{
+                            props:{
+                                type:'error',
+                                size:'small'
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:async ()=>{
+                                    this.$Modal.confirm({
+                                            title:this.L('Tips'),
+                                            content:this.L('DeleteOperationConfirm'),
+                                            okText:this.L('Yes'),
+                                            cancelText:this.L('No'),
+                                            onOk:async()=>{
+                                                await this.$store.dispatch({
+                                                    type:'operation/delete',
+                                                    data:params.row
+                                                })
+                                                await this.getpage();
+                                            }
+                                    })
+                                }
                             }
-                        }
-                    },'Ver')
-                ])
+                        },this.L('Delete')));
+                }
+                return h('div', toRender);    
             }
         }]
         async created() {

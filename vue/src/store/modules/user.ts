@@ -27,6 +27,9 @@ class UserModule extends ListModule<UserState,any,User>{
     actions={
         async getAll(context:ActionContext<UserState,any>,payload:any){
             context.state.loading=true;
+            // Agregado porque la cantidad de items que llegan del back por defecto esta topeado en 10
+            payload.data.MaxResultCount = 100000;
+            // --------------------------------------------------------------------------------------
             let reponse=await Ajax.get('/api/services/app/User/GetAll',{params:payload.data});
             context.state.loading=false;
             let page=reponse.data.result as PageResult<User>;
