@@ -12,11 +12,11 @@
                 </FormItem>
 
                 <FormItem label="Fecha y hora de inicio" prop="date">
-                    <VueCtkDateTimePicker label="Seleccione" hint=" " v-model="assignation.date" locale="es" v-bind:right="true" />
+                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true" />
                 </FormItem>
 
-                <FormItem label="Fecha y hora de fin" prop="finalDate">
-                    <VueCtkDateTimePicker label="Seleccione" hint=" " v-model="assignation.finalDate" locale="es" v-bind:right="true" />
+                <FormItem label="Fecha y hora de fin" prop="dateFin">
+                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.dateFin" locale="es" v-bind:right="true" />
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -101,6 +101,9 @@
 
         assignationRule={
             date:[
+                {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
+            ],
+            dateFin:[
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
             ],
             inspectorId:[

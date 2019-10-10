@@ -4,5 +4,5 @@ export default class Assignation extends Entity<number>{
     inspectorId:number;
     operationId:number;
     date: Date;
-    finalDate: Date;
+    dateFin: Date;
 }
