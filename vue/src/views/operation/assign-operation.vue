@@ -2,6 +2,7 @@
     <div>
         <Modal :title="L('Asignar Usuario')"
                :value="value"
+               :mask-closable="false"
                @on-ok="save"
                @on-visible-change="visibleChange">
             <Form ref="assignationForm" label-position="top" :rules="assignationRule" :model="assignation">
@@ -73,6 +74,7 @@
                         data:this.assignation
                     });
                     (this.$refs.assignationForm as any).resetFields();
+                    this.$Message.success('Asignación creada exitosamente');
                     this.$emit('save-success');
                     this.$emit('input',false);
                 }
@@ -81,15 +83,17 @@
         cancel(){
             (this.$refs.assignationForm as any).resetFields();
             this.$emit('input',false);
+            
         }
         visibleChange(value:boolean){
             if(!value){
+                (this.$refs.assignationForm as any).resetFields();
                 this.$emit('input',value);
             }
             else{
                 this.operation = Util.extend(true, {}, this.$store.state.operation.editOperation);
+                this.getUsers()
             }
-            this.getUsers()
         }
 
         async getUsers() {
