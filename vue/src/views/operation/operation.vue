@@ -75,6 +75,7 @@
         <create-operation v-model="createModalShow"  @save-success="getpage"></create-operation>
         <edit-operation v-model="editModalShow"  @save-success="getpage"></edit-operation>
         <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
+        <assign-operation v-model="assignModalShow" @save-success="getpage"></assign-operation>
     </div>
 </template>
 <script lang="ts">
@@ -90,9 +91,8 @@
     import User from '../../store/entities/user'
     import Client from '../../store/entities/client'
     import OperationState from '../../store/entities/OperationState'
-
-
-
+    import AssignOperation from './assign-operation.vue'
+    import Assignation from '../../store/entities/assignation'
     class PageOperationRequest extends PageRequest {
         LocationId: number;
         OperationTypeId: number;
@@ -112,11 +112,14 @@
     }
 
     @Component({
-        components: { CreateOperation, EditOperation, ViewOperation }
+        components: { CreateOperation, EditOperation, ViewOperation, AssignOperation }
     })
     export default class Operations extends AbpBase {
         edit(){
             this.editModalShow=true;
+        }
+        assign(){
+            this.assignModalShow=true;
         }
         pagerequest: PageOperationRequest = new PageOperationRequest();
         operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
@@ -124,8 +127,9 @@
         createModalShow: boolean = false;
         editModalShow:boolean=false;
         viewModalShow: boolean = false;
-
-        get list() {
+	assignModalShow: boolean = false;
+        
+	get list() {
 
             var auxOperations:Operation[];
             var auxLocations:Location[];
@@ -204,7 +208,6 @@
         }
 
         async getpage() {
-
             await this.$store.dispatch({
                 type: 'location/getAll',
                 data: this.pagerequest
@@ -311,6 +314,21 @@
                                 }
                             }
                         },this.L('Edit')),
+			h('Button',{
+                        props:{
+                            type:'primary',
+                            size:'small'
+                        },
+                        style:{
+                            marginRight:'5px'
+                        },
+                        on:{
+                            click:()=>{
+                                this.$store.commit('operation/edit',params.row);
+                                this.assign();
+                            }
+                        }
+                    },this.L('Assign')),
                         h('Button',{
                             props:{
                                 type:'error',
