@@ -17,6 +17,7 @@ using App.Caliset.Authorization;
 using App.Caliset.Authorization.Accounts;
 using App.Caliset.Authorization.Roles;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Operations.Dto;
 using App.Caliset.Roles.Dto;
 using App.Caliset.Users.Dto;
 using Microsoft.AspNetCore.Identity;
@@ -249,6 +250,20 @@ namespace App.Caliset.Users
             }
 
             return false;
+        }
+
+        public IEnumerable<UserDtoOperation> GetAllUsers()
+        {
+            var getAll = _userManager.GetAll().ToList();
+            List<UserDtoOperation> output = ObjectMapper.Map<List<UserDtoOperation>>(getAll);
+            return output;
+        }
+
+        public IEnumerable<UserDtoOperation> GetAllUsersFilter(GetUserFiltersInput input)
+        {
+            var getAll = _userManager.GetAllFilter(input.Keyword, input.Active).ToList();
+            List<UserDtoOperation> output = ObjectMapper.Map<List<UserDtoOperation>>(getAll);
+            return output;
         }
 
     }

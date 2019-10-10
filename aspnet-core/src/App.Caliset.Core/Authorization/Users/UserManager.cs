@@ -11,11 +11,14 @@ using Abp.Domain.Uow;
 using Abp.Organizations;
 using Abp.Runtime.Caching;
 using App.Caliset.Authorization.Roles;
+using Abp.Collections.Extensions;
+using Abp.Extensions;
 
 namespace App.Caliset.Authorization.Users
 {
     public class UserManager : AbpUserManager<Role, User>
     {
+        private readonly IRepository<User, long> _userRepository;
         public UserManager(
             RoleManager roleManager,
             UserStore store, 
@@ -53,6 +56,19 @@ namespace App.Caliset.Authorization.Users
                 organizationUnitSettings, 
                 settingManager)
         {
+            _userRepository = store.UserRepository;
+        }
+
+        public IEnumerable<User> GetAll()
+        {
+            return _userRepository.GetAllIncluding(x => x.Roles);
+        }
+
+        public IEnumerable<User> GetAllFilter(string keyword, bool? active)
+        {
+            return _userRepository.GetAllIncluding(x => x.Roles)
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(keyword) || x.Name.Contains(keyword) || x.EmailAddress.Contains(keyword))
+                .WhereIf(active.HasValue, x => x.IsActive == active); ;
         }
     }
 }

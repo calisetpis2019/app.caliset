@@ -80,6 +80,15 @@ namespace App.Caliset.Models.Assignations
                     .WhereIf(aware.HasValue, assign => assign.Aware == aware)
                     .WhereIf(pending.HasValue, assign => assign.Aware == null);
         }
+        public IEnumerable<User> GetUsersByOperation(int operationId)
+        {
+            var users = (from Users in _userManager.GetAll()
+                              join Assign in this.GetAssignmentsFilter(null, operationId)
+                              on Users.Id equals Assign.InspectorId
+                              select Users).Distinct();
+
+            return users;
+        }
 
         public IEnumerable<Operation> GetOperationsByUser(long userId, bool? aware = null, bool? pending = null)
         {
@@ -101,10 +110,6 @@ namespace App.Caliset.Models.Assignations
 
             return operations;
         }
-
-          
-        
-
         public void ConfirmAssignation(int idAssignation)
         {
             var Asign = _repositoryAssignation.FirstOrDefault(x => x.Id == idAssignation);

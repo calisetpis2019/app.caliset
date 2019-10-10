@@ -11,6 +11,7 @@ using App.Caliset.Authorization;
 using App.Caliset.Operations.Dto;
 
 using Abp.Collections.Extensions;
+using App.Caliset.Users.Dto;
 
 namespace App.Caliset.Assignations
 {
@@ -28,7 +29,6 @@ namespace App.Caliset.Assignations
             _abpSession = abpSession;
  
         }
-
 
         [AbpAuthorize(PermissionNames.Operador)]
         public async Task Create(CreateAssignationInput input)
@@ -71,6 +71,14 @@ namespace App.Caliset.Assignations
         public IEnumerable<GetAssignationOutput> GetAssignmentsByOperation(int operationId)
         {
             List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(null, operationId));
+
+            return output;
+        }
+
+        [AbpAuthorize(PermissionNames.Operador)]
+        public IEnumerable<UserDtoOperation> GetUsersByOperation(int operationId)
+        {
+            List<UserDtoOperation> output = ObjectMapper.Map<List<UserDtoOperation>>(_assignationManager.GetUsersByOperation(operationId));
 
             return output;
         }
