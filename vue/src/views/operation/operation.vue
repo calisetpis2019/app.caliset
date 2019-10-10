@@ -2,7 +2,7 @@
     <div>
         <Card dis-hover>
             <div class="page-body">
-                <Row :gutter="10">
+                <Row :gutter="30">
                     <Col span="8" >
                         <Form ref="queryForm" :label-width="80" label-position="left" inline>
                             <Row :gutter="10">
@@ -18,7 +18,7 @@
                             </Row>
                         </Form>
                     </Col>
-                    <Col span="16" style="border-left: 2px dashed #e8eaec">
+                    <Col span="16" style="border-left: 2px solid #e8eaec">
                         <Form ref="filterForm" :label-width="80" label-position="left" inline>
                             Filtrar por:
                             <Row :gutter="10">
@@ -29,7 +29,7 @@
                                             <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
-                                    <FormItem label="Tipo de operación" style="width:100%">
+                                    <FormItem label="Tipo" style="width:100%">
                                         <Select v-model="pagerequest.OperationTypeId"  filterable clearable>
                                             <Option v-for="item in listOfOperationTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
@@ -41,7 +41,7 @@
                                             <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
-                                    <FormItem label="Estado de operación" style="width:100%">
+                                    <FormItem label="Estado" style="width:100%">
                                         <Select v-model="pagerequest.OperationStateId"  filterable clearable>
                                             <Option v-for="item in listOfOperationStates" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
