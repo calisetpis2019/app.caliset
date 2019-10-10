@@ -2,19 +2,69 @@
     <div>
         <Card dis-hover>
             <div class="page-body">
-                <Form ref="queryForm" :label-width="80" label-position="left" inline>
-                    <Row :gutter="16">
-                        <Col span="6">
-                        <FormItem :label="L('Keyword')+':'" style="width:100%">
-                            <Input v-model="pagerequest.keyword" :placeholder="L('OperationName')"></Input>
-                        </FormItem>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Button @click="create" icon="android-add" type="primary" size="large" v-if="operatorRenderOnly">{{L('Add')}}</Button>
-                        <Button icon="ios-search" type="primary" size="large" @click="getpage" class="toolbar-btn">{{L('Find')}}</Button>
-                    </Row>
-                </Form>
+                <Row :gutter="10">
+                    <Col span="8" >
+                        <Form ref="queryForm" :label-width="80" label-position="left" inline>
+                            <Row :gutter="10">
+                                <Col span="24">
+                                <FormItem :label="L('Keyword')+':'" style="width:100%">
+                                    <Input v-model="pagerequest.keyword" :placeholder="L('OperationName')"></Input>
+                                </FormItem>
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Button @click="create" icon="android-add" type="primary" size="large" v-if="operatorRenderOnly">{{L('Add')}}</Button>
+                                <Button icon="ios-search" type="primary" size="large" @click="getpage" class="toolbar-btn">{{L('Find')}}</Button>
+                            </Row>
+                        </Form>
+                    </Col>
+                    <Col span="16" style="border-left: 2px dashed #e8eaec">
+                        <Form ref="filterForm" :label-width="80" label-position="left" inline>
+                            Filtrar por:
+                            <Row :gutter="10">
+                                
+                                <Col span="8">
+                                    <FormItem label="Cargador" style="width:100%">
+                                        <Select v-model="pagerequest.ChargerId"  filterable clearable>
+                                            <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
+                                    <FormItem label="Tipo de operación" style="width:100%">
+                                        <Select v-model="pagerequest.OperationTypeId"  filterable clearable>
+                                            <Option v-for="item in listOfOperationTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
+                                </Col>
+                                <Col span="8">
+                                    <FormItem label="Lugar" style="width:100%">
+                                        <Select v-model="pagerequest.LocationId"  filterable clearable>
+                                            <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
+                                    <FormItem label="Estado de operación" style="width:100%">
+                                        <Select v-model="pagerequest.OperationStateId"  filterable clearable>
+                                            <Option v-for="item in listOfOperationStates" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
+                                </Col>
+                                <Col span="8">
+                                    <FormItem label="Nominador" style="width:100%">
+                                        <Select v-model="pagerequest.NominatorId"  filterable clearable>
+                                            <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
+                                    <FormItem label="Responsable" style="width:100%">
+                                        <Select @on-change="getpagefilters" v-model="pagerequest.ManagerId"  filterable clearable>
+                                            <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
+                                </Col>
+                            </Row>
+                            <Button @click="filter" icon="ios-search" type="primary" size="large" >Filtrar</Button>
+
+                        </Form>
+                    </Col>
+                </Row>
                 <div class="margin-top-10">
                     <Table :loading="loading" :columns="columns" :no-data-text="L('NoDatas')" border :data="list">
                     </Table>
@@ -37,10 +87,15 @@
     import ViewOperation from './view-operation.vue'
     import Operation from '../../store/entities/operation'
     import Location from '../../store/entities/location'
+    import User from '../../store/entities/user'
+    import Client from '../../store/entities/client'
+    import OperationState from '../../store/entities/OperationState'
 
 
 
     class PageOperationRequest extends PageRequest {
+        LocationId: number;
+        OperationTypeId: number;
     }
 
     class OperationForListing {
@@ -112,8 +167,24 @@
             return result;
             // return this.$store.state.operation.list;
         };
+
         get loading() {
             return this.$store.state.operation.loading;
+        }
+        get listOfLocations(){
+            return this.$store.state.location.list;
+        }
+        get listOfClients(){
+            return this.$store.state.client.list;
+        }
+        get listOfOperationTypes(){
+            return this.$store.state.operationType.list;
+        }
+        get listOfOperationStates(){
+            return this.$store.state.operationState.list;
+        }
+        get listOfUsers(){
+            return this.$store.state.user.list;
         }
 
         view() {
@@ -140,10 +211,44 @@
             })
 
             await this.$store.dispatch({
+                type: 'operationType/getAll',
+                data: this.pagerequest
+            })
+
+            await this.$store.dispatch({
                 type: 'operation/getAll',
                 data: this.pagerequest
             })
+
+            await this.$store.dispatch({
+                type: 'client/getAll',
+                data: this.pagerequest
+            })
+
+            await this.$store.dispatch({
+                type: 'operationState/getAll',
+                data: this.pagerequest
+            })
+
+            await this.$store.dispatch({
+                type: 'user/getAll',
+                data: this.pagerequest
+            })
+
         }
+
+        filter() {
+            (this.$refs.filterForm as any).resetFields();
+            this.getpagefilters();
+        }
+
+        async getpagefilters(){
+            await this.$store.dispatch({
+                type: 'operation/getAllFilters',
+                data: this.pagerequest
+            })
+        }
+
         get pageSize() {
             return this.$store.state.operation.pageSize;
         }
