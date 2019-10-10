@@ -26,7 +26,6 @@ namespace App.Caliset.Assignations
         IEnumerable<GetOperationOutput> GetMyOperations();
         IEnumerable<GetOperationOutput> GetMyOperationsConfirmed(int? operationStateId);
         IEnumerable<GetOperationOutput> GetMyOperationsPending();
-        IEnumerable<GetOperationOutput> GetMyFutureOperations();
 
         void AceptAssignation(int AssignationId);
         void RefuseAssignation(int AssignationId);
