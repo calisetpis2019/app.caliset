@@ -25,6 +25,7 @@
         <create-operation v-model="createModalShow" @save-success="getpage"></create-operation>
         <edit-operation v-model="editModalShow" @save-success="getpage"></edit-operation>
         <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
+        <assign-operation v-model="assignModalShow" @save-success="getpage"></assign-operation>
     </div>
 </template>
 <script lang="ts">
@@ -37,6 +38,8 @@
     import ViewOperation from './view-operation.vue'
     import Operation from '../../store/entities/operation'
     import Location from '../../store/entities/location'
+    import AssignOperation from './assign-operation.vue'
+    import Assignation from '../../store/entities/assignation'
 
     class PageOperationRequest extends PageRequest {
     }
@@ -55,20 +58,22 @@
     }
 
     @Component({
-        components: { CreateOperation, EditOperation, ViewOperation }
+        components: { CreateOperation, EditOperation, ViewOperation, AssignOperation }
     })
     export default class Operations extends AbpBase {
         edit(){
             this.editModalShow=true;
+        }
+        assign(){
+            this.assignModalShow=true;
         }
         pagerequest: PageOperationRequest = new PageOperationRequest();
         
         createModalShow: boolean = false;
         editModalShow:boolean=false;
         viewModalShow: boolean = false;
-        // get list() {
-        //     return this.$store.state.operation.list;
-        // };
+        assignModalShow: boolean = false;
+        
         get list() {
             var auxOperations:Operation[];
             var auxLocations:Location[];
@@ -76,8 +81,9 @@
 
             auxOperations = this.$store.state.operation.list;
             auxLocations = this.$store.state.location.list;
-            // console.log(auxOperations);
+
             auxOperations.forEach( (element) => {
+                
                 result.push({
                                 id: element["id"],
                                 bookingNumber: element["bookingNumber"],
@@ -102,7 +108,6 @@
                 });
             })
             return result;
-            // return this.$store.state.operation.list;
         };
         get loading() {
             return this.$store.state.operation.loading;
@@ -125,7 +130,6 @@
         }
 
         async getpage() {
-
             await this.$store.dispatch({
                 type: 'location/getAll',
                 data: this.pagerequest
@@ -182,6 +186,21 @@
                             }
                         }
                     },this.L('Edit')),
+                    h('Button',{
+                        props:{
+                            type:'primary',
+                            size:'small'
+                        },
+                        style:{
+                            marginRight:'5px'
+                        },
+                        on:{
+                            click:()=>{
+                                this.$store.commit('operation/edit',params.row);
+                                this.assign();
+                            }
+                        }
+                    },this.L('Assign')),
                     h('Button',{
                         props:{
                             type:'error',
