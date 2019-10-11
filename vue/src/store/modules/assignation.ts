@@ -5,13 +5,32 @@ import Assignation from '../entities/assignation'
 import Ajax from '../../lib/ajax'
 import PageResult from '@/store/entities/page-result';
 import ListMutations from './list-mutations'
-interface AssignationState extends ListState<Assignation> {}
-class AssignationModule extends ListModule<AssignationState, any, Assignation>{
+import User from '../entities/user'
 
+interface AssignationState extends ListState<Assignation> {
+	usersAssignedToOperation: Array<User>;
+}
+class AssignationModule extends ListModule<AssignationState, any, Assignation>{
+	state = {
+        totalCount: 0,
+        currentPage: 1,
+        pageSize: 10,
+        list: new Array<Assignation>(),
+        loading: false,
+        usersAssignedToOperation: new Array<User>()
+    }
     actions = {
         async create(context: ActionContext<AssignationState, any>, payload: any) {
             await Ajax.post('/api/services/app/Assignation/Create', payload.data);
+        },
+        async getUsersByOperation(context: ActionContext<AssignationState, any>, payload: any) {
+            context.state.loading = true;
+            let reponse = await Ajax.get('/api/services/app/Assignation/GetUsersByOperation?operationId=' + payload.data.id);
+            context.state.loading = false;
+            context.state.totalCount = reponse.data.result.length;
+            context.state.usersAssignedToOperation = reponse.data.result;
         }
+
     };
 }
 const assignationModule = new AssignationModule();

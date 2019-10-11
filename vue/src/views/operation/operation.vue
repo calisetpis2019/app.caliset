@@ -93,6 +93,8 @@
     import OperationState from '../../store/entities/OperationState'
     import AssignOperation from './assign-operation.vue'
     import Assignation from '../../store/entities/assignation'
+    import moment from 'moment'
+
     class PageOperationRequest extends PageRequest {
         LocationId: number;
         OperationTypeId: number;
@@ -263,8 +265,14 @@
         }
         columns = [
             {
-                title: this.L('Date'),
-                key: 'date'
+                title: 'Fecha',
+                key: 'date',
+                render: (h, params) => {
+                            return h('div', [
+                                h('span', moment(params.row.date).locale('es').format(" DD [de] MMMM [del] YYYY"))
+                            ]);
+                        }
+                
             },
             {
                 title: this.L('Ubicación'),
@@ -280,7 +288,7 @@
             },{
             title:this.L('Actions'),
             key:'Actions',
-            width:200,
+            width:270,
             render:(h:any,params:any)=>{
                 var toRender = [
                         h('Button',{
@@ -301,7 +309,7 @@
                 if( this.operatorRenderOnly == true){ 
                     toRender.push(h('Button',{
                             props:{
-                                type:'primary',
+                                type:'success',
                                 size:'small'
                             },
                             style:{
@@ -313,22 +321,22 @@
                                     this.edit();
                                 }
                             }
-                        },this.L('Edit')),
-			h('Button',{
-                        props:{
-                            type:'primary',
-                            size:'small'
-                        },
-                        style:{
-                            marginRight:'5px'
-                        },
-                        on:{
-                            click:()=>{
-                                this.$store.commit('operation/edit',params.row);
-                                this.assign();
-                            }
-                        }
-                    },this.L('Assign')),
+                        },'Editar'),
+            			h('Button',{
+                                    props:{
+                                        type:'primary',
+                                        size:'small'
+                                    },
+                                    style:{
+                                        marginRight:'5px'
+                                    },
+                                    on:{
+                                        click:()=>{
+                                            this.$store.commit('operation/edit',params.row);
+                                            this.assign();
+                                        }
+                                    }
+                        },'Asignar'),
                         h('Button',{
                             props:{
                                 type:'error',
