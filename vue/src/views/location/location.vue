@@ -86,19 +86,19 @@
         }
         columns = [
             {
-                title: this.L('Name'),
+                title: 'Nombre',
                 key: 'name'
             },
             {
-                title: this.L('Latitude'),
+                title: 'Latitud',
                 key: 'latitude'
             },
             {
-                title: this.L('Longitude'),
+                title: 'Longitud',
                 key: 'longitude'
             },
             {
-                title: this.L('Radius'),
+                title: 'Radio',
                 key: 'radius'
             },{
             title:this.L('Actions'),

@@ -20,7 +20,7 @@
                             </FormItem>
                         </Col>
                         <Col span="6">
-                            <FormItem :label="L('CreationTime')+':'" style="width:100%">
+                            <FormItem label="Fecha de creación" style="width:100%">
                                 <DatePicker  v-model="creationTime" type="datetimerange" format="yyyy-MM-dd" style="width:100%" placement="bottom-end" :placeholder="L('SelectDate')"></DatePicker>
                             </FormItem>
                         </Col>
@@ -134,13 +134,13 @@
                return h('span',params.row.isActive?this.L('Yes'):this.L('No'))
             }
         },{
-            title:this.L('CreationTime'),
+            title:'Fecha de creación',
             key:'creationTime',
             render:(h:any,params:any)=>{
                 return h('span',new Date(params.row.creationTime).toLocaleDateString())
             }
         },{
-            title:this.L('LastLoginTime'),
+            title:'Última conexión',
             render:(h:any,params:any)=>{
                 return h('span',new Date(params.row.lastLoginTime).toLocaleString())
             }
