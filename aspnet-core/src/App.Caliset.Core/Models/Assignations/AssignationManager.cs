@@ -1,8 +1,10 @@
 ﻿using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
+using Abp.Domain.Uow;
 using Abp.UI;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Models.Notifications;
 using App.Caliset.Models.Operations;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -18,7 +20,7 @@ namespace App.Caliset.Models.Assignations
         private readonly IRepository<Assignation> _repositoryAssignation;
         private readonly UserManager _userManager;
         private readonly OperationManager _operationManager;
-
+        
         public AssignationManager(IRepository<Assignation> repositoryAssignation, UserManager userManager, OperationManager operationManager)
         {
             _repositoryAssignation = repositoryAssignation;
@@ -28,6 +30,7 @@ namespace App.Caliset.Models.Assignations
 
         public async Task<Assignation> Create(Assignation entity)
         {
+            
             var Assignation = _repositoryAssignation.FirstOrDefault(x => x.Id == entity.Id);
             if (Assignation != null)
             {
@@ -36,7 +39,16 @@ namespace App.Caliset.Models.Assignations
             else
             {
                 entity.Aware = null;
-                return await _repositoryAssignation.InsertAsync(entity);
+                try
+                {
+                    var assign = await _repositoryAssignation.InsertAsync(entity);
+                }
+                catch (System.Exception e)
+                {
+                    throw new UserFriendlyException("Error", e.Message);
+                }
+
+                return entity;
             }
         }
 
