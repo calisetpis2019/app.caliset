@@ -2,7 +2,7 @@
     <div>
         <Card dis-hover>
             <div class="page-body">
-                <Row :gutter="10">
+                <Row :gutter="30">
                     <Col span="8" >
                         <Form ref="queryForm" :label-width="80" label-position="left" inline>
                             <Row :gutter="10">
@@ -18,7 +18,7 @@
                             </Row>
                         </Form>
                     </Col>
-                    <Col span="16" style="border-left: 2px dashed #e8eaec">
+                    <Col span="16" style="border-left: 2px solid #e8eaec">
                         <Form ref="filterForm" :label-width="80" label-position="left" inline>
                             Filtrar por:
                             <Row :gutter="10">
@@ -29,7 +29,7 @@
                                             <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
-                                    <FormItem label="Tipo de operación" style="width:100%">
+                                    <FormItem label="Tipo" style="width:100%">
                                         <Select v-model="pagerequest.OperationTypeId"  filterable clearable>
                                             <Option v-for="item in listOfOperationTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
@@ -41,7 +41,7 @@
                                             <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
-                                    <FormItem label="Estado de operación" style="width:100%">
+                                    <FormItem label="Estado" style="width:100%">
                                         <Select v-model="pagerequest.OperationStateId"  filterable clearable>
                                             <Option v-for="item in listOfOperationStates" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
@@ -75,6 +75,7 @@
         <create-operation v-model="createModalShow"  @save-success="getpage"></create-operation>
         <edit-operation v-model="editModalShow"  @save-success="getpage"></edit-operation>
         <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
+        <assign-operation v-model="assignModalShow" @save-success="getpage"></assign-operation>
     </div>
 </template>
 <script lang="ts">
@@ -90,9 +91,8 @@
     import User from '../../store/entities/user'
     import Client from '../../store/entities/client'
     import OperationState from '../../store/entities/OperationState'
-
-
-
+    import AssignOperation from './assign-operation.vue'
+    import Assignation from '../../store/entities/assignation'
     class PageOperationRequest extends PageRequest {
         LocationId: number;
         OperationTypeId: number;
@@ -112,11 +112,14 @@
     }
 
     @Component({
-        components: { CreateOperation, EditOperation, ViewOperation }
+        components: { CreateOperation, EditOperation, ViewOperation, AssignOperation }
     })
     export default class Operations extends AbpBase {
         edit(){
             this.editModalShow=true;
+        }
+        assign(){
+            this.assignModalShow=true;
         }
         pagerequest: PageOperationRequest = new PageOperationRequest();
         operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
@@ -124,8 +127,9 @@
         createModalShow: boolean = false;
         editModalShow:boolean=false;
         viewModalShow: boolean = false;
-
-        get list() {
+	assignModalShow: boolean = false;
+        
+	get list() {
 
             var auxOperations:Operation[];
             var auxLocations:Location[];
@@ -204,7 +208,6 @@
         }
 
         async getpage() {
-
             await this.$store.dispatch({
                 type: 'location/getAll',
                 data: this.pagerequest
@@ -311,6 +314,21 @@
                                 }
                             }
                         },this.L('Edit')),
+			h('Button',{
+                        props:{
+                            type:'primary',
+                            size:'small'
+                        },
+                        style:{
+                            marginRight:'5px'
+                        },
+                        on:{
+                            click:()=>{
+                                this.$store.commit('operation/edit',params.row);
+                                this.assign();
+                            }
+                        }
+                    },this.L('Assign')),
                         h('Button',{
                             props:{
                                 type:'error',
