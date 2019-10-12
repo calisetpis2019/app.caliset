@@ -96,11 +96,10 @@
             this.getpage();
         }
         async getpage(){
-          
             this.pagerequest.maxResultCount=this.pageSize;
             this.pagerequest.skipCount=(this.currentPage-1)*this.pageSize;
-            //filters
             
+            //filters
             if (this.creationTime.length>0) {
                 this.pagerequest.from=this.creationTime[0];
             }
@@ -127,20 +126,32 @@
             key:'userName'
         },{
             title:this.L('Name'),
-            key:'name'
+            render:(h:any,params:any)=>{
+                return h('span',params.row.name+' '+params.row.surname)
+            }
         },{
             title:this.L('IsActive'),
             render:(h:any,params:any)=>{
                return h('span',params.row.isActive?this.L('Yes'):this.L('No'))
             }
         },{
-            title:this.L('CreationTime'),
-            key:'creationTime',
+            title:"Roles",
             render:(h:any,params:any)=>{
-                return h('span',new Date(params.row.creationTime).toLocaleDateString())
+                var roles=params.row.roleNames;
+                var concatenacion="";
+                for (let i = 0; i < roles.length; i++) {
+                    if(i==0){
+                        concatenacion=concatenacion+roles[i][0]+roles[i].substring(1,roles[i].length).toLowerCase();
+                    }
+                    else{
+                        concatenacion=concatenacion+", "+roles[i][0]+roles[i].substring(1,roles[i].length).toLowerCase();
+                    }
+                    
+                }
+                return h('span',concatenacion)
             }
         },{
-            title:this.L('LastLoginTime'),
+            title:"Último Login",
             render:(h:any,params:any)=>{
                 return h('span',new Date(params.row.lastLoginTime).toLocaleString())
             }

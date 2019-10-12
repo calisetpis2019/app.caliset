@@ -51,7 +51,8 @@
         pagerequest: PageAssignOperationRequest = new PageAssignOperationRequest();
 
         get listOfUsers() {
-            var result = [];
+            return this.$store.state.user.list;
+            /*var result = [];
             var auxUsuarios=this.$store.state.user.list;
             for (let i = 0; i < auxUsuarios.length; i++) {
                 var roles=auxUsuarios[i]["roleNames"];
@@ -62,7 +63,7 @@
                     }
                 }
             }
-            return result;
+            return result;*/
         }
 
         save() {
@@ -106,10 +107,7 @@
         assignationRule={
             date:[
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
-            ],
-            dateFin:[
-                {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
-            ],
+            ]
             inspectorId:[
                 {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Responsable')),trigger: 'blur'}
             ]
