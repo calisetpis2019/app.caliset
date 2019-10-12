@@ -47,7 +47,7 @@ export const appRouters: Array<Router> = [{
     path: '/setting',
     name: 'setting',
     permission: '',
-    meta: { title: 'ManageMenu' },
+    meta: { title: 'Configuración' },
     icon: '&#xe68a;',
     component: main,
     children: [
@@ -57,8 +57,17 @@ export const appRouters: Array<Router> = [{
         { path: 'operationState', permission: 'Pages.Administrador', meta: { title: 'OperationStates' }, name: 'operationState', component: () => import('../views/operationState/operationState.vue') },
         { path: 'location', permission: 'Pages.Administrador', meta: { title: 'Locations' }, name: 'location', component: () => import('../views/location/location.vue') },
         { path: 'client', permission: 'Pages.Administrador', meta: { title: 'Clients' }, name: 'client', component: () => import('../views/client/client.vue') },
+    ]
+},
+{
+    path: '/operations',
+    name: 'operations',
+    permission: '',
+    meta: { title: 'Operation' },
+    icon: '&#xe68a;',
+    component: main,
+    children: [
         { path: 'operation', permission: 'Pages.Operador', meta: { title: 'Operation' }, name: 'operation', component: () => import('../views/operation/operation.vue') }
-
     ]
 }]
 export const routers = [

@@ -9,6 +9,9 @@ import Util from './lib/util';
 import SignalRAspNetCoreHelper from './lib/SignalRAspNetCoreHelper';
 import locale from 'iview/dist/locale/es-ES';
 Vue.use(iView, { locale });
+import vSelect from 'vue-select'
+import 'vue-select/dist/vue-select.css';
+Vue.component('v-select', vSelect)
 import store from './store/index';
 Vue.config.productionTip = false;
 import { appRouters,otherRouters} from './router/router';

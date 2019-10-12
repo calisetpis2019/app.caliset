@@ -29,8 +29,6 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         },
         async getAllFilters(context: ActionContext<OperationState, any>, payload: any) {
             context.state.loading = true;
-            console.log('getallfilters');
-            console.log(payload.data);
             let responseString = '';
             let filters = ['LocationId', 'OperationTypeId', 'NominatorId','ChargerId', 'OperationStateId', 'ManagerId'];
             filters.forEach((filter)=>{
@@ -39,7 +37,6 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
                 }
             });
             responseString = responseString.slice(0,-1);
-            console.log(responseString);
             let reponse = await Ajax.get('/api/services/app/Operation/GetAllFilters?' + responseString);
             context.state.loading = false;
             context.state.totalCount = reponse.data.result.length;

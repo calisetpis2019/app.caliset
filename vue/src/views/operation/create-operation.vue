@@ -4,43 +4,47 @@
                :value="value"
                @on-ok="save"
                @on-visible-change="visibleChange">
+            
             <Form ref="operationForm" label-position="top" :rules="operationRule" :model="operation">
                 <Tabs value="detail">
                     <TabPane label="Details" name="detail">
 
+                        
+
                         <FormItem label="Tipo" prop="operationTypeId">
-                            <Select v-model="operation.operationTypeId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
-                                <Option v-for="item in listOfOperationTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
-                        </FormItem>
+                            <v-select v-model="operation.operationTypeId" label="name" :reduce="name => name.id" :options="listOfOperationTypes">
+                                <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                            </v-select>
+                        </FormItem> 
+
 
                         <FormItem label="Nominador" prop="nominatorId">
-                            <Select v-model="operation.nominatorId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
-                                <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
+                            <v-select v-model="operation.nominatorId" label="name" :reduce="name => name.id" :options="listOfClients">
+                                <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                            </v-select>
                         </FormItem>
 
                         <FormItem label="Cargador" prop="chargerId">
-                            <Select v-model="operation.chargerId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
-                                <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
+                            <v-select v-model="operation.chargerId" label="name" :reduce="name => name.id" :options="listOfClients">
+                                <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                            </v-select>
                         </FormItem>
 
 
                         <FormItem label="Lugar" prop="locationId">
-                            <Select v-model="operation.locationId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
-                                <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
+                            <v-select v-model="operation.locationId" label="name" :reduce="name => name.id" :options="listOfLocations">
+                                <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                            </v-select>
                         </FormItem>
 
                         <FormItem label="Fecha y hora de inicio" prop="date">
-                            <VueCtkDateTimePicker v-model="operation.date" locale="es" v-bind:right="true" />
+                            <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="operation.date" locale="es" v-bind:right="true" />
                         </FormItem>
 
                         <FormItem label="Responsable" prop="managerId">
-                            <Select v-model="operation.managerId" style="padding: 10px 0px 20px 0px;" filterable placeholder="">
-                                <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
+                            <v-select v-model="operation.managerId" label="name" :reduce="name => name.id" :options="listOfUsers">
+                                <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                            </v-select>
                         </FormItem>
 
                         
@@ -48,7 +52,7 @@
                             <Input v-model="operation.commodity" :maxlength="32"></Input>
                         </FormItem>
 
-                        <FormItem label="Paquete" prop="package">
+                        <FormItem label="Empaque" prop="package">
                             <Input v-model="operation.package" :maxlength="32"></Input>
                         </FormItem>
 
@@ -62,7 +66,7 @@
                         </FormItem>
 
                         
-                        <FormItem label="Cliente" prop="clientReference">
+                        <FormItem label="Referencia cliente" prop="clientReference">
                             <Input v-model="operation.clientReference" :maxlength="32"></Input>
                         </FormItem>
 
@@ -220,5 +224,21 @@
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Package')),trigger: 'blur'}
             ] 
         }
+
+        test(e){
+            console.log(e);
+            console.log(event);
+            // console.log(n);
+            // if (t == false ){
+            //     if (this.$refs['operationTypeSel']['value'] != ""){
+            //         console.log('valido');
+                    
+            //     }else {
+            //         console.log('invalido');
+            //         (this.$refs['operationTypeSel'] as any).reset();
+            //     }
+            // }
+        }
+
     }
 </script>

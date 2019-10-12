@@ -20,7 +20,7 @@
                             </FormItem>
                         </Col>
                         <Col span="6">
-                            <FormItem :label="L('CreationTime')+':'" style="width:100%">
+                            <FormItem label="Fecha de creación" style="width:100%">
                                 <DatePicker  v-model="creationTime" type="datetimerange" format="yyyy-MM-dd" style="width:100%" placement="bottom-end" :placeholder="L('SelectDate')"></DatePicker>
                             </FormItem>
                         </Col>
@@ -98,8 +98,6 @@
         async getpage(){
             this.pagerequest.maxResultCount=this.pageSize;
             this.pagerequest.skipCount=(this.currentPage-1)*this.pageSize;
-            
-            //filters
             if (this.creationTime.length>0) {
                 this.pagerequest.from=this.creationTime[0];
             }

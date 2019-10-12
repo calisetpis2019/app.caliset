@@ -12,30 +12,55 @@ using App.Caliset.Operations.Dto;
 
 using Abp.Collections.Extensions;
 using App.Caliset.Users.Dto;
+using App.Caliset.Models.Notifications;
+using Abp.Domain.Uow;
 
 namespace App.Caliset.Assignations
 {
     public class AssignationAppService : ApplicationService, IAssignationAppService
     {
-
         private readonly AssignationManager _assignationManager;
         private readonly IAbpSession _abpSession;
+        private readonly NotificationManager _notificationManager;
+        private readonly IUnitOfWorkManager _unitOfWorkManager;
 
-
-
-        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession)
+        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession, NotificationManager notificationManager, IUnitOfWorkManager unitOfWorkManager)
         {
             _assignationManager = assignationManager;
             _abpSession = abpSession;
- 
+            _notificationManager = notificationManager;
+            _unitOfWorkManager = unitOfWorkManager;
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
         public async Task Create(CreateAssignationInput input)
         {
             var assignation = ObjectMapper.Map<Assignation>(input);
+            using (var unitOfWork1 = _unitOfWorkManager.Begin())
+            {
+                try
+                {
+                    var assign = await _assignationManager.Create(assignation);
+                }
+                catch (System.Exception e)
+                {
+                    throw new UserFriendlyException("Error", e.Message);
+                }
+                unitOfWork1.Complete();
+            }
 
-            await _assignationManager.Create(assignation);
+            /*using (var unitOfWork2 = _unitOfWorkManager.Begin())
+            {
+                try
+                {
+                    _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
+                }
+                catch (System.Exception e)
+                {
+                    throw new UserFriendlyException("Error en notificación", "Asignación creada. " + e.Message);
+                }
+                unitOfWork2.Complete();
+            }*/
         }
 
         [AbpAuthorize(PermissionNames.Operador)]

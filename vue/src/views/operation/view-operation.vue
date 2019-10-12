@@ -60,7 +60,7 @@
                        Notas: {{ this.operation.notes }} 
                    </Col>
                </Row>
-               <Button type="info" :long="true" v-if="operatorRenderOnly">{{L('Usuarios asignados')}}</Button>
+               <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="usersAssigned" v-if="operatorRenderOnly"></Table>
             <div slot="footer">
             </div>
         </Modal>
@@ -77,6 +77,7 @@
     import User from '@/store/entities/user'
     import Location from '@/store/entities/location'
     import OperationState from '@/store/entities/operationState'
+    import Assignation from '@/store/entities/assignation'
 
     class PageViewOperationRequest extends UserRequest {
     }
@@ -86,10 +87,19 @@
         @Prop({type:Boolean,default:false}) value:boolean;
         operation:Operation=new Operation();
 
-        locationRequest: PageViewOperationRequest = new PageViewOperationRequest();
+        pagerequest: PageViewOperationRequest = new PageViewOperationRequest();
         operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
 
         location:Location = new Location();
+        // usersAssigned:Array<User> = new Array<User>();
+
+        get loadingAssignation() {
+            return this.$store.state.assignation.loading;
+        }
+
+        get usersAssigned() {
+          return this.$store.state.assignation.usersAssignedToOperation;
+        }
 
         visibleChange(value:boolean){
             if(!value){
@@ -98,8 +108,11 @@
                 this.operation = Util.extend(true, {}, this.$store.state.operation.viewOperation);
             }
 
-            this.locationRequest["id"] = this.operation.locationId;
+            this.pagerequest["id"] = this.operation.locationId;
             this.getLocation();
+
+            this.pagerequest["id"] = this.operation.id;
+            this.getAssignations();
 
 
         }
@@ -108,9 +121,34 @@
         async getLocation() {
             this.location = await this.$store.dispatch({
                 type: 'location/get',
-                data: this.locationRequest
+                data: this.pagerequest
             })
         }
+
+        async getAssignations() {
+            await this.$store.dispatch({
+                type: 'assignation/getUsersByOperation',
+                data: this.pagerequest
+            })
+        }
+
+        columns = [
+            {
+                title: 'Nombre',
+                key: 'name'
+            },
+            {
+                title: 'Apellido',
+                key: 'surname'
+            },
+            {
+                title: 'Email',
+                key: 'emailAddress'
+            },
+            {
+                title: 'Telefono',
+                key: 'phone'
+            }]        
 
     }
 </script>
