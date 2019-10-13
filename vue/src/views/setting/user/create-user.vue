@@ -81,7 +81,6 @@
             this.user.userName = this.user.emailAddress;
             (this.$refs.userForm as any).validate(async (valid:boolean)=>{
                 if(valid){
-                    this.user.isActive=true;
                     await this.$store.dispatch({
                         type:'user/create',
                         data:this.user
