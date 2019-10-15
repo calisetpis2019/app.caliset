@@ -66,7 +66,7 @@
                     </Col>
                 </Row>
                 <div class="margin-top-10">
-                    <Table :loading="loading" :columns="columns" :no-data-text="L('NoDatas')" border :data="list">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list">
                     </Table>
                     <Page show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
                 </div>

@@ -59,9 +59,11 @@
         validatePassCheck = (rule:any, value:any, callback:any) => {
             if (!value) {
                 callback(new Error(this.L('Campo obligatorio')));
-            } else if (value !== this.instanceChangePassword.newPassword) {
+            }
+            else if (value !== this.instanceChangePassword.newPassword) {
                 callback(new Error(this.L('La confirmación no coincide con la contraseña')));
-            } else {
+            }
+            else {
                 callback();
             }
         }
