@@ -14,6 +14,7 @@ import location from './modules/location'
 import client from './modules/client'
 import assignation from './modules/assignation'
 import comment from './modules/comment'
+import changepasswordentity from './modules/change-password'
 const store = new Vuex.Store({
     state: {
         //
@@ -37,7 +38,8 @@ const store = new Vuex.Store({
         location,
         client,
         assignation,
-        comment
+        comment,
+        changepasswordentity
     }
 });
 
