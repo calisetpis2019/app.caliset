@@ -62,6 +62,7 @@
                </Row>
                <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="usersAssigned" v-if="operatorRenderOnly"></Table>
                <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
+               <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
             <div slot="footer">
             </div>
         </Modal>
@@ -79,6 +80,7 @@
     import Location from '@/store/entities/location'
     import OperationState from '@/store/entities/operationState'
     import Assignation from '@/store/entities/assignation'
+    import Comment from '@/store/entities/comment'
 
     class PageViewOperationRequest extends UserRequest {
     }
@@ -104,6 +106,10 @@
           return this.$store.state.assignation.usersAssignedToOperation;
         }
 
+        get comments() {
+           return this.$store.state.comment.commentsOfOperation; 
+        }
+
 
         visibleChange(value:boolean){
             if(!value){
@@ -121,6 +127,9 @@
             this.pagerequest["id"] = this.operation.id;
             this.getAssignations();
 
+            this.pagerequest["id"] = this.operation.id;
+            this.getComments();
+
 
         }
 
@@ -129,7 +138,6 @@
                 type: 'operation/get',
                 data: this.pagerequest
             })
-            console.log(this.operationReponse);
         }
 
         async getLocation() {
@@ -144,7 +152,16 @@
                 type: 'assignation/getUsersByOperation',
                 data: this.pagerequest
             })
+
         }
+
+        async getComments() {
+            await this.$store.dispatch({
+                type: 'comment/getCommentsByOperation',
+                data: this.pagerequest
+            })
+        }
+
 
 
 
@@ -170,6 +187,41 @@
             {
                 title: 'Muestras',
                 key: 'comment'
+            }
+        ]
+
+        columnsComments = [
+            {
+                title: 'Comentario',
+                key: 'commentary'
+            },
+            {
+              title:this.L('Actions'),
+              key:'Actions',
+              width:100,
+              render:(h:any,params:any)=>{
+                  var toRender;
+                  if(params.row.creatorUser.id === this.$store.state.session.user.id){
+                      toRender = [
+                          h('Button',{
+                                    props:{
+                                        type: 'success',
+                                        size:'small'
+                                    },
+                                    style:{
+                                        marginRight:'5px'
+                                    },
+                                    on:{
+                                        click:()=>{
+                                            // this.$store.commit('operation/view',params.row);
+                                            // this.view();
+                                        }
+                                    }
+                                },'Editar')
+                      ]
+                  }
+                  return toRender;
+              }
             }
         ]
     }

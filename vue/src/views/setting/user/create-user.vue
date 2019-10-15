@@ -45,9 +45,9 @@
                             <Input v-model="user.adress"></Input>
                         </FormItem>
 
-                        <!--<FormItem>
+                        <FormItem>
                             <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
-                        </FormItem>-->
+                        </FormItem>
 
                         <FormItem label="Rol" prop="roleNames" >
                             <CheckboxGroup v-model="user.roleNames">
