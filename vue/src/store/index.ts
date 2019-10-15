@@ -13,6 +13,7 @@ import operationState from './modules/operationState'
 import location from './modules/location'
 import client from './modules/client'
 import assignation from './modules/assignation'
+import comment from './modules/comment'
 const store = new Vuex.Store({
     state: {
         //
@@ -35,7 +36,8 @@ const store = new Vuex.Store({
         operationState,
         location,
         client,
-        assignation
+        assignation,
+        comment
     }
 });
 

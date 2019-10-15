@@ -8,6 +8,7 @@ import ListMutations from './list-mutations'
 interface OperationState extends ListState<Operation> {
     editOperation: Operation;
     viewOperation: Object;
+    commentOperation: Operation;
 }
 class OperationModule extends ListModule<OperationState, any, Operation>{
     state = {
@@ -17,7 +18,8 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         list: new Array<Operation>(),
         loading: false,
         editOperation: new Operation(),
-        viewOperation: new Object()
+        viewOperation: new Object(),
+        commentOperation: new Operation()
     }
     actions = {
         async getAll(context: ActionContext<OperationState, any>) {
@@ -54,7 +56,11 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         async get(context: ActionContext<OperationState, any>, payload: any) {
             let reponse = await Ajax.get('/api/services/app/Operation/GetOperationById?Id=' + payload.data.id);
             return reponse.data.result as Operation;
+        },
+        async end(context: ActionContext<OperationState, any>, payload: any) {
+            await Ajax.post('/api/services/app/Operation/EndOperation', payload);
         }
+
     };
     mutations = {
         setCurrentPage(state: OperationState, page: number) {
@@ -68,6 +74,9 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         },
         view(state: OperationState, operation: Object) {
             state.viewOperation = operation;
+        },
+        comment(state: OperationState, operation: Operation) {
+            state.commentOperation = operation;
         }
 
     }

@@ -10,12 +10,12 @@
                             </FormItem>
                         </Col>
                         <Col span="6">
-                            <FormItem :label="L('IsActive')+':'" style="width:100%">
+                            <FormItem label="Activo/Inactivo" style="width:100%">
                                 <!--Select should not set :value="'All'" it may not trigger on-change when first select 'NoActive'(or 'Actived') then select 'All'-->
                                 <Select :placeholder="L('Select')" @on-change="isActiveChange">
-                                    <Option value="All">{{L('All')}}</Option>
-                                    <Option value="Actived">{{L('Actived')}}</Option>
-                                    <Option value="NoActive">{{L('NoActive')}}</Option>
+                                    <Option value="All">Todos</Option>
+                                    <Option value="Actived">Activo</Option>
+                                    <Option value="NoActive">Inactivo</Option>
                                 </Select>
                             </FormItem>
                         </Col>
@@ -119,13 +119,19 @@
             return this.$store.state.user.currentPage;
         }
         columns=[{
-            title:this.L('UserName'),
+            title:'Usuario',
             key:'userName'
         },{
-            title:this.L('Name'),
+            title:'Nombre y apellido',
             render:(h:any,params:any)=>{
                 return h('span',params.row.name+' '+params.row.surname)
             }
+        },{
+            title:'Email',
+            key: 'emailAddress'  
+        },{
+            title:'Telefono',
+            key: 'phone'  
         },{
             title:this.L('IsActive'),
             render:(h:any,params:any)=>{
