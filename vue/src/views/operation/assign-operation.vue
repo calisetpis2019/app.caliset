@@ -107,7 +107,7 @@
         assignationRule={
             date:[
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
-            ]
+            ],
             inspectorId:[
                 {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Responsable')),trigger: 'blur'}
             ]

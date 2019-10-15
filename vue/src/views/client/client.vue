@@ -73,7 +73,6 @@
                 type: 'client/getAll',
                 data: this.pagerequest
             })
-            console.log(this.pagerequest);
         }
         get pageSize() {
             return this.$store.state.client.pageSize;

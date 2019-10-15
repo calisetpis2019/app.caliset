@@ -150,11 +150,12 @@
                 result.push({
                                 id: element["id"],
                                 bookingNumber: element["bookingNumber"],
+                                chargerId: element["charger"]["id"],
                                 chargerName: element["charger"]["name"],
                                 clientReference: element["clientReference"],
                                 commodity: element["commodity"],
                                 date: element["date"],
-                                destination: element["destiny"],
+                                destiny: element["destiny"],
                                 line: element["line"],
                                 location: locationName,
                                 locationId: element["location"]["id"],
@@ -364,6 +365,22 @@
                             }
                         },this.L('Delete')));
                 }
+
+                toRender.push(h('Button',{
+                            props:{
+                                type:'success',
+                                size:'small',
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:()=>{
+                                    this.$store.commit('operation/edit',params.row);
+                                    this.edit();
+                                }
+                            }
+                        },'Finalizada'));
                 return h('div', toRender);    
             }
         }]

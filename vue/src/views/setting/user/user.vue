@@ -78,7 +78,6 @@
             this.createModalShow=true;
         }
         isActiveChange(val:string){
-            console.log(val);
             if(val==='Actived'){
                 this.pagerequest.isActive=true;
             }else if(val==='NoActive'){
