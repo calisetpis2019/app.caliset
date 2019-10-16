@@ -26,7 +26,7 @@
                         </FormItem>
                         <FormItem label="Fecha de nacimiento" prop="birthDate">
                             <!--<Input v-model="user.birthDate" type="datetime" ></Input>-->
-                            <DatePicker format="dd/MM/yyyy" type="date" v-model="user.birthDate" style="width:100%"></DatePicker>
+                            <DatePicker type="date" v-model="user.birthDate" style="width:100%"></DatePicker>
                         </FormItem>
 
                         <FormItem label="Ciudad" prop="city">
