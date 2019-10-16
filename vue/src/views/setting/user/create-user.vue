@@ -28,13 +28,15 @@
                         </FormItem>
 
                         <FormItem :label="L('Documento')" prop="document">
-                            <Input v-model="user.document" type=number></Input>
+                            <!--<Input v-model="user.document" type="number"></Input>-->
+                            <input type="number" class="ivu-input" v-model="user.document"/>
                         </FormItem>
                         <FormItem :label="L('Número de contacto')" prop="phone">
                             <Input v-model="user.phone" :maxlength="32"></Input>
                         </FormItem>
                         <FormItem :label="L('Fecha de nacimiento')" prop="birthDate">
-                            <Input v-model="user.birthDate" type="date"></Input>
+                            <!--<Input v-model="user.birthDate" type="date"></Input>-->
+                            <DatePicker format="dd/MM/yyyy" type="date" v-model="user.birthDate" style="width:100%"></DatePicker>
                         </FormItem>
 
                         <FormItem :label="L('Ciudad')" prop="city">
@@ -43,10 +45,6 @@
 
                         <FormItem :label="L('Dirección')" prop="adress">
                             <Input v-model="user.adress"></Input>
-                        </FormItem>
-
-                        <FormItem>
-                            <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
 
                         <FormItem label="Rol" prop="roleNames" >
@@ -81,6 +79,7 @@
             this.user.userName = this.user.emailAddress;
             (this.$refs.userForm as any).validate(async (valid:boolean)=>{
                 if(valid){
+                    this.user.isActive=true;
                     await this.$store.dispatch({
                         type:'user/create',
                         data:this.user
