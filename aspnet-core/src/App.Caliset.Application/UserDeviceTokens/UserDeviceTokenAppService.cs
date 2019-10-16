@@ -40,6 +40,11 @@ namespace App.Caliset.UserDeviceTokens
             _userDeviceTokenManager.Create(udt);
         }
 
+        public bool existDeviceToken(long UserId)
+        {
+            return (_userDeviceTokenManager.getById(UserId) != null );
+          
+        }
 
         public void SendNotification(string Title, string Text)
         {

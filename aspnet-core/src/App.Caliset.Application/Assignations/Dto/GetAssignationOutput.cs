@@ -16,5 +16,6 @@ namespace App.Caliset.Assignations.Dto
         public DateTime Date { get; set; }
         public DateTime? DateFin { get; set; }
         public bool? Aware { get; set; }
+        public bool Notified { get; set; }
     }
 }

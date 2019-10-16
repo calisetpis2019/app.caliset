@@ -9,6 +9,7 @@ namespace App.Caliset.Models.UserDeviceTokens
     public interface IUserDeviceTokenManager : IDomainService
     {
         Task<UserDeviceToken> Create(UserDeviceToken DT);
+        string getById(long UserId);
         void Delete(int id);
     }
 }

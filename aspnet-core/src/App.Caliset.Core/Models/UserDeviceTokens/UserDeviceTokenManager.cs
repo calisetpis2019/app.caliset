@@ -49,5 +49,17 @@ namespace App.Caliset.Models.UserDeviceTokens
                 _repositoryUserDeviceToken.Delete(udt);
             }
         }
+
+        public string getById(long UserId)
+        {
+            try {
+                string tk = _repositoryUserDeviceToken.FirstOrDefault(x => x.UserId == UserId).DeviceToken;
+                return tk;
+                    }
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

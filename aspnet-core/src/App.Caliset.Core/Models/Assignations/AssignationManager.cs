@@ -28,7 +28,7 @@ namespace App.Caliset.Models.Assignations
             _operationManager = operationManager;
         }
 
-        public async Task<Assignation> Create(Assignation entity)
+        public async Task<int> Create(Assignation entity)
         {
             
             var Assignation = _repositoryAssignation.FirstOrDefault(x => x.Id == entity.Id);
@@ -39,16 +39,19 @@ namespace App.Caliset.Models.Assignations
             else
             {
                 entity.Aware = null;
+                entity.Notified = false;
                 try
                 {
-                    var assign = await _repositoryAssignation.InsertAsync(entity);
+                    
+                    return  await _repositoryAssignation.InsertAndGetIdAsync(entity);
+                   
                 }
                 catch (System.Exception e)
                 {
                     throw new UserFriendlyException("Error", e.Message);
                 }
 
-                return entity;
+               // return assign;
             }
         }
 
@@ -126,5 +129,9 @@ namespace App.Caliset.Models.Assignations
             _repositoryAssignation.Update(Asign);
         }
 
+        public void Notify(int idAssignation)
+        {
+            _repositoryAssignation.FirstOrDefault(x => x.Id == idAssignation).Notified = true ;
+        }
     }
 }

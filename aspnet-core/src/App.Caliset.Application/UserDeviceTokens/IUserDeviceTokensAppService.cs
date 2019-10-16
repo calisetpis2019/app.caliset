@@ -7,7 +7,8 @@ namespace App.Caliset.UserDeviceTokens
 {
     public interface IUserDeviceTokensAppService : IApplicationService
     {
-        void AddDeviceToken(string input);
+        void AddDeviceToken(string userDeviceToken);
         void SendNotification(string Title, string Text);
+        bool existDeviceToken(long UserId);
     }
 }

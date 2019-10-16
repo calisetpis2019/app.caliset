@@ -9,10 +9,11 @@ namespace App.Caliset.Models.Assignations
         IEnumerable<Assignation> GetAll();
         Assignation GetAssignationById(int id);
 
-        Task<Assignation> Create(Assignation entity);
+        Task<int> Create(Assignation entity);
         void Delete(int id);
         void ConfirmAssignation(int idAssignation);
         void RefuseAssignation(int idAssignation);
+        void Notify(int idAssignation);
     }
 }
 
