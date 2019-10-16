@@ -19,43 +19,53 @@ namespace Devil
         {
             InitializeComponent();
             eventLog1 = new System.Diagnostics.EventLog();
-            if (!System.Diagnostics.EventLog.SourceExists("Caliset"))
+            if (!System.Diagnostics.EventLog.SourceExists("CalidApp"))
             {
                 System.Diagnostics.EventLog.CreateEventSource(
-                    "Caliset", "MyNewLog");
+                    "CalidApp", "Logs_CalidApp");
             }
-            eventLog1.Source = "Caliset";
-            eventLog1.Log = "MyNewLog";
+            eventLog1.Source = "CalidApp";
+            eventLog1.Log = "Logs_CalidApp";
         }
 
         protected override void OnStart(string[] args)
         {
-            eventLog1.WriteEntry("Start.");
+            eventLog1.WriteEntry("Start DevilService.");
 
             Timer timer = new Timer();
-            //timer.Interval = TimeSpan.FromMinutes(15).TotalMilliseconds;
-            timer.Interval = 60000 * 15; // 60 seconds * 15
+            timer.Interval = TimeSpan.FromMinutes(15).TotalMilliseconds;
             timer.Elapsed += new ElapsedEventHandler(this.ChangeOperationsState);
             timer.Start();
         }
 
         protected override void OnStop()
         {
+            eventLog1.WriteEntry("Stop DevilService.");
         }
 
         public void ChangeOperationsState(object sender, ElapsedEventArgs args)
         {
             eventLog1.WriteEntry("Start ChangeOperationsState", EventLogEntryType.Information, eventId++);
+
+            var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["default"].ConnectionString;
             string queryString = "UPDATE Operations SET OperationStateId = 2 WHERE OperationStateId = 1 AND Date <= convert(date,GETDATE());";
 
-            using (SqlConnection connection = new SqlConnection("Server = N71412542\\LOCALHOST; Database = CalisetDb; Trusted_Connection = True;"))
+            using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(queryString, connection);
-                command.Connection.Open();
-                command.ExecuteNonQuery();
-            }
+                try
+                {
+                    command.Connection.Open();
+                    command.ExecuteNonQuery();
 
-            eventLog1.WriteEntry("Finish ChangeOperationState");
+                    eventLog1.WriteEntry("Finish ChangeOperationState", EventLogEntryType.Information, eventId);
+                }
+                catch (System.Data.SqlClient.SqlException ex)
+                {
+                    eventLog1.WriteEntry(ex.Message, EventLogEntryType.Information, eventId);
+                }
+                
+            }
 
         }
     }
