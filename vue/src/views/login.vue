@@ -65,7 +65,7 @@ export default class Login extends AbpBase {
     (this.$refs.loginform as any).validate(async (valid:boolean)=>{
        if(valid){
           this.$Message.loading({
-            content:this.L('LoginPrompt'),
+            content: 'Iniciando sesión',
             duration:0
           })
           await this.$store.dispatch({
@@ -82,10 +82,10 @@ export default class Login extends AbpBase {
   }
   rules={
     userNameOrEmailAddress: [
-      { required: true, message: this.L('UserNameRequired'), trigger: 'blur' }
+      { required: true, message: 'Este campo es obligatorio', trigger: 'blur' }
     ],
     password: [
-      { required: true, message: this.L('PasswordRequired'), trigger: 'blur' }
+      { required: true, message: 'Este campo es obligatorio', trigger: 'blur' }
     ]
   }
   created(){

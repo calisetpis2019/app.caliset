@@ -5,39 +5,77 @@
                @on-ok="save"
                @on-visible-change="visibleChange">
             <Form ref="operationForm" label-position="top" :rules="operationRule" :model="operation">
-                <Tabs value="detail">
-                    <TabPane :label="L('Details')" name="detail">
-                        <FormItem label="Tipo" prop="operationTypeId">
-                            <Select v-model="operation.operationTypeId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.operationTypeId">
-                                <Option v-for="item in listOfOperationTypes" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
-                        </FormItem>
+                <FormItem label="Tipo" prop="operationTypeId">
+                    <v-select v-model="operation.operationTypeId" label="name" :reduce="name => name.id" :options="listOfOperationTypes">
+                        <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                    </v-select>
+                </FormItem> 
 
-                        <FormItem label="Lugar" prop="locationId">
-                            <Select v-model="operation.locationId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.locationId">
-                                <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
-                        </FormItem>
+                <FormItem label="Lugar" prop="locationId">
+                    <v-select v-model="operation.locationId" label="name" :reduce="name => name.id" :options="listOfLocations">
+                        <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                    </v-select>
+                </FormItem>
 
-                        <FormItem label="Fecha y hora de inicio" prop="date">
-                            <VueCtkDateTimePicker v-model="operation.date" locale="es" v-bind:right="true" />
-                        </FormItem>
+                <FormItem label="Fecha y hora de inicio" prop="date">
+                    <VueCtkDateTimePicker v-model="operation.date" locale="es" v-bind:right="true" />
+                </FormItem>
 
-                        <FormItem label="Responsable" prop="managerId">
-                            <Select v-model="operation.managerId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.managerId">
-                                <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                            </Select>
-                        </FormItem>
+                <FormItem label="Responsable" prop="managerId">
+                    <v-select v-model="operation.managerId" label="name" :reduce="name => name.id" :options="listOfUsers">
+                        <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                    </v-select>
+                </FormItem>
 
-                        <FormItem label="Mercaderia" prop="commodity">
-                            <Input v-model="operation.commodity" :maxlength="32"></Input>
-                        </FormItem>
-                        
-                        <FormItem label="Paquete" prop="package">
-                            <Input v-model="operation.package" :maxlength="32"></Input>
-                        </FormItem>
-                    </TabPane>
-                </Tabs>
+                <FormItem label="Mercadería" prop="commodity">
+                    <Input v-model="operation.commodity" :maxlength="32"></Input>
+                </FormItem>
+                
+                <FormItem label="Empaque" prop="package">
+                    <Input v-model="operation.package" :maxlength="32"></Input>
+                </FormItem>
+
+                <FormItem label="Nominador" prop="nominatorId" v-if="operation.operationState != 'Finalizada'">
+                    <v-select v-model="operation.nominatorId" label="name" :reduce="name => name.id" :options="listOfClients">
+                        <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                    </v-select>
+                </FormItem>
+
+                <FormItem label="Cargador" prop="chargerId" v-if="operation.operationState != 'Finalizada'">
+                    <v-select v-model="operation.chargerId" label="name" :reduce="name => name.id" :options="listOfClients">
+                        <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                    </v-select>
+                </FormItem>
+
+                <FormItem label="Responsable" prop="managerId" v-if="operation.operationState != 'Finalizada'">
+                    <v-select v-model="operation.managerId" label="name" :reduce="name => name.id" :options="listOfUsers">
+                        <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
+                    </v-select>
+                </FormItem>
+
+                <FormItem label="Nombre del Barco" prop="ship" v-if="operation.operationState != 'Finalizada'">
+                    <Input v-model="operation.shipName" :maxlength="32"></Input>
+                </FormItem>
+
+                <FormItem label="Destino" prop="destination" v-if="operation.operationState != 'Finalizada'">
+                    <Input v-model="operation.destiny" :maxlength="32"></Input>
+                </FormItem>
+
+                <FormItem label="Referencia cliente" prop="clientReference" v-if="operation.operationState != 'Finalizada'">
+                    <Input v-model="operation.clientReference" :maxlength="32"></Input>
+                </FormItem>
+
+                <FormItem label="Linea" prop="line" v-if="operation.operationState != 'Finalizada'">
+                    <Input v-model="operation.line" :maxlength="32"></Input>
+                </FormItem>
+
+                <FormItem label="Número de booking" prop="bookingNumber" v-if="operation.operationState != 'Finalizada'">
+                    <Input v-model="operation.bookingNumber" :maxlength="32"></Input>
+                </FormItem>
+
+                <FormItem label="Notas" prop="notes" v-if="operation.operationState != 'Finalizada'">
+                    <Input v-model="operation.notes" :maxlength="32"></Input>
+                </FormItem>
             </Form>
             <div slot="footer">
                 <Button @click="cancel">{{L('Cancel')}}</Button>
@@ -79,6 +117,10 @@
             return this.$store.state.operationType.list;
         };
 
+        get listOfClients() {
+            return this.$store.state.client.list;
+        };
+
         save() {
             (this.$refs.operationForm as any).validate(async (valid:boolean)=>{
                 if (valid) {
@@ -105,6 +147,7 @@
             this.getOperationTypes()
             this.getLocations()
             this.getUsers()
+            this.getClients()
         }
 
         async getOperationTypes() {
@@ -127,7 +170,16 @@
 
         async getUsers() {
             await this.$store.dispatch({
-                type: 'user/getAll',
+                type: 'user/getAllUsers',
+                data: this.pagerequest
+            })
+
+        }
+
+        async getClients() {
+
+            await this.$store.dispatch({
+                type: 'client/getAll',
                 data: this.pagerequest
             })
 
@@ -151,6 +203,9 @@
             ],
             package       :[
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Package')),trigger: 'blur'}
+            ],
+            nominatorId     :[
+                {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Nominador')),trigger: 'blur'}
             ] 
         }
     }

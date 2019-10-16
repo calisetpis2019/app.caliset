@@ -51,7 +51,8 @@
         pagerequest: PageAssignOperationRequest = new PageAssignOperationRequest();
 
         get listOfUsers() {
-            var result = [];
+            return this.$store.state.user.list;
+            /*var result = [];
             var auxUsuarios=this.$store.state.user.list;
             for (let i = 0; i < auxUsuarios.length; i++) {
                 var roles=auxUsuarios[i]["roleNames"];
@@ -62,7 +63,7 @@
                     }
                 }
             }
-            return result;
+            return result;*/
         }
 
         save() {
@@ -74,9 +75,9 @@
                         data:this.assignation
                     });
                     (this.$refs.assignationForm as any).resetFields();
-                    this.$Message.success('Asignación creada exitosamente');
                     this.$emit('save-success');
                     this.$emit('input',false);
+                    this.$Message.success({content:'Asignación creada exitosamente.',duration:3.5});
                 }
             })
         }
@@ -105,9 +106,6 @@
 
         assignationRule={
             date:[
-                {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
-            ],
-            dateFin:[
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Fecha y hora')),trigger: 'blur'}
             ],
             inspectorId:[

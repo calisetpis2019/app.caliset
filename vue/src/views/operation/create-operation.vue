@@ -225,20 +225,6 @@
             ] 
         }
 
-        test(e){
-            console.log(e);
-            console.log(event);
-            // console.log(n);
-            // if (t == false ){
-            //     if (this.$refs['operationTypeSel']['value'] != ""){
-            //         console.log('valido');
-                    
-            //     }else {
-            //         console.log('invalido');
-            //         (this.$refs['operationTypeSel'] as any).reset();
-            //     }
-            // }
-        }
 
     }
 </script>

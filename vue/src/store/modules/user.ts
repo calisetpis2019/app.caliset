@@ -8,6 +8,7 @@ import PageResult from '@/store/entities/page-result';
 import ListMutations from './list-mutations'
 
 interface UserState extends ListState<User>{
+    viewUser:User,
     editUser:User,
     roles:Role[]
 }
@@ -21,23 +22,26 @@ class UserModule extends ListModule<UserState,any,User>{
         pageSize:10,
         list: new Array<User>(),
         loading:false,
+        viewUser:new User(),
         editUser:new User(),
         roles:new Array<Role>()
     }
     actions={
         async getAll(context:ActionContext<UserState,any>,payload:any){
             context.state.loading=true;
-            // Agregado porque la cantidad de items que llegan del back por defecto esta topeado en 10
-            payload.data.MaxResultCount = 100000;
-            // --------------------------------------------------------------------------------------
             let reponse=await Ajax.get('/api/services/app/User/GetAll',{params:payload.data});
             context.state.loading=false;
             let page=reponse.data.result as PageResult<User>;
             context.state.totalCount=page.totalCount;
             context.state.list=page.items;
         },
+        async getAllUsers(context:ActionContext<UserState,any>,payload:any){
+            context.state.loading=true;
+            let reponse=await Ajax.get('/api/services/app/User/GetAllUsers',{});
+            context.state.loading=false;
+            context.state.list = reponse.data.result;
+        },
         async create(context: ActionContext<UserState, any>, payload: any) {
-            console.log(payload.data);
             await Ajax.post('/api/services/app/User/Create',payload.data);
         },
         async update(context:ActionContext<UserState,any>,payload:any){
@@ -67,6 +71,9 @@ class UserModule extends ListModule<UserState,any,User>{
         },
         edit(state:UserState,user:User){
             state.editUser=user;
+        },
+        view(state:UserState,user:User){
+            state.viewUser=user;
         }
     }
 }

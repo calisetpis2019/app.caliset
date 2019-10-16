@@ -29,7 +29,7 @@ namespace App.Caliset.Models.UserDeviceTokens
                 {
                     return await _repositoryUserDeviceToken.InsertAsync(DT);
                 }
-                catch (Exception e)
+                catch
                 {
                     throw new UserFriendlyException("Error agregando el DeviceToken del Usuario");
 

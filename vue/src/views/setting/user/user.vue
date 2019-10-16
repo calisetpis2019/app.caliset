@@ -10,12 +10,12 @@
                             </FormItem>
                         </Col>
                         <Col span="6">
-                            <FormItem :label="L('IsActive')+':'" style="width:100%">
+                            <FormItem label="Activo/Inactivo" style="width:100%">
                                 <!--Select should not set :value="'All'" it may not trigger on-change when first select 'NoActive'(or 'Actived') then select 'All'-->
                                 <Select :placeholder="L('Select')" @on-change="isActiveChange">
-                                    <Option value="All">{{L('All')}}</Option>
-                                    <Option value="Actived">{{L('Actived')}}</Option>
-                                    <Option value="NoActive">{{L('NoActive')}}</Option>
+                                    <Option value="All">Todos</Option>
+                                    <Option value="Actived">Activo</Option>
+                                    <Option value="NoActive">Inactivo</Option>
                                 </Select>
                             </FormItem>
                         </Col>
@@ -31,13 +31,14 @@
                     </Row>
                 </Form>
                 <div class="margin-top-10">
-                    <Table :loading="loading" :columns="columns" :no-data-text="L('NoDatas')" border :data="list">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list">
                     </Table>
                     <Page  show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
                 </div>
             </div>
         </Card>
         <create-user v-model="createModalShow" @save-success="getpage"></create-user>
+        <view-user v-model="viewModalShow" ></view-user>
         <edit-user v-model="editModalShow" @save-success="getpage"></edit-user>
     </div>
 </template>
@@ -48,6 +49,8 @@
     import PageRequest from '@/store/entities/page-request'
     import CreateUser from './create-user.vue'
     import EditUser from './edit-user.vue'
+    import ViewUser from './view-user.vue'
+
     class  PageUserRequest extends PageRequest{
         keyword:string;
         isActive:boolean=null;//nullable
@@ -56,9 +59,13 @@
     }
 
     @Component({
-        components:{CreateUser,EditUser}
+        components:{CreateUser,EditUser,ViewUser}
     })
     export default class Users extends AbpBase{
+
+        view(){
+            this.viewModalShow=true;
+        }
         edit(){
             this.editModalShow=true;
         }
@@ -67,6 +74,7 @@
         creationTime:Date[]=[];
 
         createModalShow:boolean=false;
+        viewModalShow:boolean=false;
         editModalShow:boolean=false;
         get list(){
             return this.$store.state.user.list;
@@ -78,7 +86,6 @@
             this.createModalShow=true;
         }
         isActiveChange(val:string){
-            console.log(val);
             if(val==='Actived'){
                 this.pagerequest.isActive=true;
             }else if(val==='NoActive'){
@@ -96,11 +103,8 @@
             this.getpage();
         }
         async getpage(){
-          
             this.pagerequest.maxResultCount=this.pageSize;
             this.pagerequest.skipCount=(this.currentPage-1)*this.pageSize;
-            //filters
-            
             if (this.creationTime.length>0) {
                 this.pagerequest.from=this.creationTime[0];
             }
@@ -123,33 +127,69 @@
             return this.$store.state.user.currentPage;
         }
         columns=[{
-            title:this.L('UserName'),
+            title:'Usuario',
             key:'userName'
         },{
-            title:this.L('Name'),
-            key:'name'
+            title:'Nombre y apellido',
+            render:(h:any,params:any)=>{
+                return h('span',params.row.name+' '+params.row.surname)
+            }
+        },{
+            title:'Email',
+            key: 'emailAddress'  
+        },{
+            title:'Telefono',
+            key: 'phone'  
         },{
             title:this.L('IsActive'),
             render:(h:any,params:any)=>{
                return h('span',params.row.isActive?this.L('Yes'):this.L('No'))
             }
         },{
-            title:'Fecha de creación',
-            key:'creationTime',
+            title:"Roles",
             render:(h:any,params:any)=>{
-                return h('span',new Date(params.row.creationTime).toLocaleDateString())
+                var roles=params.row.roleNames;
+                var concatenacion="";
+                for (let i = 0; i < roles.length; i++) {
+                    if(i==0){
+                        concatenacion=concatenacion+roles[i][0]+roles[i].substring(1,roles[i].length).toLowerCase();
+                    }
+                    else{
+                        concatenacion=concatenacion+", "+roles[i][0]+roles[i].substring(1,roles[i].length).toLowerCase();
+                    }
+                    
+                }
+                return h('span',concatenacion)
             }
         },{
-            title:'Última conexión',
+            title:"Último Login",
             render:(h:any,params:any)=>{
                 return h('span',new Date(params.row.lastLoginTime).toLocaleString())
             }
         },{
             title:this.L('Actions'),
             key:'Actions',
-            width:150,
+            width:200,
             render:(h:any,params:any)=>{
                 return h('div',[
+
+                    //Boton Ver:
+                    h('Button',{
+                        props:{
+                            type:'success',
+                            size:'small'
+                        },
+                        style:{
+                            marginRight:'5px'
+                        },
+                        on:{
+                            click:()=>{
+                                this.$store.commit('user/view',params.row);
+                                this.view();
+                            }
+                        }
+                    },this.L('View')),
+                    //Boton Editar:
                     h('Button',{
                         props:{
                             type:'primary',
@@ -165,6 +205,7 @@
                             }
                         }
                     },this.L('Edit')),
+                    //Boton Borrar:
                     h('Button',{
                         props:{
                             type:'error',

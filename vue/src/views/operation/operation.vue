@@ -66,7 +66,7 @@
                     </Col>
                 </Row>
                 <div class="margin-top-10">
-                    <Table :loading="loading" :columns="columns" :no-data-text="L('NoDatas')" border :data="list">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list">
                     </Table>
                     <Page show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
                 </div>
@@ -76,6 +76,7 @@
         <edit-operation v-model="editModalShow"  @save-success="getpage"></edit-operation>
         <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
         <assign-operation v-model="assignModalShow" @save-success="getpage"></assign-operation>
+        <comment-operation v-model="commentModalShow" ></comment-operation>
     </div>
 </template>
 <script lang="ts">
@@ -86,6 +87,7 @@
     import CreateOperation from './create-operation.vue'
     import EditOperation from './edit-operation.vue'
     import ViewOperation from './view-operation.vue'
+    import CommentOperation from './comment-operation.vue'
     import Operation from '../../store/entities/operation'
     import Location from '../../store/entities/location'
     import User from '../../store/entities/user'
@@ -93,6 +95,7 @@
     import OperationState from '../../store/entities/OperationState'
     import AssignOperation from './assign-operation.vue'
     import Assignation from '../../store/entities/assignation'
+    import Comment from '../../store/entities/comment'
     import moment from 'moment'
 
     class PageOperationRequest extends PageRequest {
@@ -114,7 +117,7 @@
     }
 
     @Component({
-        components: { CreateOperation, EditOperation, ViewOperation, AssignOperation }
+        components: { CreateOperation, EditOperation, ViewOperation, AssignOperation, CommentOperation }
     })
     export default class Operations extends AbpBase {
         edit(){
@@ -129,7 +132,8 @@
         createModalShow: boolean = false;
         editModalShow:boolean=false;
         viewModalShow: boolean = false;
-	assignModalShow: boolean = false;
+       	assignModalShow: boolean = false;
+        commentModalShow: boolean = false;
         
 	get list() {
 
@@ -139,7 +143,6 @@
 
             auxOperations = this.$store.state.operation.list;
             auxLocations = this.$store.state.location.list;
-            // console.log(auxOperations);
             auxOperations.forEach( (element) => {
                 let locationName = "";
                 auxLocations.forEach( (location) =>{
@@ -150,11 +153,12 @@
                 result.push({
                                 id: element["id"],
                                 bookingNumber: element["bookingNumber"],
+                                chargerId: element["charger"]["id"],
                                 chargerName: element["charger"]["name"],
                                 clientReference: element["clientReference"],
                                 commodity: element["commodity"],
                                 date: element["date"],
-                                destination: element["destiny"],
+                                destiny: element["destiny"],
                                 line: element["line"],
                                 location: locationName,
                                 locationId: element["location"]["id"],
@@ -195,6 +199,10 @@
 
         view() {
             this.viewModalShow = true;
+        }
+
+        comment(){
+            this.commentModalShow = true;
         }
 
         create() {
@@ -272,7 +280,6 @@
                                 h('span', moment(params.row.date).locale('es').format(" DD [de] MMMM [del] YYYY"))
                             ]);
                         }
-                
             },
             {
                 title: this.L('Ubicación'),
@@ -288,7 +295,7 @@
             },{
             title:this.L('Actions'),
             key:'Actions',
-            width:270,
+            width:420,
             render:(h:any,params:any)=>{
                 var toRender = [
                         h('Button',{
@@ -362,7 +369,44 @@
                                     })
                                 }
                             }
-                        },this.L('Delete')));
+                        },'Eliminar'));
+                }
+
+                if (params.row.operationState != 'Finalizada'){
+                    toRender.push(h('Button',{
+                                props:{
+                                    type:'error',
+                                    size:'small',
+                                },
+                                style:{
+                                    marginRight:'5px'
+                                },
+                                on:{
+                                    click:async ()=>{
+                                        this.$store.dispatch('operation/end',params.row);
+                                        await this.getpage();
+                                    }
+                                }
+                            },'Finalizar'));
+                }
+
+                if (Util.abp.auth.hasPermission('Pages.Administrador') || 
+                    params.row.operationState != 'Finalizada'){
+                    toRender.push(h('Button',{
+                            props:{
+                                type:'warning',
+                                size:'small',
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:() =>{
+                                    this.$store.commit('operation/edit',params.row);
+                                    this.comment();
+                                }
+                            }
+                        },'Comentar'));    
                 }
                 return h('div', toRender);    
             }

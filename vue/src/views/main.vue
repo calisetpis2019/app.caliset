@@ -45,7 +45,7 @@
                                     <Icon type="arrow-down-b"></Icon>
                                 </a>
                                 <DropdownMenu slot="list">
-                                    <DropdownItem name="ownSpace">{{L('UserProfile')}}</DropdownItem>
+                                    <DropdownItem name="ownSpace">{{L('Cambio de Contraseña')}}</DropdownItem>
                                     <DropdownItem name="loginout" divided>{{L('Logout')}}</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
@@ -66,6 +66,7 @@
             </div>
             <copyfooter :copyright="L('CopyRight')"></copyfooter>
         </div>
+        <change-password v-model="boolChangePasswordModal"></change-password>
     </div>
 </template>
 <script lang="ts">
@@ -78,10 +79,10 @@
     import notice from '../components/notices/notice.vue';
     import util from '../lib/util';
     import copyfooter from '../components/Footer.vue'
-    //import LanguageList from '../components/language-list.vue'
     import AbpBase from '../lib/abpbase'
+    import ChangePassword from './change-password.vue'
     @Component({
-      components:{shrinkableMenu,tagsPageOpened,breadcrumbNav,fullScreen,lockScreen,notice,copyfooter/*,LanguageList*/}
+      components:{shrinkableMenu,tagsPageOpened,breadcrumbNav,fullScreen,lockScreen,notice,copyfooter,ChangePassword}
     })
     export default class Main extends AbpBase {
         shrink:boolean=false;
@@ -89,6 +90,7 @@
           return this.$store.state.session.user?this.$store.state.session.user.name:''
         }
         isFullScreen:boolean=false;
+        boolChangePasswordModal:boolean=false;
         messageCount:string='0';
         get openedSubmenuArr(){
           return this.$store.state.app.openedSubmenuArr
@@ -132,11 +134,13 @@
         }
         handleClickUserDropdown (name:string) {
           if (name === 'ownSpace') {
-            util.openNewPage(this, 'ownspace_index',null,null);
+            this.showChangePasswordModal();
+            /*util.openNewPage(this, 'ownspace_index',null,null);
             this.$router.push({
               name: 'ownspace_index'
-            });
-          } else if (name === 'loginout') {
+            });*/
+          }
+          else if (name === 'loginout') {
             this.$store.commit('app/logout', this);
             util.abp.auth.clearToken();
             location.reload();
@@ -186,6 +190,9 @@
         }
         created () {
             this.$store.commit('app/setOpenedList');
+        }
+        showChangePasswordModal(){
+            this.boolChangePasswordModal=true;
         }
     }
 </script>

@@ -8,30 +8,32 @@
             <Form ref="userForm"  label-position="top" :rules="userRule" :model="user">
                 <Tabs value="detail">
                     <TabPane :label="L('Details')" name="detail">
-                        <FormItem :label="L('EmailAddress')" prop="emailAddress">
+                        <FormItem label="Correo electrónico" prop="emailAddress">
                             <Input v-model="user.emailAddress" type="email" :maxlength="32"></Input>
                         </FormItem>
-                        <FormItem :label="L('Name')" prop="name">
+                        <FormItem label="Nombre" prop="name">
                             <Input v-model="user.name" :maxlength="32"></Input>
                         </FormItem>
-                        <FormItem :label="L('Surname')" prop="surname">
+                        <FormItem label="Apellido" prop="surname">
                             <Input v-model="user.surname" :maxlength="1024"></Input>
                         </FormItem>
-                        <FormItem :label="L('Document')" prop="document">
-                            <Input v-model="user.document" :maxlength="32"></Input>
+                        <FormItem label="Documento" prop="document">
+                            <input type="number" class="ivu-input" v-model="user.document"/>
+                            <!--<Input v-model="user.document" :maxlength="32"></Input>-->
                         </FormItem>
-                        <FormItem :label="L('Phone')" prop="phone">
+                        <FormItem label="Número de contacto" prop="phone">
                             <Input v-model="user.phone" :maxlength="32"></Input>
                         </FormItem>
-                        <FormItem :label="L('BirthDate')" prop="birthDate">
-                            <Input v-model="user.birthDate" type="datetime" ></Input>
+                        <FormItem label="Fecha de nacimiento" prop="birthDate">
+                            <!--<Input v-model="user.birthDate" type="datetime" ></Input>-->
+                            <DatePicker type="date" v-model="user.birthDate" style="width:100%"></DatePicker>
                         </FormItem>
 
-                        <FormItem :label="L('City')" prop="city">
+                        <FormItem label="Ciudad" prop="city">
                             <Input v-model="user.city"></Input>
                         </FormItem>
 
-                        <FormItem :label="L('Adress')" prop="adress">
+                        <FormItem label="Dirección" prop="adress">
                             <Input v-model="user.adress"></Input>
                         </FormItem>
                         <FormItem>

@@ -120,5 +120,17 @@ namespace App.Caliset.Operations
             ObjectMapper.Map(input, operation);
             _operationManager.Update(operation);
         }
+
+        [AbpAuthorize(PermissionNames.Operador)]
+        public void ActivateOperation(int id)
+        {
+            var operation = _operationManager.GetOperationById(id);
+            if (operation.OperationStateId != 1)
+            {
+                throw new UserFriendlyException("Error", "La operación debe estar en estado Futura");
+            }
+            operation.OperationStateId = 2;
+            _operationManager.Update(operation);
+        }
     }
 }

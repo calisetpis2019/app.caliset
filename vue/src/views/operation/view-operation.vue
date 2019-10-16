@@ -2,7 +2,8 @@
     <div>
         <Modal :title="L('Datos de la Operación')"
                :value="value"
-               :width="500"
+               :width="1000"
+               :fullscreen="true"
                @on-visible-change="visibleChange">
                <Row>
                    <Col span="12">
@@ -41,7 +42,7 @@
                        Nombre del barco: {{ this.operation.shipName }} 
                    </Col>
                    <Col span="12">
-                       Destino: {{ this.operation.destination }} 
+                       Destino: {{ this.operation.destiny }} 
                    </Col>
                </Row>
                <Row>
@@ -60,10 +61,16 @@
                        Notas: {{ this.operation.notes }} 
                    </Col>
                </Row>
+               <Divider>Usuarios asignados</Divider>
                <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="usersAssigned" v-if="operatorRenderOnly"></Table>
+               <Divider>Muestras</Divider>
+               <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
+               <Divider>Comentarios</Divider>
+               <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
             <div slot="footer">
             </div>
         </Modal>
+        <edit-comment-operation v-model="editCommentOperationModalShow" ></edit-comment-operation>
     </div>
 </template>
 
@@ -78,19 +85,26 @@
     import Location from '@/store/entities/location'
     import OperationState from '@/store/entities/operationState'
     import Assignation from '@/store/entities/assignation'
+    import Comment from '@/store/entities/comment'
+    import EditCommentOperation from './edit-comment-operation.vue'
 
     class PageViewOperationRequest extends UserRequest {
     }
 
-    @Component
+    @Component({
+        components: { EditCommentOperation }
+    })
     export default class ViewOperation extends AbpBase{
         @Prop({type:Boolean,default:false}) value:boolean;
         operation:Operation=new Operation();
+        operationReponse:Operation=new Operation();
 
         pagerequest: PageViewOperationRequest = new PageViewOperationRequest();
         operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
 
         location:Location = new Location();
+
+        editCommentOperationModalShow: boolean = false;
         // usersAssigned:Array<User> = new Array<User>();
 
         get loadingAssignation() {
@@ -101,6 +115,11 @@
           return this.$store.state.assignation.usersAssignedToOperation;
         }
 
+        get comments() {
+           return this.$store.state.comment.commentsOfOperation; 
+        }
+
+
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
@@ -108,15 +127,27 @@
                 this.operation = Util.extend(true, {}, this.$store.state.operation.viewOperation);
             }
 
+            this.pagerequest["id"] = this.operation.id;
+            this.getOperation();
+
             this.pagerequest["id"] = this.operation.locationId;
             this.getLocation();
 
             this.pagerequest["id"] = this.operation.id;
             this.getAssignations();
 
+            this.pagerequest["id"] = this.operation.id;
+            this.getComments();
+
 
         }
 
+        async getOperation() {
+            this.operationReponse = await this.$store.dispatch({
+                type: 'operation/get',
+                data: this.pagerequest
+            })
+        }
 
         async getLocation() {
             this.location = await this.$store.dispatch({
@@ -130,7 +161,20 @@
                 type: 'assignation/getUsersByOperation',
                 data: this.pagerequest
             })
+
         }
+
+        async getComments() {
+            await this.$store.dispatch({
+                type: 'comment/getCommentsByOperation',
+                data: this.pagerequest
+            })
+        }
+
+        commentEdit(){
+            this.editCommentOperationModalShow = true;
+        }
+
 
         columns = [
             {
@@ -150,5 +194,46 @@
                 key: 'phone'
             }]        
 
+        columnsSamples =[
+            {
+                title: 'Muestras',
+                key: 'comment'
+            }
+        ]
+
+        columnsComments = [
+            {
+                title: 'Comentario',
+                key: 'commentary'
+            },
+            {
+              title:this.L('Actions'),
+              key:'Actions',
+              width:100,
+              render:(h:any,params:any)=>{
+                  var toRender;
+                  if(params.row.creatorUser.id === this.$store.state.session.user.id){
+                      toRender = [
+                          h('Button',{
+                                    props:{
+                                        type: 'success',
+                                        size:'small'
+                                    },
+                                    style:{
+                                        marginRight:'5px'
+                                    },
+                                    on:{
+                                        click:()=>{
+                                            this.$store.commit('comment/edit',params.row);
+                                            this.commentEdit();
+                                        }
+                                    }
+                                },'Editar')
+                      ]
+                  }
+                  return toRender;
+              }
+            }
+        ]
     }
 </script>

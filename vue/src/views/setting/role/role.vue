@@ -11,12 +11,11 @@
                         </Col>
                     </Row>
                     <Row>
-                        <Button @click="create" icon="android-add" type="primary" size="large">{{L('Add')}}</Button>
                         <Button icon="ios-search" type="primary" size="large" @click="getpage" class="toolbar-btn">{{L('Find')}}</Button>
                     </Row>
                 </Form>
                 <div class="margin-top-10">
-                    <Table :loading="loading" :columns="columns" :no-data-text="L('NoDatas')" border :data="list">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list">
                     </Table>
                     <Page  show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
                 </div>
@@ -120,30 +119,7 @@
                                 this.edit();
                             }
                         }
-                    },this.L('Edit')),
-                    h('Button',{
-                        props:{
-                            type:'error',
-                            size:'small'
-                        },
-                        on:{
-                            click:async ()=>{
-                                this.$Modal.confirm({
-                                        title:this.L('Tips'),
-                                        content:this.L('DeleteRolesConfirm'),
-                                        okText:this.L('Yes'),
-                                        cancelText:this.L('No'),
-                                        onOk:async()=>{
-                                            await this.$store.dispatch({
-                                                type:'role/delete',
-                                                data:params.row
-                                            })
-                                            await this.getpage();
-                                        }
-                                })
-                            }
-                        }
-                    },this.L('Delete'))
+                    },this.L('Edit'))
                 ])
             }
         }]
