@@ -94,11 +94,11 @@ namespace App.Caliset.Users
 
             var user = await _userManager.GetUserByIdAsync(input.Id);
 
-            MapToEntity(input, user);
+            MapToEntity(input, user); 
 
             CheckErrors(await _userManager.UpdateAsync(user));
 
-            if (input.RoleNames != null)
+            if (input.RoleNames != null) 
             {
                 CheckErrors(await _userManager.SetRoles(user, input.RoleNames));
             }
