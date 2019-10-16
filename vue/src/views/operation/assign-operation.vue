@@ -75,9 +75,9 @@
                         data:this.assignation
                     });
                     (this.$refs.assignationForm as any).resetFields();
-                    this.$Message.success('Asignación creada exitosamente');
                     this.$emit('save-success');
                     this.$emit('input',false);
+                    this.$Message.success({content:'Asignación creada exitosamente.',duration:3.5});
                 }
             })
         }

@@ -29,8 +29,6 @@ class ClientModule extends ListModule<ClientState, any, Client>{
             await Ajax.post('/api/services/app/Client/Create', payload.data);
         },
         async update(context: ActionContext<ClientState, any>, payload: any) {
-            console.log("update: ");
-            console.log(payload.data);
             await Ajax.put('/api/services/app/Client/Update', payload.data);
         },
         async delete(context: ActionContext<ClientState, any>, payload: any) {

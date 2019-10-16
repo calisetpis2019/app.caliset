@@ -3,6 +3,7 @@
         <Modal :title="L('Datos de la Operación')"
                :value="value"
                :width="1000"
+               :fullscreen="true"
                @on-visible-change="visibleChange">
                <Row>
                    <Col span="12">
@@ -60,12 +61,16 @@
                        Notas: {{ this.operation.notes }} 
                    </Col>
                </Row>
+               <Divider>Usuarios asignados</Divider>
                <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="usersAssigned" v-if="operatorRenderOnly"></Table>
+               <Divider>Muestras</Divider>
                <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
+               <Divider>Comentarios</Divider>
                <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
             <div slot="footer">
             </div>
         </Modal>
+        <edit-comment-operation v-model="editCommentOperationModalShow" ></edit-comment-operation>
     </div>
 </template>
 
@@ -81,11 +86,14 @@
     import OperationState from '@/store/entities/operationState'
     import Assignation from '@/store/entities/assignation'
     import Comment from '@/store/entities/comment'
+    import EditCommentOperation from './edit-comment-operation.vue'
 
     class PageViewOperationRequest extends UserRequest {
     }
 
-    @Component
+    @Component({
+        components: { EditCommentOperation }
+    })
     export default class ViewOperation extends AbpBase{
         @Prop({type:Boolean,default:false}) value:boolean;
         operation:Operation=new Operation();
@@ -96,6 +104,7 @@
 
         location:Location = new Location();
 
+        editCommentOperationModalShow: boolean = false;
         // usersAssigned:Array<User> = new Array<User>();
 
         get loadingAssignation() {
@@ -162,7 +171,9 @@
             })
         }
 
-
+        commentEdit(){
+            this.editCommentOperationModalShow = true;
+        }
 
 
         columns = [
@@ -213,8 +224,8 @@
                                     },
                                     on:{
                                         click:()=>{
-                                            // this.$store.commit('operation/view',params.row);
-                                            // this.view();
+                                            this.$store.commit('comment/edit',params.row);
+                                            this.commentEdit();
                                         }
                                     }
                                 },'Editar')
