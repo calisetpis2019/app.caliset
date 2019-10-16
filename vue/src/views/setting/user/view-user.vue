@@ -46,6 +46,18 @@
                             </li>
                         </ul>
                     </TabPane>
+                    <TabPane :label="L('Asignaciones')" name="asignations">
+                        <!-- Aca van las asignaciones del usuario sobre operaciones -->
+                        <!--<ul>
+                            <li v-for="role in roles" style="font-size: 20px;margin-left: 30px">
+                                {{role.name}}
+                            </li>
+                        </ul>
+                        -->
+                    </TabPane>
+                    <TabPane :label="L('Adjuntos')" name="attachments">
+                        <!-- Aca van documentos adjuntos del usuario -->
+                    </TabPane>
 <!--
                     <TabPane :label="L('Roles')" name="roles">
                         <CheckboxGroup v-model="user.roleNames">
