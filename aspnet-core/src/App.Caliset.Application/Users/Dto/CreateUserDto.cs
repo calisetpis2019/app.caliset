@@ -49,7 +49,7 @@ namespace App.Caliset.Users.Dto
         public string Phone { get; set; }
         public DateTime? BirthDate { get; set; }
         public string City { get; set; }
-        public string Adress { get; set; }
+        public string Address { get; set; }
         public string Specialty { get; set; }
 
     }
