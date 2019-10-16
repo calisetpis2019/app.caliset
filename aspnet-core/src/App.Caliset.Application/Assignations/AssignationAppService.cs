@@ -41,6 +41,8 @@ namespace App.Caliset.Assignations
                 try
                 {
                     var assign = await _assignationManager.Create(assignation);
+
+                    _notificationManager.sendNotification("Nueva Asignacion", "Se le ha asignado a una operacion el dia:" + input.Date, input.InspectorId);
                 }
                 catch (System.Exception e)
                 {
@@ -49,18 +51,7 @@ namespace App.Caliset.Assignations
                 unitOfWork1.Complete();
             }
 
-            /*using (var unitOfWork2 = _unitOfWorkManager.Begin())
-            {
-                try
-                {
-                    _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
-                }
-                catch (System.Exception e)
-                {
-                    throw new UserFriendlyException("Error en notificación", "Asignación creada. " + e.Message);
-                }
-                unitOfWork2.Complete();
-            }*/
+        
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
