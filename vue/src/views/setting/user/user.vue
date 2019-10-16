@@ -38,6 +38,7 @@
             </div>
         </Card>
         <create-user v-model="createModalShow" @save-success="getpage"></create-user>
+        <view-user v-model="viewModalShow" ></view-user>
         <edit-user v-model="editModalShow" @save-success="getpage"></edit-user>
     </div>
 </template>
@@ -48,6 +49,8 @@
     import PageRequest from '@/store/entities/page-request'
     import CreateUser from './create-user.vue'
     import EditUser from './edit-user.vue'
+    import ViewUser from './view-user.vue'
+
     class  PageUserRequest extends PageRequest{
         keyword:string;
         isActive:boolean=null;//nullable
@@ -56,9 +59,13 @@
     }
 
     @Component({
-        components:{CreateUser,EditUser}
+        components:{CreateUser,EditUser,ViewUser}
     })
     export default class Users extends AbpBase{
+
+        view(){
+            this.viewModalShow=true;
+        }
         edit(){
             this.editModalShow=true;
         }
@@ -67,6 +74,7 @@
         creationTime:Date[]=[];
 
         createModalShow:boolean=false;
+        viewModalShow:boolean=false;
         editModalShow:boolean=false;
         get list(){
             return this.$store.state.user.list;
@@ -161,9 +169,27 @@
         },{
             title:this.L('Actions'),
             key:'Actions',
-            width:150,
+            width:200,
             render:(h:any,params:any)=>{
                 return h('div',[
+
+                    //Boton Ver:
+                    h('Button',{
+                        props:{
+                            type:'success',
+                            size:'small'
+                        },
+                        style:{
+                            marginRight:'5px'
+                        },
+                        on:{
+                            click:()=>{
+                                this.$store.commit('user/view',params.row);
+                                this.view();
+                            }
+                        }
+                    },this.L('View')),
+                    //Boton Editar:
                     h('Button',{
                         props:{
                             type:'primary',
@@ -179,6 +205,7 @@
                             }
                         }
                     },this.L('Edit')),
+                    //Boton Borrar:
                     h('Button',{
                         props:{
                             type:'error',

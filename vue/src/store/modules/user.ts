@@ -8,6 +8,7 @@ import PageResult from '@/store/entities/page-result';
 import ListMutations from './list-mutations'
 
 interface UserState extends ListState<User>{
+    viewUser:User,
     editUser:User,
     roles:Role[]
 }
@@ -21,6 +22,7 @@ class UserModule extends ListModule<UserState,any,User>{
         pageSize:10,
         list: new Array<User>(),
         loading:false,
+        viewUser:new User(),
         editUser:new User(),
         roles:new Array<Role>()
     }
@@ -69,6 +71,9 @@ class UserModule extends ListModule<UserState,any,User>{
         },
         edit(state:UserState,user:User){
             state.editUser=user;
+        },
+        view(state:UserState,user:User){
+            state.viewUser=user;
         }
     }
 }
