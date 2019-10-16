@@ -31,9 +31,12 @@
                         <FormItem :label="L('Adress')" prop="adress">
                             <input :readonly="true" v-model="user.adress" style="width:100%"></input>
                         </FormItem>
+                        <FormItem :label="L('Speciality')" prop="speciality">
+                            <input :readonly="true" v-model="user.specialty" style="width:100%"></input>
+                        </FormItem>
                         <FormItem>
                             <h2 v-if="user.isActive" style="color:green;">{{L('IsActive')}}</h2>
-                            <h2 v-else="Inactivo"></h2>
+                            <h2 v-else style="color:red;" >Inactivo </h2>
                         </FormItem>
                     </TabPane>
                     <TabPane :label="L('Roles')" name="roles" v-model="user.roleNames">
