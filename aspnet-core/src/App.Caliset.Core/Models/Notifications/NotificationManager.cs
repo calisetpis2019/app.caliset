@@ -49,7 +49,7 @@ namespace App.Caliset.Models.Notifications
                 Console.WriteLine();
             } else
             {
-                throw new UserFriendlyException("No es posible enviar notificación.");
+                throw new UserFriendlyException("No es posible enviar notificación, compruebe que el usuario haya ingresado previamente al sistema.");
             }
             
 

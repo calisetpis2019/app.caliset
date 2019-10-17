@@ -24,66 +24,33 @@ namespace App.Caliset.Assignations
         private readonly AssignationManager _assignationManager;
         private readonly IAbpSession _abpSession;
         private readonly NotificationManager _notificationManager;
-        private readonly IUnitOfWorkManager _unitOfWorkManager;
-        private readonly UserManager _userManager;
-        private readonly UserDeviceTokenManager _repositoryUserDeviceTokens;
 
-        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession,
-            NotificationManager notificationManager, IUnitOfWorkManager unitOfWorkManager,
-              UserManager userManager, UserDeviceTokenManager repositoryUserDeviceTokens
-            )
+        public AssignationAppService(AssignationManager assignationManager, IAbpSession abpSession, NotificationManager notificationManager)
         {
             _assignationManager = assignationManager;
             _abpSession = abpSession;
             _notificationManager = notificationManager;
-            _unitOfWorkManager = unitOfWorkManager;
-            _userManager = userManager;
-            _repositoryUserDeviceTokens = repositoryUserDeviceTokens;
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
         public async Task Create(CreateAssignationInput input)
         {
-            var assignation = ObjectMapper.Map<Assignation>(input);
 
-            if (_abpSession.UserId == null)
-            {
-                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
-            }
-            long ActualUserId = _abpSession.UserId.Value;
-
-            User sndr = await _userManager.GetUserByIdAsync(ActualUserId);
-
-            using (var unitOfWork1 = _unitOfWorkManager.Begin())
-            {
-                try
-                {
-                  int idAss = await _assignationManager.Create(assignation);
-
-
-                    string tk = _repositoryUserDeviceTokens.getById(input.InspectorId);
-                    if  (tk!= null)// NO TIRA ERROR AL ENVIAR UNA NOTIFICACION A UN INSPECTOR SIN TOKEN
-                    {
-                        _notificationManager.sendNotification("Nueva Asignacion", "El usuario " + sndr.FullName + " le ha asignado a una operacion el dia:" + input.Date, input.InspectorId);
-                        _assignationManager.Notify(idAss);
-                    }
-
-
-                }
-                catch (System.Exception e)
-                {
-                    throw new UserFriendlyException("Error", e.Message);
-                }
-                unitOfWork1.Complete();
-            }
-
-        
+            var assignation = ObjectMapper.Map<Assignation>(input);   
+            
+            await _assignationManager.Create(assignation);
+            _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
+           
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
         public void Delete(DeleteAssignationInput input)
         {
+            var inspectorId = _assignationManager.GetAssignationById(input.Id).InspectorId;
+            
             _assignationManager.Delete(input.Id);
+            _notificationManager.sendNotification("Asignación", "Eliminación de asignación", inspectorId);
+            
         }
 
         [AbpAuthorize(PermissionNames.Operador)]

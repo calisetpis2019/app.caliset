@@ -36,22 +36,22 @@ namespace App.Caliset.Models.Assignations
             {
                 throw new UserFriendlyException("Error", "Ya existe asignación.");
             }
-            else
+            if (entity.Date > entity.DateFin)
             {
-                entity.Aware = null;
-                entity.Notified = false;
-                try
-                {
-                    
-                    return  await _repositoryAssignation.InsertAndGetIdAsync(entity);
-                   
-                }
-                catch (System.Exception e)
-                {
-                    throw new UserFriendlyException("Error", e.Message);
-                }
+                throw new UserFriendlyException("Error", "La fecha de inicio no puede ser mayor a la fecha de fin.");
+            }
 
-               // return assign;
+            entity.Aware = null;
+            entity.Notified = false;
+            try
+            {
+                    
+                return  await _repositoryAssignation.InsertAndGetIdAsync(entity);
+                   
+            }
+            catch (System.Exception e)
+            {
+                throw new UserFriendlyException("Error", e.Message);
             }
         }
 
