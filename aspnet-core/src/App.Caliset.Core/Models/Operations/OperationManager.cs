@@ -114,7 +114,7 @@ namespace App.Caliset.Models.Operations
 
         public void ActvateOperations()
         {
-            var operations = this.GetAllFilters("", 1).Where(oper => oper.Date <= DateTime.Now);
+            var operations = this.GetAll().Where(oper => oper.OperationStateId == 1).Where(oper => oper.Date <= DateTime.Now);
             foreach (Operation oper in operations)
             {
                 this.ActivateOperationById(oper.Id);
