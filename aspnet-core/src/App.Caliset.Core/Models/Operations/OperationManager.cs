@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Collections.Extensions;
@@ -94,6 +95,27 @@ namespace App.Caliset.Models.Operations
             return from Oper in this.GetAll()
                         where Oper.OperationStateId != 3
                         select Oper;
+        }
+
+        public void ActivateOperationById(int idOperation)
+        {
+            var operation = this.GetOperationById(idOperation);
+            if (operation.OperationStateId != 1)
+            {
+                throw new UserFriendlyException("Error", "La operación debe estar en estado Futura");
+            }
+            operation.OperationStateId = 2;
+            this.Update(operation);
+        }
+
+        public void ActvateOperations()
+        {
+            var operations = this.GetAllFilters(1).Where(oper => oper.Date <= DateTime.Now);
+            foreach (Operation oper in operations)
+            {
+                this.ActivateOperationById(oper.Id);
+                //Envio de notificacion
+            }
         }
     }
 }

@@ -148,15 +148,14 @@ namespace App.Caliset.Operations
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
-        public void ActivateOperation(int id)
+        public void ActivateOperationById(int id)
         {
-            var operation = _operationManager.GetOperationById(id);
-            if (operation.OperationStateId != 1)
-            {
-                throw new UserFriendlyException("Error", "La operación debe estar en estado Futura");
-            }
-            operation.OperationStateId = 2;
-            _operationManager.Update(operation);
+            _operationManager.ActivateOperationById(id);
+        }
+
+        public void ActvateOperations()
+        {
+            _operationManager.ActvateOperations();
         }
     }
 }
