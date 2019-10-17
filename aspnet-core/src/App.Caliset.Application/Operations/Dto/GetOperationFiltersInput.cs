@@ -28,6 +28,7 @@ namespace App.Caliset.Operations.Dto
         public int? ChargerId { get; set; }
         public int? OperationStateId { get; set; }
         public int? ManagerId { get; set; }
+        public string Keyword { get; set; }
 
     }
 }

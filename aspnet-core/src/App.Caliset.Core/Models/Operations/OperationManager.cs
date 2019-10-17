@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
+using Abp.Extensions;
 using Abp.UI;
 using Microsoft.EntityFrameworkCore;
 
@@ -80,14 +81,17 @@ namespace App.Caliset.Models.Operations
             _repositoryOperation.Update(entity);
         }
 
-        public IEnumerable<Operation> GetAllFilters(int? operationstateId = null, int? operationTypeId = null, int? locationId = null, int? nominatorId = null, int? chargerId = null, int? managerId = null)
+        public IEnumerable<Operation> GetAllFilters(string keyword, int? operationstateId = null, int? operationTypeId = null, int? locationId = null, int? nominatorId = null, int? chargerId = null, int? managerId = null)
         {
             return this.GetAll().WhereIf(operationstateId.HasValue, oper => oper.OperationStateId == operationstateId)
                 .WhereIf(operationTypeId.HasValue, oper => oper.OperationTypeId == operationTypeId)
                 .WhereIf(locationId.HasValue, oper => oper.LocationId == locationId)
                 .WhereIf(nominatorId.HasValue, oper => oper.NominatorId == nominatorId)
                 .WhereIf(chargerId.HasValue, oper => oper.ChargerId == chargerId)
-                .WhereIf(managerId.HasValue, oper => oper.ManagerId == managerId);
+                .WhereIf(managerId.HasValue, oper => oper.ManagerId == managerId)
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Commodity.Contains(keyword) || x.Package.Contains(keyword) || x.ShipName.Contains(keyword) 
+                || x.Destiny.Contains(keyword) || x.ClientReference.Contains(keyword) || x.Line.Contains(keyword) || x.BookingNumber.Contains(keyword) 
+                || x.OperationType.Name.Contains(keyword) || x.Location.Name.Contains(keyword) || x.Nominator.Name.Contains(keyword) || x.Charger.Name.Contains(keyword) || x.Manager.Name.Contains(keyword));
         }
 
         public IEnumerable<Operation> GetCurrentOperations()
@@ -110,12 +114,13 @@ namespace App.Caliset.Models.Operations
 
         public void ActvateOperations()
         {
-            var operations = this.GetAllFilters(1).Where(oper => oper.Date <= DateTime.Now);
+            var operations = this.GetAllFilters("", 1).Where(oper => oper.Date <= DateTime.Now);
             foreach (Operation oper in operations)
             {
                 this.ActivateOperationById(oper.Id);
                 //Envio de notificacion
             }
         }
+
     }
 }

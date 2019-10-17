@@ -106,7 +106,7 @@ namespace App.Caliset.Operations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetOperationOutput> GetAllFilters(GetOperationFiltersInput input)
         {
-            var operations = _operationManager.GetAllFilters(input.OperationStateId, input.OperationTypeId, input.LocationId, input.NominatorId, input.ChargerId, input.ManagerId);
+            var operations = _operationManager.GetAllFilters(input.Keyword, input.OperationStateId, input.OperationTypeId, input.LocationId, input.NominatorId, input.ChargerId, input.ManagerId);
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(operations);
 
             return output;
