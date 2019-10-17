@@ -36,7 +36,7 @@ namespace Devil
             eventLog1.WriteEntry("Start DevilService.");
 
             Timer timer = new Timer();
-            timer.Interval = TimeSpan.FromMinutes(1).TotalMilliseconds;
+            timer.Interval = TimeSpan.FromMinutes(15).TotalMilliseconds;
             timer.Elapsed += new ElapsedEventHandler(this.ChangeOperationsState);
             timer.Start();
         }
