@@ -1,13 +1,16 @@
 ﻿using Abp.Application.Services;
 using Abp.Authorization;
 using Abp.UI;
+using App.Caliset.Assignations.Dto;
 using App.Caliset.Authorization;
-
+using App.Caliset.Models.Assignations;
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Locations;
+using App.Caliset.Models.Notifications;
 using App.Caliset.Models.Operations;
 using App.Caliset.Models.OperationStates;
 using App.Caliset.Models.OperationTypes;
+using App.Caliset.Models.UserDeviceTokens;
 using App.Caliset.Operations.Dto;
 using System;
 using System.Collections.Generic;
@@ -26,6 +29,9 @@ namespace App.Caliset.Operations
         private readonly ILocationManager _locationManager;
         private readonly IClientManager _clientManager;
         private readonly IOperationTypeManager _operationTypeManager;
+        private readonly AssignationManager _assignationManager;
+        private readonly NotificationManager _notificationManager;
+        private readonly UserDeviceTokenManager _userDeviceTokerManager;
 
 
 
@@ -34,7 +40,10 @@ namespace App.Caliset.Operations
                                     ,ILocationManager locationManager
                                     ,IClientManager clientManager
                                     ,IOperationTypeManager operationTypeManager
-                          
+                                     , AssignationManager assignationManager
+                                     , NotificationManager notificationManager
+                                     , UserDeviceTokenManager userDeviceTokerManager
+
             )
         {
             _operationManager = operationManager;
@@ -42,7 +51,9 @@ namespace App.Caliset.Operations
             _locationManager = locationManager;
             _clientManager = clientManager;
             _operationTypeManager = operationTypeManager;
-  
+            _assignationManager = assignationManager;
+            _notificationManager = notificationManager;
+            _userDeviceTokerManager = userDeviceTokerManager;
         }
 
 
@@ -119,6 +130,21 @@ namespace App.Caliset.Operations
             }
             ObjectMapper.Map(input, operation);
             _operationManager.Update(operation);
+
+            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(null,operation.Id));
+
+            List<long> userNotify = new List<long>();
+
+            foreach (var x in output) 
+            {
+                if( (x.Aware==true || x.Aware == null) && (_userDeviceTokerManager.getById(x.InspectorId)!= null)) {
+                    if (!userNotify.Contains(x.InspectorId)) { 
+                        _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado una operacion a la que esta asignado", x.InspectorId);
+                        userNotify.Add(x.InspectorId);
+                    }
+
+                }
+            }
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
