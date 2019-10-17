@@ -266,6 +266,17 @@ namespace App.Caliset.Users
             return output;
         }
 
+        public void SetLastLoginTime()
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Inicie sesión.");
+            }
+            long userId = _abpSession.UserId.Value;
+
+            _userManager.SetLastLoginTime(userId);
+        }
+
     }
 }
 

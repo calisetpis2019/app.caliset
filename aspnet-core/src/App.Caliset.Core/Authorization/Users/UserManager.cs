@@ -63,6 +63,11 @@ namespace App.Caliset.Authorization.Users
         {
             return _userRepository.GetAllIncluding(x => x.Roles);
         }
+   
+        public void SetLastLoginTime(long idUser)
+        {
+            _userRepository.FirstOrDefault(x => x.Id == idUser).LastLoginTime = DateTime.Now;
+        }
 
         public IEnumerable<User> GetAllFilter(string keyword, bool? active)
         {
