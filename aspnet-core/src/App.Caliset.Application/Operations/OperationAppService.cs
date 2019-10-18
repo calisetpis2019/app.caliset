@@ -135,6 +135,7 @@ namespace App.Caliset.Operations
 
             List<long> userNotify = new List<long>();
 
+            //ARRANCA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
             foreach (var x in output) 
             {
                 if( (x.Aware==true || x.Aware == null) && (_userDeviceTokerManager.getById(x.InspectorId)!= null)) {
@@ -144,8 +145,22 @@ namespace App.Caliset.Operations
                     }
 
                 }
-            }
+            }//TERMINA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
         }
+
+        [AbpAuthorize(PermissionNames.Administrador)]
+        public void UpdateFinishedOperation(UpdateOperationInput input)
+        {
+            var operation = _operationManager.GetOperationById(input.Id);
+            if (operation.OperationStateId != 3)
+            {
+                throw new UserFriendlyException("Error", "Esta operacion no esta finalizada");
+            }
+            ObjectMapper.Map(input, operation);
+            _operationManager.Update(operation);
+
+        }
+
 
         [AbpAuthorize(PermissionNames.Operador)]
         public void ActivateOperationById(int id)

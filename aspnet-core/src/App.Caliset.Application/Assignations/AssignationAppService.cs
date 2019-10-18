@@ -37,7 +37,6 @@ namespace App.Caliset.Assignations
         {
 
             var assignation = ObjectMapper.Map<Assignation>(input);   
-            
             await _assignationManager.Create(assignation);
             _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
            

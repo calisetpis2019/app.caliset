@@ -28,7 +28,7 @@ namespace App.Caliset.Models.Assignations
             _operationManager = operationManager;
         }
 
-        public async Task<int> Create(Assignation entity)
+        public async Task Create(Assignation entity)
         {
             
             var Assignation = _repositoryAssignation.FirstOrDefault(x => x.Id == entity.Id);
@@ -46,7 +46,7 @@ namespace App.Caliset.Models.Assignations
             try
             {
                     
-                return  await _repositoryAssignation.InsertAndGetIdAsync(entity);
+                  await _repositoryAssignation.InsertAsync(entity);
                    
             }
             catch (System.Exception e)
