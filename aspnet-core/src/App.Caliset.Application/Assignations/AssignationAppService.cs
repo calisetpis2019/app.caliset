@@ -35,8 +35,7 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public async Task Create(CreateAssignationInput input)
         {
-
-            var assignation = ObjectMapper.Map<Assignation>(input);   
+            var assignation = ObjectMapper.Map<Assignation>(input);
             await _assignationManager.Create(assignation);
             _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
            

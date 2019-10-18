@@ -36,7 +36,7 @@ namespace App.Caliset.Models.Assignations
             {
                 throw new UserFriendlyException("Error", "Ya existe asignación.");
             }
-            if (entity.Date > entity.DateFin)
+            if (entity.DateFin != null && entity.Date > entity.DateFin)
             {
                 throw new UserFriendlyException("Error", "La fecha de inicio no puede ser mayor a la fecha de fin.");
             }
