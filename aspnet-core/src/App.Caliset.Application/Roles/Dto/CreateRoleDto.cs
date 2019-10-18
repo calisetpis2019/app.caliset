@@ -7,7 +7,8 @@ namespace App.Caliset.Roles.Dto
 {
     public class CreateRoleDto
     {
-        [Required]
+        public string Name { get; set; }
+        /*[Required]
         [StringLength(AbpRoleBase.MaxNameLength)]
         public string Name { get; set; }
         
@@ -20,6 +21,6 @@ namespace App.Caliset.Roles.Dto
         [StringLength(Role.MaxDescriptionLength)]
         public string Description { get; set; }
 
-        public List<string> GrantedPermissions { get; set; }
+        public List<string> GrantedPermissions { get; set; }*/
     }
 }

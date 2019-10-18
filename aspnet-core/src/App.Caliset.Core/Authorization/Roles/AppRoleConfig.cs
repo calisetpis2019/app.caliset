@@ -11,7 +11,21 @@ namespace App.Caliset.Authorization.Roles
 
             roleManagementConfig.StaticRoles.Add(
                 new StaticRoleDefinition(
-                    StaticRoleNames.Host.Admin,
+                    StaticRoleNames.Host.Administrador,
+                    MultiTenancySides.Host
+                )
+            );
+
+            roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    StaticRoleNames.Host.Operador,
+                    MultiTenancySides.Host
+                )
+            );
+
+            roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    StaticRoleNames.Host.Inspector,
                     MultiTenancySides.Host
                 )
             );
@@ -20,7 +34,21 @@ namespace App.Caliset.Authorization.Roles
 
             roleManagementConfig.StaticRoles.Add(
                 new StaticRoleDefinition(
-                    StaticRoleNames.Tenants.Admin,
+                    StaticRoleNames.Tenants.Administrador,
+                    MultiTenancySides.Tenant
+                )
+            );
+
+            roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    StaticRoleNames.Tenants.Operador,
+                    MultiTenancySides.Tenant
+                )
+            );
+
+            roleManagementConfig.StaticRoles.Add(
+                new StaticRoleDefinition(
+                    StaticRoleNames.Tenants.Inspector,
                     MultiTenancySides.Tenant
                 )
             );

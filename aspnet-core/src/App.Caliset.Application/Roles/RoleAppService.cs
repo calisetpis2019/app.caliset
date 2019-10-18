@@ -8,6 +8,7 @@ using Abp.Domain.Repositories;
 using Abp.Extensions;
 using Abp.IdentityFramework;
 using Abp.Linq.Extensions;
+using Abp.UI;
 using App.Caliset.Authorization;
 using App.Caliset.Authorization.Roles;
 using App.Caliset.Authorization.Users;
@@ -17,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace App.Caliset.Roles
 {
-    [AbpAuthorize(PermissionNames.Pages_Roles)]
     public class RoleAppService : AsyncCrudAppService<Role, RoleDto, int, PagedRoleResultRequestDto, CreateRoleDto, RoleDto>, IRoleAppService
     {
         private readonly RoleManager _roleManager;
@@ -30,9 +30,11 @@ namespace App.Caliset.Roles
             _userManager = userManager;
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public override async Task<RoleDto> Create(CreateRoleDto input)
         {
-            CheckCreatePermission();
+            throw new UserFriendlyException("Error","No es posible crear nuevos roles en el sistema.");
+            /*CheckCreatePermission();
 
             var role = ObjectMapper.Map<Role>(input);
             role.SetNormalizedName();
@@ -46,7 +48,7 @@ namespace App.Caliset.Roles
 
             await _roleManager.SetGrantedPermissionsAsync(role, grantedPermissions);
 
-            return MapToEntityDto(role);
+            return MapToEntityDto(role);*/
         }
 
         public async Task<ListResultDto<RoleListDto>> GetRolesAsync(GetRolesInput input)
@@ -62,6 +64,7 @@ namespace App.Caliset.Roles
             return new ListResultDto<RoleListDto>(ObjectMapper.Map<List<RoleListDto>>(roles));
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public override async Task<RoleDto> Update(RoleDto input)
         {
             CheckUpdatePermission();
@@ -82,9 +85,11 @@ namespace App.Caliset.Roles
             return MapToEntityDto(role);
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public override async Task Delete(EntityDto<int> input)
         {
-            CheckDeletePermission();
+            throw new UserFriendlyException("Error", "No es posible eliminar roles existentes.");
+            /*CheckDeletePermission();
 
             var role = await _roleManager.FindByIdAsync(input.Id.ToString());
             var users = await _userManager.GetUsersInRoleAsync(role.NormalizedName);
@@ -94,7 +99,7 @@ namespace App.Caliset.Roles
                 CheckErrors(await _userManager.RemoveFromRoleAsync(user, role.NormalizedName));
             }
 
-            CheckErrors(await _roleManager.DeleteAsync(role));
+            CheckErrors(await _roleManager.DeleteAsync(role));*/
         }
 
         public Task<ListResultDto<PermissionDto>> GetAllPermissions()
@@ -129,7 +134,7 @@ namespace App.Caliset.Roles
             identityResult.CheckErrors(LocalizationManager);
         }
 
-        public async Task<GetRoleForEditOutput> GetRoleForEdit(EntityDto input)
+        /*public async Task<GetRoleForEditOutput> GetRoleForEdit(EntityDto input)
         {
             var permissions = PermissionManager.GetAllPermissions();
             var role = await _roleManager.GetRoleByIdAsync(input.Id);
@@ -142,7 +147,7 @@ namespace App.Caliset.Roles
                 Permissions = ObjectMapper.Map<List<FlatPermissionDto>>(permissions).OrderBy(p => p.DisplayName).ToList(),
                 GrantedPermissionNames = grantedPermissions.Select(p => p.Name).ToList()
             };
-        }
+        }*/
     }
 }
 

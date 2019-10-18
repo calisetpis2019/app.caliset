@@ -4,12 +4,16 @@ namespace App.Caliset.Authorization.Roles
     {
         public static class Host
         {
-            public const string Admin = "Admin";
+            public const string Administrador = "Administrador";
+            public const string Operador = "Operador";
+            public const string Inspector = "Inspector";
         }
 
         public static class Tenants
         {
-            public const string Admin = "Admin";
+            public const string Administrador = "Administrador";
+            public const string Operador = "Operador";
+            public const string Inspector = "Inspector";
         }
     }
 }
