@@ -32,13 +32,25 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Tenants
         {
             // Admin role
 
-            var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Admin);
+            var adminRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Administrador);
             if (adminRole == null)
             {
-                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Admin, StaticRoleNames.Tenants.Admin) { IsStatic = true }).Entity;
+                adminRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Administrador, StaticRoleNames.Tenants.Administrador) { IsStatic = true }).Entity;
                 _context.SaveChanges();
             }
-
+            var operRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Operador);
+            if (operRole == null)
+            {
+                operRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Operador, StaticRoleNames.Tenants.Operador) { IsStatic = true }).Entity;
+                _context.SaveChanges();
+                
+            }
+            var inspRole = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == _tenantId && r.Name == StaticRoleNames.Tenants.Inspector);
+            if (inspRole == null)
+            {
+                inspRole = _context.Roles.Add(new Role(_tenantId, StaticRoleNames.Tenants.Inspector, StaticRoleNames.Tenants.Inspector) { IsStatic = true }).Entity;
+                _context.SaveChanges();
+            }
             // Grant all permissions to admin role
 
             var grantedPermissions = _context.Permissions.IgnoreQueryFilters()
@@ -64,6 +76,30 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Tenants
                         RoleId = adminRole.Id
                     })
                 );
+                _context.Permissions.Add(new RolePermissionSetting
+                    {
+                        TenantId = _tenantId,
+                        Name = "Operador",
+                        IsGranted = true,
+                        RoleId = operRole.Id
+                    }
+                );
+                _context.Permissions.Add( new RolePermissionSetting
+                    {
+                        TenantId = _tenantId,
+                        Name = "Inspector",
+                        IsGranted = true,
+                        RoleId = operRole.Id
+                    }
+                );
+                _context.Permissions.Add(new RolePermissionSetting
+                    {
+                        TenantId = _tenantId,
+                        Name = "Inspector",
+                        IsGranted = true,
+                        RoleId = inspRole.Id
+                    }
+                );
                 _context.SaveChanges();
             }
 
@@ -72,7 +108,7 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Tenants
             var adminUser = _context.Users.IgnoreQueryFilters().FirstOrDefault(u => u.TenantId == _tenantId && u.UserName == AbpUserBase.AdminUserName);
             if (adminUser == null)
             {
-                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@defaulttenant.com");
+                adminUser = User.CreateTenantAdminUser(_tenantId, "admin@caliset.com");
                 adminUser.Password = new PasswordHasher<User>(new OptionsWrapper<PasswordHasherOptions>(new PasswordHasherOptions())).HashPassword(adminUser, "123qwe");
                 adminUser.IsEmailConfirmed = true;
                 adminUser.IsActive = true;

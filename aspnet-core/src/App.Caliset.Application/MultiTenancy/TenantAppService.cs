@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace App.Caliset.MultiTenancy
 {
-    [AbpAuthorize(PermissionNames.Pages_Tenants)]
+    [AbpAuthorize(PermissionNames.Administrador)]
     public class TenantAppService : AsyncCrudAppService<Tenant, TenantDto, int, PagedTenantResultRequestDto, CreateTenantDto, TenantDto>, ITenantAppService
     {
         private readonly TenantManager _tenantManager;
@@ -74,7 +74,7 @@ namespace App.Caliset.MultiTenancy
                 await CurrentUnitOfWork.SaveChangesAsync(); // To get static role ids
 
                 // Grant all permissions to admin role
-                var adminRole = _roleManager.Roles.Single(r => r.Name == StaticRoleNames.Tenants.Admin);
+                var adminRole = _roleManager.Roles.Single(r => r.Name == StaticRoleNames.Tenants.Administrador);
                 await _roleManager.GrantAllPermissionsAsync(adminRole);
 
                 // Create admin user for the tenant

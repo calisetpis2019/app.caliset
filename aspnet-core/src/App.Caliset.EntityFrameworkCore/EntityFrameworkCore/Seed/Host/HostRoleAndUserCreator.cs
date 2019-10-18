@@ -30,10 +30,10 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Host
         {
             // Admin role for host
 
-            var adminRoleForHost = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.Admin);
+            var adminRoleForHost = _context.Roles.IgnoreQueryFilters().FirstOrDefault(r => r.TenantId == null && r.Name == StaticRoleNames.Host.Administrador);
             if (adminRoleForHost == null)
             {
-                adminRoleForHost = _context.Roles.Add(new Role(null, StaticRoleNames.Host.Admin, StaticRoleNames.Host.Admin) { IsStatic = true, IsDefault = true }).Entity;
+                adminRoleForHost = _context.Roles.Add(new Role(null, StaticRoleNames.Host.Administrador, StaticRoleNames.Host.Administrador) { IsStatic = true, IsDefault = true }).Entity;
                 _context.SaveChanges();
             }
 

@@ -218,7 +218,7 @@ namespace App.Caliset.Users
                 return false;
             }
             var roles = await _userManager.GetRolesAsync(currentUser);
-            if (!roles.Contains(StaticRoleNames.Tenants.Admin))
+            if (!roles.Contains(StaticRoleNames.Tenants.Administrador))
             {
                 throw new UserFriendlyException("Error", "Solo usuarios administradores pueden realizar esta acción.");
             }

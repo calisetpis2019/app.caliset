@@ -9,7 +9,7 @@ namespace App.Caliset.Roles
     {
         Task<ListResultDto<PermissionDto>> GetAllPermissions();
 
-        Task<GetRoleForEditOutput> GetRoleForEdit(EntityDto input);
+        //Task<GetRoleForEditOutput> GetRoleForEdit(EntityDto input);
 
         Task<ListResultDto<RoleListDto>> GetRolesAsync(GetRolesInput input);
     }
