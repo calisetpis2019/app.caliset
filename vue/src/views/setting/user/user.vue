@@ -164,7 +164,12 @@
         },{
             title:"Último Login",
             render:(h:any,params:any)=>{
-                return h('span',new Date(params.row.lastLoginTime).toLocaleString())
+                if(params.row.lastLoginTime=="Nunca"){
+                    return h('span',params.row.lastLoginTime)    
+                }
+                else{
+                    return h('span',new Date(params.row.lastLoginTime).toLocaleString())
+                }
             }
         },{
             title:this.L('Actions'),
@@ -188,7 +193,7 @@
                                 this.view();
                             }
                         }
-                    },this.L('View')),
+                    },this.L('Ver')),
                     //Boton Editar:
                     h('Button',{
                         props:{

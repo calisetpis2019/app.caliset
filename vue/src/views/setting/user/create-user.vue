@@ -36,7 +36,7 @@
                         </FormItem>
                         <FormItem :label="L('Fecha de nacimiento')" prop="birthDate">
                             <!--<Input v-model="user.birthDate" type="date"></Input>-->
-                            <DatePicker format="dd/MM/yyyy" type="date" v-model="user.birthDate" style="width:100%"></DatePicker>
+                            <DatePicker format="dd/MM/yyyy" type="date" :start-date="set_start_date()" v-model="user.birthDate" style="width:100%"></DatePicker>
                         </FormItem>
 
                         <FormItem :label="L('Ciudad')" prop="city">
@@ -46,9 +46,7 @@
                         <FormItem :label="L('Dirección')" prop="adress">
                             <Input v-model="user.adress"></Input>
                         </FormItem>
-                        <FormItem>
-                            <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
-                        </FormItem>
+
                         <FormItem label="Rol" prop="roleNames" >
                             <CheckboxGroup v-model="user.roleNames">
                                 <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
@@ -78,7 +76,6 @@
             return this.$store.state.user.roles;
         }
         save() {
-            console.log(this.user);
             this.user.userName = this.user.emailAddress;
             (this.$refs.userForm as any).validate(async (valid:boolean)=>{
                 if(valid){
@@ -110,6 +107,10 @@
             } else {
                 callback();
             }
+        }
+        set_start_date(){
+            var year=new Date().getFullYear()-20;
+            return new Date(year, 1, 1);
         };
         userRule={
             //userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],

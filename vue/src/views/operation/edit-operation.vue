@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Modal :title="L('EditOperation')"
+        <Modal title="Editar Operación"
                :value="value"
                @on-ok="save"
                @on-visible-change="visibleChange">
@@ -18,7 +18,7 @@
                 </FormItem>
 
                 <FormItem label="Fecha y hora de inicio" prop="date">
-                    <VueCtkDateTimePicker v-model="operation.date" locale="es" v-bind:right="true" />
+                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="operation.date" locale="es" v-bind:right="true" />
                 </FormItem>
 
                 <FormItem label="Responsable" prop="managerId">

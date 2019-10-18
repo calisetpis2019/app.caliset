@@ -91,8 +91,14 @@
             if(!value){
                 this.$emit('input',value);
             }else{
+                console.log(this.$store.state.user.editUser);
+                //this.$store.state.user.editUser.birthDate=this.parse_date(this.$store.state.user.editUser.birthDate);
                 this.user=Util.extend(true,{},this.$store.state.user.editUser);
             }
+        }
+        parse_date(date:string){
+            var array_date = date.split("T");
+            return array_date[2]+"/"+array_date[1]+"/"+array_date[0];
         }
         userRule={
             userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],

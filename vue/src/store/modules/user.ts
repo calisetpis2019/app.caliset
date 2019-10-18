@@ -31,6 +31,13 @@ class UserModule extends ListModule<UserState,any,User>{
             context.state.loading=true;
             let reponse=await Ajax.get('/api/services/app/User/GetAll',{params:payload.data});
             context.state.loading=false;
+            
+            for (let i = 0; i < reponse.data.result.items.length; i++) {
+                if(reponse.data.result.items[i].lastLoginTime=="0001-01-01T00:00:00"){
+                    reponse.data.result.items[i].lastLoginTime="Nunca";
+                }
+            }
+
             let page=reponse.data.result as PageResult<User>;
             context.state.totalCount=page.totalCount;
             context.state.list=page.items;
@@ -42,6 +49,12 @@ class UserModule extends ListModule<UserState,any,User>{
             context.state.list = reponse.data.result;
         },
         async create(context: ActionContext<UserState, any>, payload: any) {
+            payload.data.isActive=true;
+
+            payload.data.roleNames = payload.data.roleNames.filter(function(value, index, arr){
+                return value != null;
+            });
+
             await Ajax.post('/api/services/app/User/Create',payload.data);
         },
         async update(context:ActionContext<UserState,any>,payload:any){

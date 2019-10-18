@@ -8,12 +8,13 @@
             <Form ref="assignationForm" label-position="top" :rules="assignationRule" :model="assignation">
                 <FormItem label="Inspector" prop="inspectorId">
                     <Select v-model="assignation.inspectorId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.managerId">
-                        <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                        <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name+" "+item.surname }}</Option>
                     </Select>
                 </FormItem>
 
                 <FormItem label="Fecha y hora de inicio" prop="date">
                     <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true" />
+                    <!--<DatePicker type="datetime" format="dd-MM-yyyy HH:mm" v-model="assignation.date" style="width: 100%"></DatePicker>-->
                 </FormItem>
 
                 <FormItem label="Fecha y hora de fin" prop="dateFin">
@@ -93,15 +94,31 @@
             }
             else{
                 this.operation = Util.extend(true, {}, this.$store.state.operation.editOperation);
-                this.getUsers()
+                this.getUsers();
+
             }
         }
 
         async getUsers() {
             await this.$store.dispatch({
-                type: 'user/getAll',
-                data: this.pagerequest
+                type: 'user/getAllUsers',
+                data: ""
             })
+        }
+
+        validate_dates = (rule:any, value:any, callback:any) => {
+            if (value !== null) {
+                if(this.assignation.date == null){
+                    callback();
+                }
+                else if(value <= this.assignation.date){
+                    callback(new Error(this.L('Fecha Fin debe ser anteior a Fecha de Inicio')));
+                }
+                
+            }
+            else {
+                callback();
+            }
         }
 
         assignationRule={
@@ -110,6 +127,9 @@
             ],
             inspectorId:[
                 {type: "number", required: true,message:this.L('FieldIsRequired',undefined,this.L('Responsable')),trigger: 'blur'}
+            ],
+            dateFin:[
+                {required:false,validator:this.validate_dates,trigger: 'blur'}
             ]
         }
     }

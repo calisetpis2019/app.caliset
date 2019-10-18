@@ -62,7 +62,7 @@
             }
         }
 
-        operationRule={
+        editCommentRule={
             commentary     :[
                 {required: true,message:this.L('FieldIsRequired',undefined,this.L('Commodity')),trigger: 'blur'}
             ]

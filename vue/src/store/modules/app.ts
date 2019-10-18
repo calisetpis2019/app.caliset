@@ -197,7 +197,8 @@ class AppModule implements Module<AppState, any>{
             let rep = await ajax.post("/api/TokenAuth/Authenticate", payload.data);
             var tokenExpireDate = payload.data.rememberMe ? (new Date(new Date().getTime() + 1000 * rep.data.result.expireInSeconds)) : undefined;
             Util.abp.auth.setToken(rep.data.result.accessToken, tokenExpireDate);
-            Util.abp.utils.setCookieValue(appconst.authorization.encrptedAuthTokenName, rep.data.result.encryptedAccessToken, tokenExpireDate, Util.abp.appPath)
+            Util.abp.utils.setCookieValue(appconst.authorization.encrptedAuthTokenName, rep.data.result.encryptedAccessToken, tokenExpireDate, Util.abp.appPath);
+            rep = await ajax.post("/api/services/app/User/SetLastLoginTime", "");
         },
     }
 }
