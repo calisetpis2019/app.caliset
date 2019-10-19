@@ -58,6 +58,8 @@ class UserModule extends ListModule<UserState,any,User>{
             await Ajax.post('/api/services/app/User/Create',payload.data);
         },
         async update(context:ActionContext<UserState,any>,payload:any){
+            payload.data.roleNames=null;
+            payload.data.lastLoginTime=null;
             await Ajax.put('/api/services/app/User/Update',payload.data);
         },
         async delete(context:ActionContext<UserState,any>,payload:any){

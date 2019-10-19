@@ -19,14 +19,12 @@
                         </FormItem>
                         <FormItem label="Documento" prop="document">
                             <input type="number" class="ivu-input" v-model="user.document"/>
-                            <!--<Input v-model="user.document" :maxlength="32"></Input>-->
                         </FormItem>
                         <FormItem label="Número de contacto" prop="phone">
                             <Input v-model="user.phone" :maxlength="32"></Input>
                         </FormItem>
                         <FormItem label="Fecha de nacimiento" prop="birthDate">
-                            <!--<Input v-model="user.birthDate" type="datetime" ></Input>-->
-                            <DatePicker type="date" v-model="user.birthDate" style="width:100%"></DatePicker>
+                            <DatePicker format="dd/MM/yyyy" type="date" v-model="user.birthDate" style="width:100%"></DatePicker>
                         </FormItem>
 
                         <FormItem label="Ciudad" prop="city">
@@ -40,11 +38,11 @@
                             <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
                     </TabPane>
-                    <TabPane :label="L('Roles')" name="roles">
+                    <!--<TabPane :label="L('Roles')" name="roles">
                         <CheckboxGroup v-model="user.roleNames">
                             <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
                         </CheckboxGroup>
-                    </TabPane>
+                    </TabPane>-->
                 </Tabs>
             </Form>
             <div slot="footer">
@@ -90,15 +88,22 @@
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
-            }else{
-                console.log(this.$store.state.user.editUser);
-                //this.$store.state.user.editUser.birthDate=this.parse_date(this.$store.state.user.editUser.birthDate);
+            }
+            else{
+                this.$store.state.user.editUser.birthDate=this.parse_date(this.$store.state.user.editUser.birthDate);
                 this.user=Util.extend(true,{},this.$store.state.user.editUser);
             }
         }
         parse_date(date:string){
-            var array_date = date.split("T");
-            return array_date[2]+"/"+array_date[1]+"/"+array_date[0];
+            if(date!=null){
+                var array_date = date.split("T");
+                if(array_date.length==1){
+                    return date;
+                }
+                array_date=array_date[0].split("-");
+                return array_date[2]+"/"+array_date[1]+"/"+array_date[0];
+            }
+            return date;
         }
         userRule={
             userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],

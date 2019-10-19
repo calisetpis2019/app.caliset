@@ -68,13 +68,18 @@
         }
 
         save() {
+            console.log("1");
             this.assignation.operationId=this.operation.id;
+            console.log("22");
             (this.$refs.assignationForm as any).validate(async (valid:boolean)=>{
+                console.log("2");
                 if (valid) {
+                    console.log("3");
                     await this.$store.dispatch({
                         type:'assignation/create',
                         data:this.assignation
                     });
+                    console.log("4");
                     (this.$refs.assignationForm as any).resetFields();
                     this.$emit('save-success');
                     this.$emit('input',false);
@@ -107,16 +112,10 @@
         }
 
         validate_dates = (rule:any, value:any, callback:any) => {
-            if (value !== null) {
-                if(this.assignation.date == null){
-                    callback();
-                }
-                else if(value <= this.assignation.date){
-                    callback(new Error(this.L('Fecha Fin debe ser anteior a Fecha de Inicio')));
-                }
-                
+            if(typeof value !== "undefined" && typeof this.assignation.date !== "undefined" && value <= this.assignation.date){
+                callback(new Error(this.L('Fecha de Inicio debe ser anteior a Fecha de Fin')));
             }
-            else {
+            else{
                 callback();
             }
         }
