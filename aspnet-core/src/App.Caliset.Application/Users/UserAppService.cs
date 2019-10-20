@@ -93,15 +93,14 @@ namespace App.Caliset.Users
             CheckUpdatePermission();
 
             var user = await _userManager.GetUserByIdAsync(input.Id);
+            input.RoleNames = null;
+            input.LastLoginTime = null;
 
             MapToEntity(input, user); 
 
             CheckErrors(await _userManager.UpdateAsync(user));
 
-            if (input.RoleNames != null) 
-            {
-                CheckErrors(await _userManager.SetRoles(user, input.RoleNames));
-            }
+           
 
             return await Get(input);
         }
