@@ -4,8 +4,10 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using App.Caliset.Models.Notifications;
 using App.Caliset.Models.UserDeviceTokens;
+using App.Caliset.Users.Dto;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -48,6 +50,13 @@ namespace App.Caliset.UserDeviceTokens
           
         }
 
+        public IEnumerable<UserDto> GetAllUserElegible()
+        {
+            var getAll= _userDeviceTokenManager.GetAllUserElegible().ToList();
+            List<UserDto> output = ObjectMapper.Map<List<UserDto>>(getAll);
+            return output;
+        }
+
         public void SendNotification(string Title, string Text)
         {
             if (_abpSession.UserId == null)
@@ -58,6 +67,8 @@ namespace App.Caliset.UserDeviceTokens
 
             _notificationManager.sendNotification(Title, Text, userId);
         }
+
+
 
     }
 }

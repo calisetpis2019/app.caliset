@@ -13,12 +13,15 @@ using Abp.Runtime.Caching;
 using App.Caliset.Authorization.Roles;
 using Abp.Collections.Extensions;
 using Abp.Extensions;
+using System.Linq.Dynamic.Core;
+using App.Caliset.Models.UserDeviceTokens;
 
 namespace App.Caliset.Authorization.Users
 {
     public class UserManager : AbpUserManager<Role, User>
     {
         private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<UserDeviceToken> _userDeviceTokenRepository;
         public UserManager(
             RoleManager roleManager,
             UserStore store, 
@@ -36,7 +39,8 @@ namespace App.Caliset.Authorization.Users
             IRepository<OrganizationUnit, long> organizationUnitRepository, 
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
             IOrganizationUnitSettings organizationUnitSettings, 
-            ISettingManager settingManager)
+            ISettingManager settingManager
+            )
             : base(
                 roleManager, 
                 store, 
@@ -75,5 +79,7 @@ namespace App.Caliset.Authorization.Users
                 .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(keyword) || x.Name.Contains(keyword) || x.EmailAddress.Contains(keyword))
                 .WhereIf(active.HasValue, x => x.IsActive == active); ;
         }
+
+     
     }
 }
