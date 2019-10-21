@@ -78,16 +78,34 @@
     import Util from '../../../lib/util'
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
+    import UserRequest from '@/store/entities/user-request'
+
+    class PageViewUserRequest extends UserRequest {
+    }
+
     @Component
     export default class ViewUser extends AbpBase{
+
+
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
+
+        pagerequest: PageViewUserRequest = new PageViewUserRequest();
+
+
         created(){
             
         }
         get roles(){
             return this.$store.state.user.roles;
         }
+
+        get assingnations(){
+            console.log(this.$store.state.assignation.assignmentsByUsers);
+            return this.$store.state.assignation.assignmentsByUsers;
+
+        }
+
         cancel(){
             (this.$refs.userForm as any).resetFields();
             this.$emit('input',false);
@@ -98,6 +116,14 @@
             }else{
                 this.user=Util.extend(true,{},this.$store.state.user.viewUser);
             }
+        }
+
+        async getAssignations() {
+            await this.$store.dispatch({
+                type: 'assignation/getAssignationsByUser',
+                data: this.pagerequest
+            })
+
         }
     }
 </script>
