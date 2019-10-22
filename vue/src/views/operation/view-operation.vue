@@ -61,8 +61,8 @@
                        Notas: {{ this.operation.notes }} 
                    </Col>
                </Row>
-               <Divider>Usuarios asignados</Divider>
-               <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="usersAssigned" v-if="operatorRenderOnly"></Table>
+               <Divider>Asignaciones</Divider>
+               <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
                <Divider>Muestras</Divider>
                <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
                <Divider>Comentarios</Divider>
@@ -111,8 +111,8 @@
             return this.$store.state.assignation.loading;
         }
 
-        get usersAssigned() {
-          return this.$store.state.assignation.usersAssignedToOperation;
+        get assignations() {
+          return this.$store.state.assignation.assignmentsOfOperation;
         }
 
         get comments() {
@@ -158,7 +158,7 @@
 
         async getAssignations() {
             await this.$store.dispatch({
-                type: 'assignation/getUsersByOperation',
+                type: 'assignation/getAssignmentsByOperation',
                 data: this.pagerequest
             })
 
@@ -179,20 +179,45 @@
         columns = [
             {
                 title: 'Nombre',
-                key: 'name'
+                key: 'name',
+                render:(h:any,params:any)=>{
+                  return h('Span', params.row.inspector.name);
+                }
             },
             {
                 title: 'Apellido',
-                key: 'surname'
+                key: 'surname',
+                render:(h:any,params:any)=>{
+                  return h('Span', params.row.inspector.surname);
+                }
             },
             {
-                title: 'Email',
-                key: 'emailAddress'
+                title: 'Fecha de inicio',
+                key: 'date',
+                render:(h:any,params:any)=>{
+                  return h('Span', params.row.date);
+                }
             },
             {
                 title: 'Telefono',
-                key: 'phone'
-            }]        
+                key: 'phone',
+                render:(h:any,params:any)=>{
+                  return h('Span', params.row.inspector.phone);
+                }
+            },
+            {
+                title: 'Estado',
+                key: 'surname',
+                render:(h:any,params:any)=>{
+                  if (params.row.aware == null){
+                      return h('Span', 'Pendiente');
+                  } else if (params.row.aware) {
+                      return h('Span', 'Confirmada');
+                  } else {
+                      return h('Span', 'Rechazada');
+                  }
+                }
+            },]        
 
         columnsSamples =[
             {
