@@ -34,12 +34,10 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
         },
 
         async getAssignationsByUser(context: ActionContext<AssignationState, any>, payload: any){
-
             context.state.loading = true;
-            let reponse = await Ajax.get('/api/services/app/Assignation/GetAssignmentsByUser?userId=' + payload.data.id);
+            let response = await Ajax.get('/api/services/app/Assignation/GetAssignmentsByUser?userId=' + payload.data.id);
             context.state.loading = false;
-            context.state.totalCount = reponse.data.result.length;
-            context.state.assignmentsByUsers = reponse.data.result;  
+            context.state.assignmentsByUsers = response.data.result;  
         }
 
     };

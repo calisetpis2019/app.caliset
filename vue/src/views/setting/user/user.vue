@@ -50,6 +50,7 @@
     import CreateUser from './create-user.vue'
     import EditUser from './edit-user.vue'
     import ViewUser from './view-user.vue'
+    import AssignationModule from '@/store/entities/assignation'
 
     class  PageUserRequest extends PageRequest{
         keyword:string;
@@ -71,6 +72,7 @@
         }
         //filters
         pagerequest:PageUserRequest=new PageUserRequest();
+
         creationTime:Date[]=[];
 
         createModalShow:boolean=false;
@@ -190,6 +192,8 @@
                         on:{
                             click:()=>{
                                 this.$store.commit('user/view',params.row);
+                                console.log("VER");
+                                console.log(params.row);
                                 this.view();
                             }
                         }
@@ -241,7 +245,8 @@
             this.getpage();
             await this.$store.dispatch({
                 type:'user/getRoles'
-            })
+            });
         }
+
     }
 </script>
