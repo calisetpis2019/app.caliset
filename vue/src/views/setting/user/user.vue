@@ -50,6 +50,7 @@
     import CreateUser from './create-user.vue'
     import EditUser from './edit-user.vue'
     import ViewUser from './view-user.vue'
+    import AssignationModule from '@/store/entities/assignation'
 
     class  PageUserRequest extends PageRequest{
         keyword:string;
@@ -62,7 +63,6 @@
         components:{CreateUser,EditUser,ViewUser}
     })
     export default class Users extends AbpBase{
-
         view(){
             this.viewModalShow=true;
         }
@@ -72,10 +72,10 @@
         //filters
         pagerequest:PageUserRequest=new PageUserRequest();
         creationTime:Date[]=[];
-
         createModalShow:boolean=false;
         viewModalShow:boolean=false;
         editModalShow:boolean=false;
+
         get list(){
             return this.$store.state.user.list;
         };
@@ -176,9 +176,7 @@
             key:'Actions',
             width:200,
             render:(h:any,params:any)=>{
-                return h('div',[
-
-                    //Boton Ver:
+                var toRender = [
                     h('Button',{
                         props:{
                             type:'success',
@@ -209,39 +207,44 @@
                                 this.edit();
                             }
                         }
-                    },this.L('Edit')),
-                    //Boton Borrar:
-                    h('Button',{
-                        props:{
-                            type:'error',
-                            size:'small'
-                        },
-                        on:{
-                            click:async ()=>{
-                                this.$Modal.confirm({
-                                        title:this.L('Tips'),
-                                        content:this.L('DeleteUserConfirm'),
-                                        okText:this.L('Yes'),
-                                        cancelText:this.L('No'),
-                                        onOk:async()=>{
-                                            await this.$store.dispatch({
-                                                type:'user/delete',
-                                                data:params.row
-                                            })
-                                            await this.getpage();
-                                        }
-                                })
+                    },this.L('Edit'))
+                ];
+                if(this.$store.state.session.user.id !== params.row.id){
+                    toRender.push(
+                        h('Button',{
+                            props:{
+                                type:'error',
+                                size:'small'
+                            },
+                            on:{
+                                click:async ()=>{
+                                    this.$Modal.confirm({
+                                            title:this.L('Tips'),
+                                            content:this.L('DeleteUserConfirm'),
+                                            okText:this.L('Yes'),
+                                            cancelText:this.L('No'),
+                                            onOk:async()=>{
+                                                await this.$store.dispatch({
+                                                    type:'user/delete',
+                                                    data:params.row
+                                                })
+                                                await this.getpage();
+                                            }
+                                    })
+                                }
                             }
-                        }
-                    },this.L('Delete'))
-                ])
+                        },this.L('Delete'))
+                    )
+                }
+                return toRender;
             }
         }]
         async created(){
             this.getpage();
             await this.$store.dispatch({
                 type:'user/getRoles'
-            })
+            });
         }
+
     }
 </script>

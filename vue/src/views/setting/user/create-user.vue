@@ -47,6 +47,10 @@
                             <Input v-model="user.adress"></Input>
                         </FormItem>
 
+                        <FormItem label="Especialidad">
+                            <Input v-model="user.specialty"></Input>
+                        </FormItem>
+
                         <FormItem label="Rol" prop="roleNames" >
                             <CheckboxGroup v-model="user.roleNames">
                                 <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>

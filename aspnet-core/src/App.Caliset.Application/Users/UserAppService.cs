@@ -276,6 +276,7 @@ namespace App.Caliset.Users
             _userManager.SetLastLoginTime(userId);
         }
 
+        
     }
 }
 

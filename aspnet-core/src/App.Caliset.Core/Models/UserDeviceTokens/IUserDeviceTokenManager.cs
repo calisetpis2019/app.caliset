@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Services;
+using App.Caliset.Authorization.Users;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,5 +12,6 @@ namespace App.Caliset.Models.UserDeviceTokens
         Task<UserDeviceToken> Create(UserDeviceToken DT);
         string getById(long UserId);
         void Delete(int id);
+        IEnumerable<User> GetAllUserElegible(); 
     }
 }

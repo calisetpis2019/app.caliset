@@ -63,7 +63,10 @@
             else if (value !== this.instanceChangePassword.newPassword) {
                 callback(new Error(this.L('La confirmación no coincide con la contraseña')));
             }
-            else {
+            else if (value === this.instanceChangePassword.currentPassword){
+                callback(new Error(this.L('La nueva contraseña coincide con la su anterior contraseña')));
+            }
+            else{
                 callback();
             }
         }

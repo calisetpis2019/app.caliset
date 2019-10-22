@@ -10,6 +10,7 @@ import User from '../entities/user'
 interface AssignationState extends ListState<Assignation> {
 	usersAssignedToOperation: Array<User>;
     assignmentsOfOperation: Array<Assignation>;
+    assignmentsByUsers: Array<Assignation>;
 }
 class AssignationModule extends ListModule<AssignationState, any, Assignation>{
 	state = {
@@ -19,7 +20,8 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
         list: new Array<Assignation>(),
         loading: false,
         usersAssignedToOperation: new Array<User>(),
-        assignmentsOfOperation: new Array<Assignation>()
+        assignmentsOfOperation: new Array<Assignation>(),
+        assignmentsByUsers: new Array<Assignation>()
     }
     actions = {
         async create(context: ActionContext<AssignationState, any>, payload: any) {
@@ -38,6 +40,13 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
             context.state.loading = false;
             context.state.totalCount = reponse.data.result.length;
             context.state.assignmentsOfOperation = reponse.data.result;
+        },
+
+        async getAssignationsByUser(context: ActionContext<AssignationState, any>, payload: any){
+            context.state.loading = true;
+            let response = await Ajax.get('/api/services/app/Assignation/GetAssignmentsByUser?userId=' + payload.data.id);
+            context.state.loading = false;
+            context.state.assignmentsByUsers = response.data.result;  
         }
         
 
