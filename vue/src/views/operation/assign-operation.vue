@@ -7,7 +7,11 @@
                @on-visible-change="visibleChange">
             <Form ref="assignationForm" label-position="top" :rules="assignationRule" :model="assignation">
                 <FormItem label="Inspector" prop="inspectorId">
-                    <Select v-model="assignation.inspectorId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.managerId">
+                    <Select v-if="listOfUsers.length > 0" v-model="assignation.inspectorId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.managerId">
+                        <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name+" "+item.surname }}</Option>
+                    </Select>
+
+                    <Select v-else placeholder="No se encontraron inspectores elegibles" v-model="assignation.inspectorId" style="padding: 10px 0px 20px 0px;" filterable :value="this.operation.managerId">
                         <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name+" "+item.surname }}</Option>
                     </Select>
                 </FormItem>
@@ -99,14 +103,14 @@
             }
             else{
                 this.operation = Util.extend(true, {}, this.$store.state.operation.editOperation);
-                this.getUsers();
+                this.getEligibleUsers();
 
             }
         }
 
-        async getUsers() {
+        async getEligibleUsers() {
             await this.$store.dispatch({
-                type: 'user/getAllUsers',
+                type: 'user/getEligibleUsers',
                 data: ""
             })
         }

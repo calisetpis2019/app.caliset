@@ -35,7 +35,7 @@
                             <Input v-model="user.adress"></Input>
                         </FormItem>
                         <FormItem>
-                            <Checkbox v-model="user.isActive">{{L('IsActive')}}</Checkbox>
+                            <Checkbox v-if="differentUser()" v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
                     </TabPane>
                     <!--<TabPane :label="L('Roles')" name="roles">
@@ -104,6 +104,16 @@
                 return array_date[2]+"/"+array_date[1]+"/"+array_date[0];
             }
             return date;
+        }
+        differentUser(){
+            if(this.user.id!=null){
+                if(typeof this.$store.state.session.user.id !== "undefined" && typeof this.user.id !== "undefined"){
+                    return this.$store.state.session.user.id !== this.user.id;
+                }
+                else{
+                    return true;
+                }
+            }
         }
         userRule={
             userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],
