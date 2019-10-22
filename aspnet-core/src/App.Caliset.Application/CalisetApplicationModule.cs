@@ -22,6 +22,8 @@ using App.Caliset.Assignations.Dto;
 using App.Caliset.Models.Assignations;
 using App.Caliset.Models.UserFile;
 using App.Caliset.UserFiles.Dto;
+using App.Caliset.HoursRecord.Dto;
+using App.Caliset.Models.HoursRecords;
 
 namespace App.Caliset
 {
@@ -92,6 +94,11 @@ namespace App.Caliset
                 mapper.CreateMap<GetAssignationOutput, Assignation>().ReverseMap();
                 mapper.CreateMap<GetAssignationInput, Assignation>().ReverseMap();
                 mapper.CreateMap<DeleteAssignationInput, Assignation>().ReverseMap();
+
+                //Hours Record
+                mapper.CreateMap < CreateHoursRecordInput, HourRecord>().ReverseMap();
+                mapper.CreateMap<GetHoursRecordOutput, HourRecord>().ReverseMap();
+                mapper.CreateMap<UpdateHoursRecordInput, HourRecord>().ReverseMap();
 
             });
         }

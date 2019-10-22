@@ -14,6 +14,7 @@ namespace App.Caliset.Models.Assignations
         void ConfirmAssignation(int idAssignation);
         void RefuseAssignation(int idAssignation);
         void Notify(int idAssignation);
+        bool UserAssigned(long IdUser, int IdOper);
     }
 }
 

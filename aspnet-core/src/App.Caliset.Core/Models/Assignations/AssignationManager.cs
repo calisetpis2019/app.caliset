@@ -133,5 +133,10 @@ namespace App.Caliset.Models.Assignations
         {
             _repositoryAssignation.FirstOrDefault(x => x.Id == idAssignation).Notified = true ;
         }
+
+        public bool UserAssigned(long IdUser, int IdOper)
+        {
+            return (_repositoryAssignation.FirstOrDefault(x => x.InspectorId == IdUser && x.OperationId == IdOper) == null);
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace App.Caliset.EntityFrameworkCore
         public virtual DbSet<Models.Assignations.Assignation> Assignations { get; set; }
         public virtual DbSet<Models.UserFile.UserFile> UserFiles { get; set; }
         public virtual DbSet<Models.UserDeviceTokens.UserDeviceToken> UserDeviceTokens { get; set; }
+        public virtual DbSet<Models.HoursRecords.HourRecord> HoursRecord { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
