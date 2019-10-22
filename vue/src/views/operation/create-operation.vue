@@ -42,7 +42,7 @@
                         </FormItem>
 
                         <FormItem label="Responsable" prop="managerId">
-                            <v-select v-model="operation.managerId" label="name" :reduce="name => name.id" :options="listOfUsers">
+                            <v-select v-model="operation.managerId" label="fullName" :reduce="name => name.id" :options="listOfUsers">
                                 <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
                             </v-select>
                         </FormItem>

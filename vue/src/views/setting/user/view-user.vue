@@ -129,8 +129,6 @@
                 this.$emit('input',value);
             }else{
                 this.user=Util.extend(true,{},this.$store.state.user.viewUser);
-                console.log("en el modal");
-                console.log(this.$store.state.user.viewUser);
                 this.$store.dispatch({
                     type: 'assignation/getAssignationsByUser',
                     data: this.user,

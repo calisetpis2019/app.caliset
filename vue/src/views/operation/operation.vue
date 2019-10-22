@@ -67,17 +67,17 @@
                 </Row>
                 <div class="margin-top-10">
                     <h4>Operaciones Activas</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_active">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_active.sort(dynamicSort_desc('date'))">
                     </Table>
                 </div>
                 <div class="margin-top-10">
                     <h4>Operaciones Futuras</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_future">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_future.sort(dynamicSort_desc('date'))">
                     </Table>
                 </div>
                 <div class="margin-top-10">
                     <h4>Operaciones Finalizadas</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_finished">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_finished.sort(dynamicSort_asc('date'))">
                     </Table>
                 </div>
                 <div><Page show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page></div>
@@ -152,7 +152,6 @@
             var result = [];
             auxOperations = this.$store.state.operation.list;
             auxLocations = this.$store.state.location.list;
-            console.log(auxOperations);
             auxOperations.forEach( (element) => {
                 //Finished==3
                 if(element["operationState"]["id"]==3){
@@ -277,6 +276,36 @@
                 }
             })
             return result;
+        };
+
+        dynamicSort_asc(property:string) {
+            var sortOrder = 1;
+            if(property[0] === "-") {
+                sortOrder = -1;
+                property = property.substr(1);
+            }
+            return function (a,b) {
+                /* next line works with strings and numbers, 
+                 * and you may want to customize it to your needs
+                 */
+                var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+                return result * sortOrder;
+            }
+        };
+
+        dynamicSort_desc(property:string) {
+            var sortOrder = 1;
+            if(property[0] === "-") {
+                sortOrder = -1;
+                property = property.substr(1);
+            }
+            return function (a,b) {
+                /* next line works with strings and numbers, 
+                 * and you may want to customize it to your needs
+                 */
+                var result = (a[property] < b[property]) ? 1 : (a[property] > b[property]) ? -1 : 0;
+                return result * sortOrder;
+            }
         };
 
         get loading() {

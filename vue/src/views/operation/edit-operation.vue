@@ -21,8 +21,8 @@
                     <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="operation.date" locale="es" v-bind:right="true" />
                 </FormItem>
 
-                <FormItem label="Responsable" prop="managerId">
-                    <v-select v-model="operation.managerId" label="name" :reduce="name => name.id" :options="listOfUsers">
+                <FormItem label="Responsable" prop="managerId" v-if="operation.operationState != 'Finalizada'">
+                    <v-select v-model="operation.managerId" label="fullName" :reduce="name => name.id" :options="listOfUsers">
                         <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
                     </v-select>
                 </FormItem>
@@ -43,12 +43,6 @@
 
                 <FormItem label="Cargador" prop="chargerId" v-if="operation.operationState != 'Finalizada'">
                     <v-select v-model="operation.chargerId" label="name" :reduce="name => name.id" :options="listOfClients">
-                        <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
-                    </v-select>
-                </FormItem>
-
-                <FormItem label="Responsable" prop="managerId" v-if="operation.operationState != 'Finalizada'">
-                    <v-select v-model="operation.managerId" label="name" :reduce="name => name.id" :options="listOfUsers">
                         <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
                     </v-select>
                 </FormItem>
@@ -106,7 +100,13 @@
         pagerequest: PageEditOperationRequest = new PageEditOperationRequest();
 
         get listOfUsers() {
-            return this.$store.state.user.list;
+            var result = [];
+            var auxUser = this.$store.state.user.list;
+            auxUser.forEach( (element) => {
+                element["fullName"]=element["name"]+" "+element["surname"];
+                result.push(element);
+            });
+            return result;
         };
 
         get listOfLocations() {

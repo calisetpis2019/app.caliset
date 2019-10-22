@@ -72,18 +72,13 @@
         }
 
         save() {
-            console.log("1");
             this.assignation.operationId=this.operation.id;
-            console.log("22");
             (this.$refs.assignationForm as any).validate(async (valid:boolean)=>{
-                console.log("2");
                 if (valid) {
-                    console.log("3");
                     await this.$store.dispatch({
                         type:'assignation/create',
                         data:this.assignation
                     });
-                    console.log("4");
                     (this.$refs.assignationForm as any).resetFields();
                     this.$emit('save-success');
                     this.$emit('input',false);
