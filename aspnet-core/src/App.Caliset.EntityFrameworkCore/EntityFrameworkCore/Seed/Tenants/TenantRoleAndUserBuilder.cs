@@ -79,7 +79,7 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Tenants
                 _context.Permissions.Add(new RolePermissionSetting
                     {
                         TenantId = _tenantId,
-                        Name = "Operador",
+                        Name = "Pages.Operador",
                         IsGranted = true,
                         RoleId = operRole.Id
                     }
@@ -87,7 +87,7 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Tenants
                 _context.Permissions.Add( new RolePermissionSetting
                     {
                         TenantId = _tenantId,
-                        Name = "Inspector",
+                        Name = "Pages.Inspector",
                         IsGranted = true,
                         RoleId = operRole.Id
                     }
@@ -95,7 +95,7 @@ namespace App.Caliset.EntityFrameworkCore.Seed.Tenants
                 _context.Permissions.Add(new RolePermissionSetting
                     {
                         TenantId = _tenantId,
-                        Name = "Inspector",
+                        Name = "Pages.Inspector",
                         IsGranted = true,
                         RoleId = inspRole.Id
                     }

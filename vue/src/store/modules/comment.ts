@@ -8,6 +8,7 @@ import ListMutations from './list-mutations'
 interface CommentState extends ListState<Comment> {
     editComment: Comment;
     commentsOfOperation: Array<Comment>;
+    operationStateId: number;
 }
 class CommentModule extends ListModule<CommentState, any, Comment>{
     state = {
@@ -17,7 +18,8 @@ class CommentModule extends ListModule<CommentState, any, Comment>{
         list: new Array<Comment>(),
         loading: false,
         editComment: new Comment(),
-        commentsOfOperation: new Array<Comment>()
+        commentsOfOperation: new Array<Comment>(),
+        operationStateId: 0
     }
     actions = {
         async getAll(context: ActionContext<CommentState, any>) {
@@ -43,7 +45,6 @@ class CommentModule extends ListModule<CommentState, any, Comment>{
         async getCommentsByOperation(context: ActionContext<CommentState, any>, payload: any) {
             let reponse = await Ajax.get('/api/services/app/Comments/GetCommentsByOperation?operationId=' + payload.data.id);
             context.state.commentsOfOperation = reponse.data.result as Array<Comment>;
-            console.log(reponse.data.result);
         }
     };
     mutations = {
@@ -55,6 +56,9 @@ class CommentModule extends ListModule<CommentState, any, Comment>{
         },
         edit(state: CommentState, comment: Comment) {
             state.editComment = comment;
+        },
+        setOperationStateId(state: CommentState, idOperState: number){
+            state.operationStateId = idOperState;
         }
     }
 }

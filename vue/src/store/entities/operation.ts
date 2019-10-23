@@ -15,4 +15,5 @@ export default class Operation extends Entity<number>{
     line: string;
     bookingNumber: string;
     notes: string;
+    operationStateId:number;
 }

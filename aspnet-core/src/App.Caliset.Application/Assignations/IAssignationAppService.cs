@@ -9,7 +9,7 @@ namespace App.Caliset.Assignations
     public interface IAssignationAppService: IApplicationService
     {
         IEnumerable<GetAssignationOutput> GetAll();
-        Task Create(CreateAssignationInput input);
+        Task<bool> Create(CreateAssignationInput input);
         void Delete(DeleteAssignationInput input);
         GetAssignationOutput GetAssignationById(GetAssignationInput input);
 

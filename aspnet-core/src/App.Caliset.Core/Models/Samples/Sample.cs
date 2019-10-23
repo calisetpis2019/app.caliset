@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities.Auditing;
+using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Operations;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,6 +18,10 @@ namespace App.Caliset.Models.Samples
         public int OperationId { get; set; }
         [ForeignKey("OperationId")]
         public virtual Operation Operation { get; set; }
+
+        public long InspectorId { get; set; }
+        [ForeignKey("InspectorId")]
+        public virtual User Inspector { get; set; }
 
     }
 }

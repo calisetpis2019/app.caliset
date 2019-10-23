@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.UI;
+using App.Caliset.Models.Operations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,17 +14,23 @@ namespace App.Caliset.Models.Comments
     public class CommentManager : DomainService, ICommentManager
     {
         private readonly IRepository<Comment> _repositoryComments;
-        public CommentManager(IRepository<Comment> repositoryComment)
+        private readonly IRepository<Operation> _repositoryOperations;
+        public CommentManager(IRepository<Comment> repositoryComment, IRepository<Operation> repositoryOperations)
         {
             _repositoryComments = repositoryComment;
+            _repositoryOperations = repositoryOperations;
         }
 
         public async Task<Comment> Create(Comment entity)
         {
-            var Sample = _repositoryComments.FirstOrDefault(x => x.Id == entity.Id);
-            if (Sample != null)
+            var Comment = _repositoryComments.FirstOrDefault(x => x.Id == entity.Id);
+            if (Comment != null)
             {
                 throw new UserFriendlyException("Error", "Ya existe comentario.");
+            }
+            else if(_repositoryOperations.FirstOrDefault(entity.OperationId).OperationStateId == 3)
+            {
+                throw new UserFriendlyException("Error", "La operacion ya esta finalizada.");
             }
             else
             {

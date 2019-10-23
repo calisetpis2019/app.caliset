@@ -28,7 +28,7 @@ namespace App.Caliset.Models.Assignations
             _operationManager = operationManager;
         }
 
-        public async Task Create(Assignation entity)
+        public async Task<bool> Create(Assignation entity)
         {
             
             var Assignation = _repositoryAssignation.FirstOrDefault(x => x.Id == entity.Id);
@@ -47,6 +47,15 @@ namespace App.Caliset.Models.Assignations
             {
                     
                   await _repositoryAssignation.InsertAsync(entity);
+                var allAssignUser = this.GetAll().Where(x => x.InspectorId == entity.InspectorId) ;
+                bool ret = false;
+               foreach (var x in allAssignUser)
+                {
+                    if (SePisanFechas(x.Date, entity.Date, x.DateFin, entity.DateFin))
+                        ret = true;
+                }
+
+                return ret;
                    
             }
             catch (System.Exception e)
@@ -137,6 +146,20 @@ namespace App.Caliset.Models.Assignations
         public bool UserAssigned(long IdUser, int IdOper)
         {
             return (_repositoryAssignation.FirstOrDefault(x => x.InspectorId == IdUser && x.OperationId == IdOper) == null);
+        }
+
+
+
+        bool SePisanFechas(DateTime fecha1Inicio, DateTime fecha2Inicio, DateTime? fecha1Fin, DateTime? fecha2Fin)
+        {
+            if (!fecha1Fin.HasValue)
+                fecha1Fin = fecha1Inicio;
+            if (!fecha2Fin.HasValue)
+                fecha2Fin = fecha2Inicio;
+
+            bool overlap = ((fecha1Inicio <= fecha2Fin) && (fecha2Inicio <= fecha1Fin));
+
+            return overlap;
         }
     }
 }

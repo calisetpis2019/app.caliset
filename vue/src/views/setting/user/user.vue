@@ -191,24 +191,28 @@
                                 this.view();
                             }
                         }
-                    },this.L('Ver')),
-                    //Boton Editar:
-                    h('Button',{
-                        props:{
-                            type:'primary',
-                            size:'small'
-                        },
-                        style:{
-                            marginRight:'5px'
-                        },
-                        on:{
-                            click:()=>{
-                                this.$store.commit('user/edit',params.row);
-                                this.edit();
-                            }
-                        }
-                    },this.L('Edit'))
+                    },this.L('Ver'))
                 ];
+                if(params.row.id !== 2){
+                    toRender.push(
+                        //Boton Editar:
+                        h('Button',{
+                            props:{
+                                type:'primary',
+                                size:'small'
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:()=>{
+                                    this.$store.commit('user/edit',params.row);
+                                    this.edit();
+                                }
+                            }
+                        },this.L('Edit'))
+                    )
+                }
                 if(this.$store.state.session.user.id !== params.row.id){
                     toRender.push(
                         h('Button',{
