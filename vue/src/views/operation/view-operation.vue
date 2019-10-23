@@ -112,18 +112,20 @@
         }
 
         get assignations() {
-          return this.$store.state.assignation.assignmentsOfOperation;
+            return this.$store.state.assignation.assignmentsOfOperation;
         }
 
         get comments() {
-           return this.$store.state.comment.commentsOfOperation; 
+            this.$store.commit('comment/setOperationStateId',this.operation.operationStateId);
+            return this.$store.state.comment.commentsOfOperation; 
         }
 
 
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
-            } else {
+            }
+            else {
                 this.operation = Util.extend(true, {}, this.$store.state.operation.viewOperation);
             }
 
@@ -138,8 +140,6 @@
 
             this.pagerequest["id"] = this.operation.id;
             this.getComments();
-
-
         }
 
         async getOperation() {
@@ -232,32 +232,32 @@
                 key: 'commentary'
             },
             {
-              title:this.L('Actions'),
-              key:'Actions',
-              width:100,
-              render:(h:any,params:any)=>{
-                  var toRender;
-                  if(params.row.creatorUser.id === this.$store.state.session.user.id){
-                      toRender = [
-                          h('Button',{
-                                    props:{
-                                        type: 'success',
-                                        size:'small'
-                                    },
-                                    style:{
-                                        marginRight:'5px'
-                                    },
-                                    on:{
-                                        click:()=>{
-                                            this.$store.commit('comment/edit',params.row);
-                                            this.commentEdit();
-                                        }
+                title:this.L('Actions'),
+                key:'Actions',
+                width:100,
+                render:(h:any,params:any)=>{
+                    var toRender;
+                    if(params.row.creatorUser.id === this.$store.state.session.user.id && this.$store.state.comment.operationStateId!==3){
+                        toRender = [
+                            h('Button',{
+                                props:{
+                                    type: 'success',
+                                    size:'small'
+                                },
+                                style:{
+                                    marginRight:'5px'
+                                },
+                                on:{
+                                    click:()=>{
+                                        this.$store.commit('comment/edit',params.row);
+                                        this.commentEdit();
                                     }
-                                },'Editar')
-                      ]
-                  }
-                  return toRender;
-              }
+                                }
+                            },'Editar')
+                        ]
+                    }
+                    return toRender;
+                }
             }
         ]
     }
