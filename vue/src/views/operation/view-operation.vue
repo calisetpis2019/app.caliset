@@ -87,6 +87,7 @@
     import Assignation from '@/store/entities/assignation'
     import Comment from '@/store/entities/comment'
     import EditCommentOperation from './edit-comment-operation.vue'
+    import moment from 'moment'
 
     class PageViewOperationRequest extends UserRequest {
     }
@@ -230,6 +231,19 @@
             {
                 title: 'Comentario',
                 key: 'commentary'
+            },
+            {
+                title: 'Fecha',
+                render:(h:any,params:any)=>{
+                    return h('Span', moment(params.row.creationTime).locale('es').format("DD [de] MMMM [del] YYYY, h:mm:ss a"));
+                }
+
+            },
+            {
+                title: 'Creador',
+                render:(h:any,params:any)=>{
+                    return h('Span', params.row.creatorUser.name+" "+params.row.creatorUser.surname);
+                }
             },
             {
                 title:this.L('Actions'),

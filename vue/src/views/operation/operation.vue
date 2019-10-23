@@ -139,6 +139,7 @@
         }
         pagerequest: PageOperationRequest = new PageOperationRequest();
         operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
+        administratorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Administrador');
 
         createModalShow: boolean = false;
         editModalShow:boolean=false;
@@ -285,9 +286,6 @@
                 property = property.substr(1);
             }
             return function (a,b) {
-                /* next line works with strings and numbers, 
-                 * and you may want to customize it to your needs
-                 */
                 var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
                 return result * sortOrder;
             }
@@ -300,9 +298,6 @@
                 property = property.substr(1);
             }
             return function (a,b) {
-                /* next line works with strings and numbers, 
-                 * and you may want to customize it to your needs
-                 */
                 var result = (a[property] < b[property]) ? 1 : (a[property] > b[property]) ? -1 : 0;
                 return result * sortOrder;
             }
@@ -444,23 +439,29 @@
                         }
                     },'Ver')
                 ];
-                if(this.operatorRenderOnly == true){
+                var botonEditar=h('Button',{
+                                    props:{
+                                        type:'success',
+                                        size:'small'
+                                    },
+                                    style:{
+                                        marginRight:'5px'
+                                    },
+                                    on:{
+                                        click:()=>{
+                                            this.$store.commit('operation/edit',params.row);
+                                            this.edit();
+                                        }
+                                    }
+                                },'Editar');
+                if(this.operatorRenderOnly == true && params.row.operationStateId != 3){
+                    toRender.push(botonEditar)
+                }
+                else if(this.administratorRenderOnly){
+                    toRender.push(botonEditar)
+                }
+                if(this.administratorRenderOnly == true){
                     toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'success',
-                                size:'small'
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:()=>{
-                                    this.$store.commit('operation/edit',params.row);
-                                    this.edit();
-                                }
-                            }
-                        },'Editar'),
                         h('Button',{
                             props:{
                                 type:'error',

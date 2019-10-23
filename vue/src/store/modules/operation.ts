@@ -50,6 +50,9 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         async update(context: ActionContext<OperationState, any>, payload: any) {
             await Ajax.put('/api/services/app/Operation/Update', payload.data);
         },
+        async update_finished(context: ActionContext<OperationState, any>, payload: any) {
+            await Ajax.put('/api/services/app/Operation/UpdateFinishedOperation', payload.data);
+        },
         async delete(context: ActionContext<OperationState, any>, payload: any) {
             await Ajax.delete('/api/services/app/Operation/Delete?Id=' + payload.data.id);
         },

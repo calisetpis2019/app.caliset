@@ -21,7 +21,7 @@
                     <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="operation.date" locale="es" v-bind:right="true" />
                 </FormItem>
 
-                <FormItem label="Responsable" prop="managerId" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Responsable" prop="managerId">
                     <v-select v-model="operation.managerId" label="fullName" :reduce="name => name.id" :options="listOfUsers">
                         <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
                     </v-select>
@@ -35,45 +35,46 @@
                     <Input v-model="operation.package" :maxlength="32"></Input>
                 </FormItem>
 
-                <FormItem label="Nominador" prop="nominatorId" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Nominador" prop="nominatorId" v-if="operation.operationStateId != 3">
                     <v-select v-model="operation.nominatorId" label="name" :reduce="name => name.id" :options="listOfClients">
                         <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
                     </v-select>
                 </FormItem>
 
-                <FormItem label="Cargador" prop="chargerId" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Cargador" prop="chargerId" v-if="operation.operationStateId != 3">
                     <v-select v-model="operation.chargerId" label="name" :reduce="name => name.id" :options="listOfClients">
                         <span slot="no-options">No existen opciones para la busqueda ingresada.</span>
                     </v-select>
                 </FormItem>
 
-                <FormItem label="Nombre del Barco" prop="ship" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Nombre del Barco" prop="ship" v-if="operation.operationStateId != 3">
                     <Input v-model="operation.shipName" :maxlength="32"></Input>
                 </FormItem>
 
-                <FormItem label="Destino" prop="destination" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Destino" prop="destination" v-if="operation.operationStateId != 3">
                     <Input v-model="operation.destiny" :maxlength="32"></Input>
                 </FormItem>
 
-                <FormItem label="Referencia cliente" prop="clientReference" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Referencia cliente" prop="clientReference" v-if="operation.operationStateId != 3">
                     <Input v-model="operation.clientReference" :maxlength="32"></Input>
                 </FormItem>
 
-                <FormItem label="Linea" prop="line" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Linea" prop="line" v-if="operation.operationStateId != 3">
                     <Input v-model="operation.line" :maxlength="32"></Input>
                 </FormItem>
 
-                <FormItem label="Número de booking" prop="bookingNumber" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Número de booking" prop="bookingNumber" v-if="operation.operationStateId != 3">
                     <Input v-model="operation.bookingNumber" :maxlength="32"></Input>
                 </FormItem>
 
-                <FormItem label="Notas" prop="notes" v-if="operation.operationState != 'Finalizada'">
+                <FormItem label="Notas" prop="notes" v-if="operation.operationStateId != 3">
                     <Input v-model="operation.notes" :maxlength="32"></Input>
                 </FormItem>
             </Form>
             <div slot="footer">
                 <Button @click="cancel">{{L('Cancel')}}</Button>
-                <Button @click="save" type="primary">{{L('OK')}}</Button>
+                <Button v-if="operation.operationStateId != 3" @click="save" type="primary">{{L('OK')}}</Button>
+                <Button v-if="operation.operationStateId == 3" @click="save_finished" type="primary">{{L('OK')}}</Button>
             </div>
         </Modal>
     </div>
@@ -126,6 +127,19 @@
                 if (valid) {
                     await this.$store.dispatch({
                         type:'operation/update',
+                        data:this.operation
+                    });
+                    (this.$refs.operationForm as any).resetFields();
+                    this.$emit('save-success');
+                    this.$emit('input',false);
+                }
+            })
+        }
+        save_finished() {
+            (this.$refs.operationForm as any).validate(async (valid:boolean)=>{
+                if (valid) {
+                    await this.$store.dispatch({
+                        type:'operation/update_finished',
                         data:this.operation
                     });
                     (this.$refs.operationForm as any).resetFields();
