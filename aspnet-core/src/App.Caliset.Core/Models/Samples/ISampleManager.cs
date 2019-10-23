@@ -10,7 +10,7 @@ namespace App.Caliset.Models.Samples
     public interface ISampleManager: IDomainService
     {
         IEnumerable<Sample> GetAll();
-        Sample GetSampleById(int id);
+        Sample GetSampleByIdAsync(int id);
         Task<Sample> Create(Sample entity);
         void Update(Sample entity);
         void Delete(int id);

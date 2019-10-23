@@ -1,5 +1,7 @@
 ﻿using Abp.Application.Services;
 using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
+using Abp.UI;
 using App.Caliset.Models.Operations;
 using App.Caliset.Models.Samples;
 using App.Caliset.Operations;
@@ -17,20 +19,32 @@ namespace App.Caliset.Samples
 
         private readonly SampleManager _sampleManager;
         private readonly OperationManager _operationManager;
-  
+        private readonly IAbpSession _abpSession;
 
-        public SampleAppService(SampleManager sampleManager, OperationManager operationManager)
+
+        public SampleAppService(SampleManager sampleManager, OperationManager operationManager, IAbpSession abpSession)
         {
             _sampleManager = sampleManager;
             _operationManager = operationManager;
- 
+            _abpSession = abpSession;
+
+
         }
 
 
         public async Task<string> Create(CreateSampleInput input)
         {
-            var oper = _operationManager.GetAll();
-            var oper2 = oper.FirstOrDefault(x => x.Id == input.OperationId);
+
+
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+            long userId = _abpSession.UserId.Value;
+
+
+            var oper2 = _operationManager.GetOperationById( input.OperationId);
+     
             int aux;
 
             if (oper2.Samples == null)
@@ -39,6 +53,7 @@ namespace App.Caliset.Samples
                 aux = oper2.Samples.Count();
 
             var Sample = ObjectMapper.Map<Sample>(input);
+            Sample.InspectorId = userId;
             Sample.IdSample = "Operation" + oper2.Id.ToString() + "Sample" + aux.ToString();
 
             
@@ -61,7 +76,7 @@ namespace App.Caliset.Samples
 
         public GetSampleOutput GetSampleById(GetSampleInput input)
         {
-            var getSample = _sampleManager.GetSampleById(input.Id);
+            var getSample = _sampleManager.GetSampleByIdAsync(input.Id);
             GetSampleOutput output = ObjectMapper.Map<GetSampleOutput>(getSample);
             return output;
         }

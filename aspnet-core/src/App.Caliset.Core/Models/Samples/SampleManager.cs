@@ -2,6 +2,7 @@
 using Abp.Domain.Services;
 using Abp.UI;
 using App.Caliset.Models.Operations;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,12 +52,16 @@ namespace App.Caliset.Models.Samples
 
         public IEnumerable<Sample> GetAll()
         {
-            return _repositorySample.GetAll();
+            return _repositorySample.GetAll()
+                .Include(x => x.Inspector)
+                .Include(x => x.Operation)
+                ;
+
         }
 
-        public Sample GetSampleById(int id)
+        public  Sample GetSampleByIdAsync(int id)
         {
-            return _repositorySample.Get(id);
+            return  _repositorySample.Get(id);
         }
 
         public void Update(Sample entity)
