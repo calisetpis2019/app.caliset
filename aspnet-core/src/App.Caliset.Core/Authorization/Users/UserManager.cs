@@ -21,7 +21,7 @@ namespace App.Caliset.Authorization.Users
     public class UserManager : AbpUserManager<Role, User>
     {
         private readonly IRepository<User, long> _userRepository;
-        private readonly IRepository<UserDeviceToken> _userDeviceTokenRepository;
+
         public UserManager(
             RoleManager roleManager,
             UserStore store, 
@@ -80,6 +80,6 @@ namespace App.Caliset.Authorization.Users
                 .WhereIf(active.HasValue, x => x.IsActive == active); ;
         }
 
-     
+       
     }
 }

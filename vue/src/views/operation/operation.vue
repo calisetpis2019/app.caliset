@@ -490,6 +490,25 @@
                         },'Eliminar')
                     );
                 }
+                if(this.operatorRenderOnly == true && params.row.operationStateId == 1){
+                    toRender.push(
+                        h('Button',{
+                            props:{
+                                type:'warning',
+                                size:'small',
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:async ()=>{
+                                    this.$store.dispatch('operation/activate',params.row);
+                                    await this.getpage();
+                                }
+                            }
+                        },'Activar')
+                    );
+                }
                 if(this.operatorRenderOnly == true && params.row.operationStateId != 3){
                     toRender.push(
                         h('Button',{

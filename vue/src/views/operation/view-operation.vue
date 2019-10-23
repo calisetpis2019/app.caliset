@@ -122,6 +122,7 @@
         }
 
 
+
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
@@ -222,12 +223,32 @@
 
         columnsSamples =[
             {
+                title: 'Id',
+                key: 'id'
+            },
+            {
                 title: 'Muestras',
                 key: 'comment'
             }
         ]
 
         columnsComments = [
+            {
+                title: 'Creador',
+                key: 'creator',
+                render:(h:any,params:any)=>{
+                    return h('Span', params.row.creatorUser.name + ' ' + params.row.creatorUser.surname );    
+                }
+            },
+            {
+                title: 'Fecha de creación',
+                key: 'date',
+                render:(h:any,params:any)=>{
+                    console.log('en la fecha');
+                    console.log(params);
+                    return h('Span', params.row.creationTime);    
+                }
+            },
             {
                 title: 'Comentario',
                 key: 'commentary'
