@@ -74,7 +74,8 @@ namespace App.Caliset.Users
             }
             catch (System.Exception e)            {
 
-                throw new UserFriendlyException("Falló la creación del Usuario", e.Message);
+                string ExceptionMessage = "Error";    
+            throw new UserFriendlyException("Falló la creación del Usuario", ExceptionMessage);
             }       
           
             if (input.RoleNames != null)
