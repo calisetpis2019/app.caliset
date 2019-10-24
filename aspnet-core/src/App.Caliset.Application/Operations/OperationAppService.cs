@@ -1,5 +1,7 @@
-﻿using Abp.Application.Services;
+﻿using Abp;
+using Abp.Application.Services;
 using Abp.Authorization;
+using Abp.Notifications;
 using Abp.UI;
 using App.Caliset.Assignations.Dto;
 using App.Caliset.Authorization;
@@ -32,6 +34,8 @@ namespace App.Caliset.Operations
         private readonly AssignationManager _assignationManager;
         private readonly NotificationManager _notificationManager;
         private readonly UserDeviceTokenManager _userDeviceTokerManager;
+        private readonly INotificationPublisher _notificationPublisher;
+        private readonly IUserNotificationManager _notificationManagerFW;
 
 
 
@@ -40,9 +44,11 @@ namespace App.Caliset.Operations
                                     ,ILocationManager locationManager
                                     ,IClientManager clientManager
                                     ,IOperationTypeManager operationTypeManager
-                                     , AssignationManager assignationManager
-                                     , NotificationManager notificationManager
-                                     , UserDeviceTokenManager userDeviceTokerManager
+                                    , AssignationManager assignationManager
+                                    , NotificationManager notificationManager
+                                    , UserDeviceTokenManager userDeviceTokerManager
+                                    , INotificationPublisher notificationPublisher
+                                    , IUserNotificationManager notificationManagerFW
 
             )
         {
@@ -54,6 +60,8 @@ namespace App.Caliset.Operations
             _assignationManager = assignationManager;
             _notificationManager = notificationManager;
             _userDeviceTokerManager = userDeviceTokerManager;
+            _notificationPublisher = notificationPublisher;
+            _notificationManagerFW = notificationManagerFW;
         }
 
 
@@ -66,7 +74,19 @@ namespace App.Caliset.Operations
             else
                 operation.OperationStateId = 1;
 
+            
             await _operationManager.Create(operation);
+
+            var message = "Ha sido asignado como responsable de una operación.";
+
+            var userManager = new UserIdentifier(1, input.ManagerId);
+
+            await _notificationPublisher.PublishAsync(
+                "App.SimpleMessage",
+                new MessageNotificationData(message),
+                severity: NotificationSeverity.Info,
+                userIds: new[] { userManager }
+            );
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
@@ -80,6 +100,15 @@ namespace App.Caliset.Operations
             {
                 _operationManager.Delete(input.Id);
             }
+
+            //NOTIFICACION FW
+            var userManager = new UserIdentifier(1, operation.ManagerId);
+            _notificationPublisher.PublishAsync(
+                "App.SimpleMessage",
+                new MessageNotificationData("Se ha eliminado una operación de la cual era responsable."),
+                severity: NotificationSeverity.Info,
+                userIds: new[] { userManager }
+            );
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
@@ -146,6 +175,15 @@ namespace App.Caliset.Operations
 
                 }
             }//TERMINA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
+
+            //NOTIFICACION FW
+            var userManager = new UserIdentifier(1, operation.ManagerId);
+            _notificationPublisher.PublishAsync(
+                "App.SimpleMessage",
+                new MessageNotificationData("Se ha modificado una operación de la cual es responsable."),
+                severity: NotificationSeverity.Info,
+                userIds: new[] { userManager }
+            );
         }
 
         [AbpAuthorize(PermissionNames.Administrador)]
@@ -154,7 +192,7 @@ namespace App.Caliset.Operations
             var operation = _operationManager.GetOperationById(input.Id);
             if (operation.OperationStateId != 3)
             {
-                throw new UserFriendlyException("Error", "Esta operacion no esta finalizada");
+                throw new UserFriendlyException("Error", "Esta operacion no está finalizada");
             }
             ObjectMapper.Map(input, operation);
             _operationManager.Update(operation);
@@ -172,5 +210,11 @@ namespace App.Caliset.Operations
         {
             _operationManager.ActvateOperations();
         }
+
+        public Task<List<UserNotification>> PRUEBA_getNotificationFWByUser(long userId)
+        {
+            return _notificationManagerFW.GetUserNotificationsAsync(new UserIdentifier(1, userId));
+        }
+
     }
 }

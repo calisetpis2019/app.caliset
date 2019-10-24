@@ -67,7 +67,8 @@ namespace App.Caliset.Roles
         [AbpAuthorize(PermissionNames.Administrador)]
         public override async Task<RoleDto> Update(RoleDto input)
         {
-            CheckUpdatePermission();
+            throw new UserFriendlyException("Error", "No es posible modificar roles existentes.");
+            /*CheckUpdatePermission();
 
             var role = await _roleManager.GetRoleByIdAsync(input.Id);
 
@@ -82,7 +83,7 @@ namespace App.Caliset.Roles
 
             await _roleManager.SetGrantedPermissionsAsync(role, grantedPermissions);
 
-            return MapToEntityDto(role);
+            return MapToEntityDto(role);*/
         }
 
         [AbpAuthorize(PermissionNames.Administrador)]
