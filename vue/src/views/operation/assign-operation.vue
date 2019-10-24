@@ -17,12 +17,12 @@
                 </FormItem>
 
                 <FormItem label="Fecha y hora de inicio" prop="date">
-                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true" />
+                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true" :min-date="formattedDate" :format="'YYYY-MM-DD HH:mm'"/>
                     <!--<DatePicker type="datetime" format="dd-MM-yyyy HH:mm" v-model="assignation.date" style="width: 100%"></DatePicker>-->
                 </FormItem>
 
                 <FormItem label="Fecha y hora de fin" prop="dateFin">
-                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.dateFin" locale="es" v-bind:right="true" />
+                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.dateFin" locale="es" v-bind:right="true" :min-date="formattedDate" :format="'YYYY-MM-DD HH:mm'"/>
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -40,6 +40,7 @@
     import PageRequest from '@/store/entities/page-request'
     import Operation from '@/store/entities/operation'
     import Assignation from '@/store/entities/assignation'
+    import moment from 'moment'
 
     class PageAssignOperationRequest extends PageRequest {
     }
@@ -54,6 +55,7 @@
         created(){ }
 
         pagerequest: PageAssignOperationRequest = new PageAssignOperationRequest();
+
 
         get listOfUsers() {
             return this.$store.state.user.list;
@@ -108,6 +110,12 @@
                 type: 'user/getEligibleUsers',
                 data: ""
             })
+        }
+
+        get formattedDate(){
+            const fDate = moment(this.operation.date);
+            console.log(fDate.format('YYYY-MM-DD hh:mm a'))
+            return fDate.format('YYYY-MM-DD hh:mm a');
         }
 
         validate_dates = (rule:any, value:any, callback:any) => {
