@@ -8,6 +8,7 @@ namespace App.Caliset.Models.Notifications
 {
     public interface INotificationManager:IDomainService
     {
-         void sendNotification(string Title, string Text, long UserId);
+        void sendNotification(string Title, string Text, long UserId);
+        void sendMessage(string Text, long UserId);
     }
 }

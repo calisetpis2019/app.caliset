@@ -11,6 +11,8 @@ using Abp.Extensions;
 using Abp.IdentityFramework;
 using Abp.Linq.Extensions;
 using Abp.Localization;
+using App.Caliset.Models.Notifications;
+using App.Caliset.Models.UserDeviceTokens;
 using Abp.Runtime.Session;
 using Abp.UI;
 using App.Caliset.Authorization;
@@ -33,6 +35,8 @@ namespace App.Caliset.Users
         private readonly IPasswordHasher<User> _passwordHasher;
         private readonly IAbpSession _abpSession;
         private readonly LogInManager _logInManager;
+        private readonly UserDeviceTokenManager _userDeviceTokerManager;
+        private readonly NotificationManager _notificationManager;
 
         public UserAppService(
             IRepository<User, long> repository,
@@ -41,7 +45,9 @@ namespace App.Caliset.Users
             IRepository<Role> roleRepository,
             IPasswordHasher<User> passwordHasher,
             IAbpSession abpSession,
-            LogInManager logInManager)
+            LogInManager logInManager,
+            UserDeviceTokenManager userDeviceTokerManager,
+            NotificationManager notificationManager)
             : base(repository)
         {
             _userManager = userManager;
@@ -50,6 +56,8 @@ namespace App.Caliset.Users
             _passwordHasher = passwordHasher;
             _abpSession = abpSession;
             _logInManager = logInManager;
+            _userDeviceTokerManager = userDeviceTokerManager;
+            _notificationManager = notificationManager;
         }
 
         [AbpAuthorize(PermissionNames.Administrador)]
@@ -111,6 +119,11 @@ namespace App.Caliset.Users
         {
             var user = await _userManager.GetUserByIdAsync(input.Id);
             await _userManager.DeleteAsync(user);
+
+            // Para manejar envío de mensaje a usuario borrado en la app
+            if (_userDeviceTokerManager.getById(input.Id)!= null){
+                _notificationManager.sendMessage("Usuario eliminado", input.Id);
+            }
         }
 
         public async Task<ListResultDto<RoleDto>> GetRoles()
