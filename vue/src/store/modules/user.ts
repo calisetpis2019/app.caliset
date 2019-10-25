@@ -72,7 +72,8 @@ class UserModule extends ListModule<UserState,any,User>{
             await Ajax.delete('/api/services/app/User/Delete?Id='+payload.data.id);
         },
         async get(context:ActionContext<UserState,any>,payload:any){
-            let reponse=await Ajax.get('/api/services/app/User/Get?Id='+payload.id);
+            console.log(payload);
+            let reponse=await Ajax.get('/api/services/app/User/Get?Id='+payload.data.id);
             return reponse.data.result as User;
         },
         async getRoles(context:ActionContext<UserState,any>){

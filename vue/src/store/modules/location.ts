@@ -29,8 +29,6 @@ class LocationModule extends ListModule<LocationState, any, Location>{
             await Ajax.post('/api/services/app/Location/Create', payload.data);
         },
         async update(context: ActionContext<LocationState, any>, payload: any) {
-            console.log("update: ");
-            console.log(payload.data);
             await Ajax.put('/api/services/app/Location/Update', payload.data);
         },
         async delete(context: ActionContext<LocationState, any>, payload: any) {

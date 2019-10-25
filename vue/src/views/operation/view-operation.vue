@@ -2,75 +2,29 @@
     <div>
         <Modal :title="L('Datos de la Operación')"
                :value="value"
-               :width="1000"
-               :fullscreen="true"
-               @on-visible-change="visibleChange">
-               <Row>
-                   <Col span="12">
-                       Tipo de operación: {{ this.operation.operationType }} 
-                   </Col>
-                   <Col span="12">
-                       Nominador: {{ this.operation.nominatorName }} 
-                   </Col>
-               </Row>
-               <Row>
-                   <Col span="12">
-                       Cargador: {{ this.operation.chargerName }} 
-                   </Col>
-                   <Col span="12">
-                       Lugar: {{ this.location.name }} 
-                   </Col>
-               </Row>
-               <Row>
-                   <Col span="12">
-                       Fecha y hora de inicio: {{ this.operation.date }} 
-                   </Col>
-                   <Col span="12">
-                       Responsable de la operación: {{ this.operation.managerName }} 
-                   </Col>
-               </Row>
-               <Row>
-                   <Col span="12">
-                       Mercaderia: {{ this.operation.commodity }} 
-                   </Col>
-                   <Col span="12">
-                       Empaque: {{ this.operation.package }} 
-                   </Col>
-               </Row>
-               <Row>
-                   <Col span="12">
-                       Nombre del barco: {{ this.operation.shipName }} 
-                   </Col>
-                   <Col span="12">
-                       Destino: {{ this.operation.destiny }} 
-                   </Col>
-               </Row>
-               <Row>
-                   <Col span="12">
-                       Referencia del cliente: {{ this.operation.clientReference }} 
-                   </Col>
-                   <Col span="12">
-                       Línea: {{ this.operation.line }} 
-                   </Col>
-               </Row>
-               <Row>
-                   <Col span="12">
-                       Número de Booking: {{ this.operation.bookingNumber }} 
-                   </Col>
-                   <Col span="12">
-                       Notas: {{ this.operation.notes }} 
-                   </Col>
-               </Row>
-               <Divider>Asignaciones</Divider>
-               <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
-               <Divider>Muestras</Divider>
-               <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
-               <Divider>Comentarios</Divider>
-               <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
+               @on-visible-change="visibleChange"
+               width="90%">
+               <Table :loading="loadingOperation" :columns="infoColumns" no-data-text="No existe informacion." border :data="operationDetails" size="small" style="margin-bottom:20px;">
+              </Table>
+              <Table :loading="loadingOperation" :columns="infoColumns2" no-data-text="No existe informacion." border :data="operationDetails" size="small">
+              </Table>
+              <Divider />
+               <Tabs value="assignations" type="card">
+                    <TabPane label="Asignaciones" name="assignations">
+                        <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
+                    </TabPane>
+                    <TabPane label="Comentarios" name="comments">
+                       <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
+                    </TabPane>
+                    <TabPane label="Muestras" name="samples">
+                        <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
+                    </TabPane>
+                </Tabs>
             <div slot="footer">
             </div>
         </Modal>
         <edit-comment-operation v-model="editCommentOperationModalShow" ></edit-comment-operation>
+        <view-user v-model="viewUserAssignedToOperationModalShow" ></view-user>
     </div>
 </template>
 
@@ -87,18 +41,21 @@
     import Assignation from '@/store/entities/assignation'
     import Comment from '@/store/entities/comment'
     import EditCommentOperation from './edit-comment-operation.vue'
+    import ViewUser from '../setting/user/view-user.vue'
     import moment from 'moment'
 
     class PageViewOperationRequest extends UserRequest {
     }
 
     @Component({
-        components: { EditCommentOperation }
+        components: { EditCommentOperation, ViewUser }
     })
     export default class ViewOperation extends AbpBase{
+
         @Prop({type:Boolean,default:false}) value:boolean;
         operation:Operation=new Operation();
         operationReponse:Operation=new Operation();
+        user:User=new User();
 
         pagerequest: PageViewOperationRequest = new PageViewOperationRequest();
         operatorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Operador');
@@ -106,6 +63,7 @@
         location:Location = new Location();
 
         editCommentOperationModalShow: boolean = false;
+        viewUserAssignedToOperationModalShow: boolean = false;
         // usersAssigned:Array<User> = new Array<User>();
 
         get loadingAssignation() {
@@ -121,7 +79,16 @@
             return this.$store.state.comment.commentsOfOperation; 
         }
 
+        get loadingOperation() {
+            return this.$store.state.operation.loading && this.$store.state.location.loading;
+        }
 
+        get operationDetails() {
+            var obj: {[k: string]: any} = this.operation;
+            console.log(this.location);
+            obj.location = this.location.name;
+            return new Array<Object>(obj);
+        }
 
         visibleChange(value:boolean){
             if(!value){
@@ -131,17 +98,20 @@
                 this.operation = Util.extend(true, {}, this.$store.state.operation.viewOperation);
             }
 
-            this.pagerequest["id"] = this.operation.id;
-            this.getOperation();
-
             this.pagerequest["id"] = this.operation.locationId;
-            this.getLocation();
+            this.getLocation().then(result => {
+                this.pagerequest["id"] = this.operation.id;
+                this.getAssignations();
 
-            this.pagerequest["id"] = this.operation.id;
-            this.getAssignations();
+                this.pagerequest["id"] = this.operation.id;
+                this.getComments();
 
-            this.pagerequest["id"] = this.operation.id;
-            this.getComments();
+                this.pagerequest["id"] = this.operation.id;
+                this.getOperation();
+
+            });
+
+
         }
 
         async getOperation() {
@@ -173,10 +143,87 @@
             })
         }
 
+        async getUser(){
+            let user = await this.$store.dispatch({
+                type: 'user/get',
+                data: this.pagerequest
+            })
+            return user
+        }
+
         commentEdit(){
             this.editCommentOperationModalShow = true;
         }
 
+        viewUserDetail(){
+          this.viewUserAssignedToOperationModalShow = true;
+        }
+
+        infoColumns = [
+            {
+                title: 'Id',
+                key: 'id'
+            },
+            {
+                title: 'Tipo',
+                key: 'operationType'
+            },
+            {
+                title: 'Nominador',
+                key: 'nominatorName'
+            },
+            {
+                title: 'Cargador',
+                key: 'chargerName'
+            },
+            {
+                title: 'Lugar',
+                key: 'location'
+            },
+            {
+                title: 'Fecha y hora de inicio',
+                key: 'date'
+            },
+            {
+                title: 'Responsable',
+                key: 'managerName'
+            },
+            {
+                title: 'Mercaderia',
+                key: 'commodity'
+            },
+            {
+                title: 'Empaque',
+                key: 'package' 
+            }
+
+        ]
+        infoColumns2 = [
+            {
+                title: 'Nombre del barco',
+                key: 'shipName'
+            },
+            {
+                title: 'Destino',
+                key: 'destiny'
+            },
+            {
+                title: 'Referencia del cliente',
+                key: 'clientReference'
+            },
+            {
+                title: 'Línea',
+                key: 'line'
+            },
+            {
+                title: 'Número de Booking',
+                key: 'bookingNumber'
+            },
+            {
+                title: 'Notas',
+                key: 'notes'
+            }
+        ]
 
         columns = [
             {
@@ -219,7 +266,36 @@
                       return h('Span', 'Rechazada');
                   }
                 }
-            },]        
+            },
+            {
+                title:this.L('Actions'),
+                key:'Actions',
+                width:100,
+                render:(h:any,params:any)=>{
+                    var toRender = [
+                            h('Button',{
+                                props:{
+                                    type: 'info',
+                                    size:'small'
+                                },
+                                style:{
+                                    marginRight:'5px'
+                                },
+                                on:{
+                                    click:()=>{
+                                        this.pagerequest.id = params.row.inspector.id;
+                                        this.getUser().then(result =>{
+                                            this.$store.commit('user/view',result);
+                                            this.viewUserDetail();
+                                        });
+                                    }
+                                }
+                            },'Ver')
+                        ]
+                    
+                    return toRender;
+                }
+            }]        
 
         columnsSamples =[
             {
