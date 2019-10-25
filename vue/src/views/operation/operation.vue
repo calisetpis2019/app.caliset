@@ -146,6 +146,11 @@
         viewModalShow: boolean = false;
        	assignModalShow: boolean = false;
         commentModalShow: boolean = false;
+
+        //datos hardcodeados en el backend:
+        ended=3;
+        active=2;
+        future=1;
         
         get list_finished() {
             var auxOperations:Operation[];
@@ -454,13 +459,13 @@
                                         }
                                     }
                                 },'Editar');
-                if(this.operatorRenderOnly == true && params.row.operationStateId != 3){
+                if(this.operatorRenderOnly == true && params.row.operationStateId != this.ended){
                     toRender.push(botonEditar)
                 }
                 else if(this.administratorRenderOnly){
                     toRender.push(botonEditar)
                 }
-                if(this.administratorRenderOnly == true){
+                if(this.administratorRenderOnly == true && params.row.operationStateId != this.ended){
                     toRender.push(
                         h('Button',{
                             props:{
