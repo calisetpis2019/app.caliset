@@ -76,6 +76,8 @@
         viewModalShow:boolean=false;
         editModalShow:boolean=false;
 
+        administratorRenderOnly: boolean = Util.abp.auth.hasPermission('Pages.Administrador');
+
         get list(){
             return this.$store.state.user.list;
         };
@@ -193,7 +195,7 @@
                         }
                     },this.L('Ver'))
                 ];
-                if(params.row.id !== 2){
+                if(this.administratorRenderOnly){
                     toRender.push(
                         //Boton Editar:
                         h('Button',{
@@ -212,8 +214,7 @@
                             }
                         },this.L('Edit'))
                     )
-                }
-                if(this.$store.state.session.user.id !== params.row.id){
+                
                     toRender.push(
                         h('Button',{
                             props:{

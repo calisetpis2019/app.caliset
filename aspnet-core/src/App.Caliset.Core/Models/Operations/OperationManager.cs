@@ -94,6 +94,8 @@ namespace App.Caliset.Models.Operations
 
         public void Update(Operation entity)
         {
+            if (entity.Date > System.DateTime.Now && entity.OperationStateId != 3)
+                entity.OperationStateId = 1;
             _repositoryOperation.Update(entity);
         }
 

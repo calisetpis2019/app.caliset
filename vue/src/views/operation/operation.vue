@@ -8,13 +8,13 @@
                             <Row :gutter="10">
                                 <Col span="24">
                                 <FormItem :label="L('Keyword')+':'" style="width:100%">
-                                    <Input v-model="pagerequest.keyword" :placeholder="L('OperationName')"></Input>
+                                    <Input v-model="pagerequest.Keyword" :placeholder="L('OperationName')"></Input>
                                 </FormItem>
                                 </Col>
                             </Row>
                             <Row>
                                 <Button @click="create" icon="android-add" type="primary" size="large" v-if="operatorRenderOnly">{{L('Add')}}</Button>
-                                <Button icon="ios-search" type="primary" size="large" @click="getpage" class="toolbar-btn">{{L('Find')}}</Button>
+                                <Button icon="ios-search" type="primary" size="large" @click="filter" class="toolbar-btn">{{L('Find')}}</Button>
                             </Row>
                         </Form>
                     </Col>
@@ -146,6 +146,11 @@
         viewModalShow: boolean = false;
        	assignModalShow: boolean = false;
         commentModalShow: boolean = false;
+
+        //datos hardcodeados en el backend:
+        ended=3;
+        active=2;
+        future=1;
         
         get list_finished() {
             var auxOperations:Operation[];
@@ -454,13 +459,13 @@
                                         }
                                     }
                                 },'Editar');
-                if(this.operatorRenderOnly == true && params.row.operationStateId != 3){
+                if(this.operatorRenderOnly == true && params.row.operationStateId != this.ended){
                     toRender.push(botonEditar)
                 }
                 else if(this.administratorRenderOnly){
                     toRender.push(botonEditar)
                 }
-                if(this.administratorRenderOnly == true){
+                if(this.administratorRenderOnly == true && params.row.operationStateId != this.ended){
                     toRender.push(
                         h('Button',{
                             props:{
