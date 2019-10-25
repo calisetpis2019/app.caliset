@@ -2,24 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Abp;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Domain.Services;
+using Abp.Domain.Uow;
 using Abp.Extensions;
+using Abp.Notifications;
 using Abp.UI;
+using App.Caliset.Authorization.Users;
+using App.Caliset.Models.Assignations;
+using App.Caliset.Models.Notifications;
+using App.Caliset.Models.UserDeviceTokens;
 using Microsoft.EntityFrameworkCore;
 
 namespace App.Caliset.Models.Operations
 {
     public class OperationManager : DomainService, IOperationManager
     {
-
-
         private readonly IRepository<Operation> _repositoryOperation;
+        private readonly UserDeviceTokenManager _userDeviceTokenManager;
+        private readonly NotificationManager _notificationManager;
+        private readonly NotificationPublisher _notificationPublisher;
+        private readonly UserManager _userManager;
+        private readonly IRepository<Assignation> _repositoryAssignation;
 
-        public OperationManager(IRepository<Operation> repositoryOperation)
+        public OperationManager(IRepository<Operation> repositoryOperation, IRepository<Assignation> repositoryAssignation, UserDeviceTokenManager userDeviceTokenManager,
+                                NotificationManager notificationManager, NotificationPublisher notificationPublisher, UserManager userManager)
         {
             _repositoryOperation = repositoryOperation;
+            _repositoryAssignation = repositoryAssignation;
+            _userDeviceTokenManager = userDeviceTokenManager;
+            _notificationManager = notificationManager;
+            _notificationPublisher = notificationPublisher;
+            _userManager = userManager;
 
         }
 
@@ -106,7 +122,7 @@ namespace App.Caliset.Models.Operations
                         select Oper;
         }
 
-        public void ActivateOperationById(int idOperation)
+        public async Task ActivateOperationById(int idOperation)
         {
             var operation = this.GetOperationById(idOperation);
             if (operation.OperationStateId != 1)
@@ -114,16 +130,44 @@ namespace App.Caliset.Models.Operations
                 throw new UserFriendlyException("Error", "La operación debe estar en estado Futura");
             }
             operation.OperationStateId = 2;
+            var manager = operation.ManagerId;
+
             this.Update(operation);
+            //NOTIFICATIONS MOBILE
+            var inspectors = (from Insp in _userManager.GetAll()
+                              join Assign in _repositoryAssignation.GetAll().Where(a => a.OperationId == idOperation && a.Aware == true).ToList()
+                              on Insp.Id equals Assign.InspectorId
+                              select Insp.Id).Distinct();
+
+            if (inspectors.Count() > 0)
+            {
+                foreach (int insp in inspectors)
+                {
+                    if (_userDeviceTokenManager.getById(insp) != null)
+                    {
+                        _notificationManager.sendNotification("Operacion Activa", "Se ha activado una operacion a la que está asignado.", insp);
+                    }
+                }
+
+            }
+
+            //NOTIFICATIONS FW
+            var userManager = new UserIdentifier(1, manager);
+            await _notificationPublisher.PublishAsync(
+                "App.SimpleMessage",
+                new MessageNotificationData("Se ha activado una operación de la cual es responsable."),
+                severity: NotificationSeverity.Info,
+                userIds: new[] { userManager }
+            );
         }
 
-        public void ActvateOperations()
+        public async Task ActvateOperations()
         {
-            var operations = this.GetAll().Where(oper => oper.OperationStateId == 1).Where(oper => oper.Date <= DateTime.Now);
+            var operations = this.GetAll().Where(oper => oper.OperationStateId == 1).Where(oper => oper.Date <= DateTime.Now.AddHours(6));
+
             foreach (Operation oper in operations)
             {
-                this.ActivateOperationById(oper.Id);
-                //Envio de notificacion
+                await this.ActivateOperationById(oper.Id);
             }
         }
 

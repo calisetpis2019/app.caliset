@@ -27,10 +27,6 @@ namespace App.Caliset.Operations
 
 
         private readonly IOperationManager _operationManager;
-        private readonly IOperationStateManager _operationStateManager;
-        private readonly ILocationManager _locationManager;
-        private readonly IClientManager _clientManager;
-        private readonly IOperationTypeManager _operationTypeManager;
         private readonly AssignationManager _assignationManager;
         private readonly NotificationManager _notificationManager;
         private readonly UserDeviceTokenManager _userDeviceTokerManager;
@@ -40,10 +36,6 @@ namespace App.Caliset.Operations
 
 
         public OperationAppService(IOperationManager operationManager
-                                    ,IOperationStateManager operationStateManager
-                                    ,ILocationManager locationManager
-                                    ,IClientManager clientManager
-                                    ,IOperationTypeManager operationTypeManager
                                     , AssignationManager assignationManager
                                     , NotificationManager notificationManager
                                     , UserDeviceTokenManager userDeviceTokerManager
@@ -53,10 +45,6 @@ namespace App.Caliset.Operations
             )
         {
             _operationManager = operationManager;
-            _operationStateManager = operationStateManager;
-            _locationManager = locationManager;
-            _clientManager = clientManager;
-            _operationTypeManager = operationTypeManager;
             _assignationManager = assignationManager;
             _notificationManager = notificationManager;
             _userDeviceTokerManager = userDeviceTokerManager;
@@ -90,7 +78,7 @@ namespace App.Caliset.Operations
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
-        public void Delete(DeleteOperationInput input)
+        public async Task Delete(DeleteOperationInput input)
         {
             var operation = _operationManager.GetOperationById(input.Id);
             if (operation.OperationStateId == 3)
@@ -102,10 +90,11 @@ namespace App.Caliset.Operations
             }
 
             //NOTIFICACION FW
+            var message = "Se ha eliminado una operación de la cual era responsable.";
             var userManager = new UserIdentifier(1, operation.ManagerId);
-            _notificationPublisher.PublishAsync(
+            await _notificationPublisher.PublishAsync(
                 "App.SimpleMessage",
-                new MessageNotificationData("Se ha eliminado una operación de la cual era responsable."),
+                new MessageNotificationData(message),
                 severity: NotificationSeverity.Info,
                 userIds: new[] { userManager }
             );
@@ -150,7 +139,7 @@ namespace App.Caliset.Operations
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
-        public void Update(UpdateOperationInput input)
+        public async Task Update(UpdateOperationInput input)
         {
             var operation = _operationManager.GetOperationById(input.Id);
             if (operation.OperationStateId == 3)
@@ -176,9 +165,10 @@ namespace App.Caliset.Operations
                 }
             }//TERMINA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
 
-            //NOTIFICACION FW
+            //NOTIFICATION FW
+
             var userManager = new UserIdentifier(1, operation.ManagerId);
-            _notificationPublisher.PublishAsync(
+            await _notificationPublisher.PublishAsync(
                 "App.SimpleMessage",
                 new MessageNotificationData("Se ha modificado una operación de la cual es responsable."),
                 severity: NotificationSeverity.Info,
@@ -201,14 +191,14 @@ namespace App.Caliset.Operations
 
 
         [AbpAuthorize(PermissionNames.Operador)]
-        public void ActivateOperationById(int id)
+        public async Task ActivateOperationById(int id)
         {
-            _operationManager.ActivateOperationById(id);
+            await _operationManager.ActivateOperationById(id);
         }
 
-        public void ActvateOperations()
+        public async Task ActvateOperations()
         {
-            _operationManager.ActvateOperations();
+            await _operationManager.ActvateOperations();
         }
 
         public Task<List<UserNotification>> PRUEBA_getNotificationFWByUser(long userId)

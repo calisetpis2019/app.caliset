@@ -11,7 +11,7 @@ namespace App.Caliset.Operations
     {
         IEnumerable<GetOperationOutput> GetAll();
         Task Create(CreateOperationInput input);
-        void Update(UpdateOperationInput input);
+        Task Update(UpdateOperationInput input);
         // SOLO PERMITE EL CAMBIO DE LOS CAMPOS: 
         //.Location
         //.Nominador 
@@ -27,7 +27,7 @@ namespace App.Caliset.Operations
         void UpdateFinishedOperation(UpdateOperationInput input);
 
 
-        void Delete(DeleteOperationInput input);
+        Task Delete(DeleteOperationInput input);
         GetOperationOutput GetOperationById(GetOperationInput input);
         void EndOperation(GetOperationInput input);
         IEnumerable<GetOperationOutput> GetAllFilters(GetOperationFiltersInput input);
