@@ -8,13 +8,13 @@
                             <Row :gutter="10">
                                 <Col span="24">
                                 <FormItem :label="L('Keyword')+':'" style="width:100%">
-                                    <Input v-model="pagerequest.keyword" :placeholder="L('OperationName')"></Input>
+                                    <Input v-model="pagerequest.Keyword" :placeholder="L('OperationName')"></Input>
                                 </FormItem>
                                 </Col>
                             </Row>
                             <Row>
                                 <Button @click="create" icon="android-add" type="primary" size="large" v-if="operatorRenderOnly">{{L('Add')}}</Button>
-                                <Button icon="ios-search" type="primary" size="large" @click="getpage" class="toolbar-btn">{{L('Find')}}</Button>
+                                <Button icon="ios-search" type="primary" size="large" @click="filter" class="toolbar-btn">{{L('Find')}}</Button>
                             </Row>
                         </Form>
                     </Col>

@@ -32,7 +32,7 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         async getAllFilters(context: ActionContext<OperationState, any>, payload: any) {
             context.state.loading = true;
             let responseString = '';
-            let filters = ['LocationId', 'OperationTypeId', 'NominatorId','ChargerId', 'OperationStateId', 'ManagerId'];
+            let filters = ['LocationId', 'OperationTypeId', 'NominatorId','ChargerId', 'OperationStateId', 'ManagerId','Keyword'];
             filters.forEach((filter)=>{
                 if (payload.data[filter]){
                     responseString = responseString + filter + '=' + payload.data[filter] + '&';
