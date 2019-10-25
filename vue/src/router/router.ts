@@ -51,7 +51,7 @@ export const appRouters: Array<Router> = [{
     icon: '&#xe68a;',
     component: main,
     children: [
-        { path: 'user', permission: 'Pages.Administrador', meta: { title: 'Users' }, name: 'user', component: () => import('../views/setting/user/user.vue') },
+        { path: 'user', permission: 'Pages.Operador', meta: { title: 'Users' }, name: 'user', component: () => import('../views/setting/user/user.vue') },
         { path: 'role', permission: 'Pages.Administrador', meta: { title: 'Roles' }, name: 'role', component: () => import('../views/setting/role/role.vue') },
         { path: 'operationType', permission: 'Pages.Administrador', meta: { title: 'OperationTypes' }, name: 'operationType', component: () => import('../views/operationType/operationType.vue') },
         { path: 'operationState', permission: 'Pages.Administrador', meta: { title: 'OperationStates' }, name: 'operationState', component: () => import('../views/operationState/operationState.vue') },
