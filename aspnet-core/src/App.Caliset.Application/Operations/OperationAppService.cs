@@ -62,7 +62,7 @@ namespace App.Caliset.Operations
             else
                 operation.OperationStateId = 1;
 
-            
+
             await _operationManager.Create(operation);
 
             var message = "Ha sido asignado como responsable de una operación.";
@@ -142,10 +142,39 @@ namespace App.Caliset.Operations
         public async Task Update(UpdateOperationInput input)
         {
             var operation = _operationManager.GetOperationById(input.Id);
-            if (operation.OperationStateId == 3)
-            {
-                throw new UserFriendlyException("Error", "Operación finalizada, no se puede modificar.");
-            }
+
+            String Cambios = "";
+
+            if (input.Date != operation.Date)
+                Cambios += "Fecha, ";
+            if (input.Commodity != operation.Commodity)
+                Cambios += "Commodity, ";
+            if (input.Package != operation.Package)
+                Cambios += "Package, ";
+            if (input.ShipName != operation.ShipName)
+                Cambios += "ShipName, ";
+            if (input.Destiny != operation.Destiny)
+                Cambios += "Destiny, ";
+            if (input.ClientReference != operation.ClientReference)
+                Cambios += "ClientReference, ";
+            if (input.Line != operation.Line)
+                Cambios += "Line, ";
+            if (input.BookingNumber != operation.BookingNumber)
+                Cambios += "BookingNumber, ";
+            if (input.Notes != operation.Notes)
+                Cambios += "Notes, ";
+            if (input.LocationId != operation.LocationId)
+                Cambios += "Location, ";
+            if (input.OperationTypeId != operation.OperationTypeId)
+                Cambios += "OperationType, ";
+            if (input.NominatorId != operation.NominatorId)
+                Cambios += "Nominator, ";
+            if (input.ChargerId != operation.ChargerId)
+                Cambios += "Charger, ";
+            if (input.ManagerId != operation.ManagerId)
+                Cambios += "Manager, ";
+
+
             ObjectMapper.Map(input, operation);
             _operationManager.Update(operation);
 
@@ -158,7 +187,7 @@ namespace App.Caliset.Operations
             {
                 if( (x.Aware==true || x.Aware == null) && (_userDeviceTokerManager.getById(x.InspectorId)!= null)) {
                     if (!userNotify.Contains(x.InspectorId)) { 
-                        _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado una operacion a la que esta asignado", x.InspectorId);
+                        _notificationManager.sendNotification("Operacion Modificada", "Se le ha modificado a una operacion a la que esta asignado los siguientes campos: " + Cambios, x.InspectorId);
                         userNotify.Add(x.InspectorId);
                     }
 
@@ -170,7 +199,7 @@ namespace App.Caliset.Operations
             var userManager = new UserIdentifier(1, operation.ManagerId);
             await _notificationPublisher.PublishAsync(
                 "App.SimpleMessage",
-                new MessageNotificationData("Se ha modificado una operación de la cual es responsable."),
+                new MessageNotificationData("Se le ha modificado una operación de la cual es responsable los siguientes cambios: " + Cambios ),
                 severity: NotificationSeverity.Info,
                 userIds: new[] { userManager }
             );
@@ -196,6 +225,7 @@ namespace App.Caliset.Operations
             await _operationManager.ActivateOperationById(id);
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public async Task ActvateOperations()
         {
             await _operationManager.ActvateOperations();

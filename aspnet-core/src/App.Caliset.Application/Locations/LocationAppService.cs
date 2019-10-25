@@ -6,15 +6,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Abp.Authorization;
 using App.Caliset.Authorization;
+using Abp.Runtime.Session;
+using Abp.UI;
 
 namespace App.Caliset.Locations
 {
     public class LocationAppService : ApplicationService, ILocationAppService
     {
         private readonly ILocationManager _locationManager;
-        public LocationAppService(ILocationManager locationManager)
+        private readonly IAbpSession _abpSession;
+        public LocationAppService(ILocationManager locationManager,   IAbpSession abpSession)
         {
             _locationManager = locationManager;
+            _abpSession = abpSession;
         }
 
         public IEnumerable<GetLocationOutput> GetAll()
@@ -27,6 +31,10 @@ namespace App.Caliset.Locations
         [AbpAuthorize(PermissionNames.Administrador)]
         public async Task Create(CreateLocationInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             var location = ObjectMapper.Map<Location>(input);
             await _locationManager.Create(location);
         }
@@ -34,6 +42,11 @@ namespace App.Caliset.Locations
         [AbpAuthorize(PermissionNames.Administrador)]
         public void Delete(DeleteLocationInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+
             _locationManager.Delete(input.Id);
         }
 
@@ -47,6 +60,11 @@ namespace App.Caliset.Locations
         [AbpAuthorize(PermissionNames.Administrador)]
         public void Update(UpdateLocationInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+
             var location = _locationManager.GetLocationById(input.Id);
             ObjectMapper.Map(input, location);
             _locationManager.Update(location);

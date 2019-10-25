@@ -34,8 +34,6 @@ namespace App.Caliset.Samples
 
         public async Task<string> Create(CreateSampleInput input)
         {
-
-
             if (_abpSession.UserId == null)
             {
                 throw new UserFriendlyException("Error", "Por favor inicie sesión.");
@@ -64,6 +62,11 @@ namespace App.Caliset.Samples
 
         public void Delete(DeleteSampleInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+
             _sampleManager.Delete(input.Id);
         }
 

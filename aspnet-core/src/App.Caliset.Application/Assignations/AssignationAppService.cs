@@ -35,6 +35,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public async Task<bool> Create(CreateAssignationInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             var assignation = ObjectMapper.Map<Assignation>(input);
             bool resp = await _assignationManager.Create(assignation);
             _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
@@ -46,6 +50,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public void Delete(DeleteAssignationInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             var inspectorId = _assignationManager.GetAssignationById(input.Id).InspectorId;
             
             _assignationManager.Delete(input.Id);
@@ -63,6 +71,10 @@ namespace App.Caliset.Assignations
 
         public GetAssignationOutput GetAssignationById(GetAssignationInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             var getAssignation = _assignationManager.GetAssignationById(input.Id);
             GetAssignationOutput output = ObjectMapper.Map<GetAssignationOutput>(getAssignation);
             return output;
@@ -71,6 +83,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetAssignationOutput> GetAssignmentsByUser(long userId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(userId));
 
             return output;
@@ -79,6 +95,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetAssignationOutput> GetAssignmentsByOperation(int operationId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(null, operationId));
 
             return output;
@@ -87,6 +107,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<UserDtoOperation> GetUsersByOperation(int operationId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             List<UserDtoOperation> output = ObjectMapper.Map<List<UserDtoOperation>>(_assignationManager.GetUsersByOperation(operationId));
 
             return output;
@@ -95,6 +119,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetOperationOutput> GetOperationsByUser(long userId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId));
 
             return output;
@@ -103,6 +131,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetOperationOutput> GetOperationsConfirmedByUser(long userId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, true));
 
             return output;
@@ -111,6 +143,10 @@ namespace App.Caliset.Assignations
         [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetOperationOutput> GetOperationsPendingByUser(long userId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             List<GetOperationOutput> output = ObjectMapper.Map<List<GetOperationOutput>>(_assignationManager.GetOperationsByUser(userId, null, true));
 
             return output;
@@ -178,10 +214,18 @@ namespace App.Caliset.Assignations
 
         public void RefuseAssignation(int AssignationId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             _assignationManager.RefuseAssignation(AssignationId);
         }
         public void AceptAssignation(int AssignationId)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             _assignationManager.ConfirmAssignation(AssignationId);
         }
     }

@@ -1,4 +1,6 @@
 ﻿using Abp.Application.Services;
+using Abp.Runtime.Session;
+using Abp.UI;
 using App.Caliset.Comments.Dto;
 using App.Caliset.Models.Comments;
 using System;
@@ -13,19 +15,29 @@ namespace App.Caliset.Comments
     {
 
         private readonly CommentManager _commentManager;
-        public CommentsAppService(CommentManager commentManager)
+        private readonly IAbpSession _abpSession;
+        public CommentsAppService(CommentManager commentManager,  IAbpSession abpSession)
         {
             _commentManager = commentManager;
+            _abpSession = abpSession;
         }
 
         public async Task Create(CreateCommentInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             var Comment = ObjectMapper.Map<Comment>(input);
             await _commentManager.Create(Comment);
         }
 
         public void Delete(DeleteCommentInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             _commentManager.Delete(input.Id);
         }
 
@@ -53,6 +65,10 @@ namespace App.Caliset.Comments
 
         public void Update(UpdateCommentInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             var Comment = _commentManager.GetCommentById(input.Id);
             ObjectMapper.Map(input, Comment);
             _commentManager.Update(Comment);

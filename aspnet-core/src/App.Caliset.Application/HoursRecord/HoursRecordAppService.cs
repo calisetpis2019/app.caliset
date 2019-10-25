@@ -47,6 +47,10 @@ namespace App.Caliset.HoursRecord
 
         public void Delete(int idHoursRecord)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             _hoursRecordManager.Delete(idHoursRecord);
         }
 
@@ -80,6 +84,10 @@ namespace App.Caliset.HoursRecord
 
         public void Update(UpdateHoursRecordInput input)
         {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
             var HRecord = _hoursRecordManager.GetHoursRecordById(input.Id);
             ObjectMapper.Map(input, HRecord);
             _hoursRecordManager.Update(HRecord);
