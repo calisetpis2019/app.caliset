@@ -89,9 +89,14 @@ namespace App.Caliset.Models.Operations
                 .WhereIf(nominatorId.HasValue, oper => oper.NominatorId == nominatorId)
                 .WhereIf(chargerId.HasValue, oper => oper.ChargerId == chargerId)
                 .WhereIf(managerId.HasValue, oper => oper.ManagerId == managerId)
-                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.Commodity.Contains(keyword) || x.Package.Contains(keyword) || x.ShipName.Contains(keyword) 
-                || x.Destiny.Contains(keyword) || x.ClientReference.Contains(keyword) || x.Line.Contains(keyword) || x.BookingNumber.Contains(keyword) 
-                || x.OperationType.Name.Contains(keyword) || x.Location.Name.Contains(keyword) || x.Nominator.Name.Contains(keyword) || x.Charger.Name.Contains(keyword) || x.Manager.Name.Contains(keyword));
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => (x.Commodity != null && x.Commodity.Contains(keyword)) || (x.Package != null && x.Package.Contains(keyword))
+                                                     || (x.ShipName != null && x.ShipName.Contains(keyword)) || (x.Destiny != null && x.Destiny.Contains(keyword)) 
+                                                     || (x.ClientReference != null && x.ClientReference.Contains(keyword)) || (x.Line != null && x.Destiny.Contains(keyword)) 
+                                                     || (x.BookingNumber != null && x.Destiny.Contains(keyword)) || (x.Notes != null && x.Notes.Contains(keyword))
+                                                     || x.OperationType.Name.Contains(keyword) || x.Manager.Name.Contains(keyword) || x.Nominator.Name.Contains(keyword)
+                                                     || x.Charger.Name.Contains(keyword) || x.Location.Name.Contains(keyword) || x.OperationState.Name.Contains(keyword)
+
+               );
         }
 
         public IEnumerable<Operation> GetCurrentOperations()
