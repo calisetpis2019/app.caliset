@@ -15,7 +15,7 @@ namespace App.Caliset.Models.UserFile
     {
 
         private readonly IRepository<UserFile> _repositoryUserFile;
-        const string Path = @"C:\Users\Emilio\Downloads\";
+        const string Path = @"\Users\Emilio\Downloads\";
 
         public UserFileManager(IRepository<UserFile> repositoryUserFile)
         {
