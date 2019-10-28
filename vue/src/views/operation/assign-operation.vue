@@ -17,12 +17,12 @@
                 </FormItem>
 
                 <FormItem label="Fecha y hora de inicio" prop="date">
-                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true" :min-date="formattedDate" :format="'YYYY-MM-DD HH:mm'"/>
+                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true"/>
                     <!--<DatePicker type="datetime" format="dd-MM-yyyy HH:mm" v-model="assignation.date" style="width: 100%"></DatePicker>-->
                 </FormItem>
 
                 <FormItem label="Fecha y hora de fin" prop="dateFin">
-                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.dateFin" locale="es" v-bind:right="true" :min-date="formattedDate" :format="'YYYY-MM-DD HH:mm'"/>
+                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.dateFin" locale="es" v-bind:right="true"/>
                 </FormItem>
             </Form>
             <div slot="footer">
@@ -30,6 +30,7 @@
                 <Button @click="save" type="primary">{{L('OK')}}</Button>
             </div>
         </Modal>
+        <overlap-assignation-modal v-model="overlapModalShow"></overlap-assignation-modal>
     </div>
 </template>
 
@@ -41,11 +42,14 @@
     import Operation from '@/store/entities/operation'
     import Assignation from '@/store/entities/assignation'
     import moment from 'moment'
+    import OverlapAssignationModal from './overlap-assignation-modal.vue'
 
     class PageAssignOperationRequest extends PageRequest {
     }
 
-    @Component
+    @Component({
+        components: { OverlapAssignationModal }
+    })
     export default class AssignOperation extends AbpBase{
         @Prop({type:Boolean,default:false}) value:boolean;
         //esta asociado con this.operation = Util.extend(true, {}, this.$store.state.operation.editOperation);
@@ -55,7 +59,7 @@
         created(){ }
 
         pagerequest: PageAssignOperationRequest = new PageAssignOperationRequest();
-
+        overlapModalShow:boolean=false;
 
         get listOfUsers() {
             return this.$store.state.user.list;
@@ -84,6 +88,9 @@
                     (this.$refs.assignationForm as any).resetFields();
                     this.$emit('save-success');
                     this.$emit('input',false);
+                    console.log("ASSIGNATION COMPONENT");
+                    console.log(this.$store.state.assignation.lastAssignationOverlap);
+                    this.overlapModalShow =  this.$store.state.assignation.lastAssignationOverlap;
                     this.$Message.success({content:'Asignación creada exitosamente.',duration:3.5});
                 }
             })
@@ -95,10 +102,12 @@
         }
         visibleChange(value:boolean){
             if(!value){
+                //Si cierra
                 (this.$refs.assignationForm as any).resetFields();
                 this.$emit('input',value);
             }
             else{
+                //Si abre
                 this.operation = Util.extend(true, {}, this.$store.state.operation.editOperation);
                 this.getEligibleUsers();
 
@@ -114,7 +123,6 @@
 
         get formattedDate(){
             const fDate = moment(this.operation.date);
-            console.log(fDate.format('YYYY-MM-DD hh:mm a'))
             return fDate.format('YYYY-MM-DD hh:mm a');
         }
 
