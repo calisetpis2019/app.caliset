@@ -50,7 +50,10 @@ namespace App.Caliset.Users.Dto
         public DateTime? BirthDate { get; set; }
         public string City { get; set; }
         public string Address { get; set; }
-        public string Specialty { get; set; }
+        public string Specialty { get; set;
+        }
+        public string CuentaGP { get; set; }
+        public string PasswordGP { get; set; }
 
     }
 }

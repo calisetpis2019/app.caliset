@@ -12,7 +12,12 @@ using Abp.Notifications;
 using Abp.UI;
 using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Assignations;
+using App.Caliset.Models.Clients;
+using App.Caliset.Models.Locations;
 using App.Caliset.Models.Notifications;
+using App.Caliset.Models.OperationStates;
+using App.Caliset.Models.OperationTypes;
+using App.Caliset.Models.Samples;
 using App.Caliset.Models.UserDeviceTokens;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,9 +31,20 @@ namespace App.Caliset.Models.Operations
         private readonly NotificationPublisher _notificationPublisher;
         private readonly UserManager _userManager;
         private readonly IRepository<Assignation> _repositoryAssignation;
+   
+        private readonly IRepository<Location> _repositoryLocation;
+        private readonly IRepository<OperationType> _repositoryOperationType;
+        private readonly IRepository<Client> _repositoryClient;
+        private readonly IRepository<OperationState> _repositoryOperationState;
+        private readonly SampleManager _sampleManager;
+
+
 
         public OperationManager(IRepository<Operation> repositoryOperation, IRepository<Assignation> repositoryAssignation, UserDeviceTokenManager userDeviceTokenManager,
-                                NotificationManager notificationManager, NotificationPublisher notificationPublisher, UserManager userManager)
+                                NotificationManager notificationManager, NotificationPublisher notificationPublisher, UserManager userManager, 
+                                IRepository<Location> repositoryLocation , IRepository<OperationType> repositoryOperationType,
+                                IRepository<Client> repositoryClient, IRepository<OperationState> repositoryOperationState,
+                                SampleManager sampleManager)
         {
             _repositoryOperation = repositoryOperation;
             _repositoryAssignation = repositoryAssignation;
@@ -36,6 +52,11 @@ namespace App.Caliset.Models.Operations
             _notificationManager = notificationManager;
             _notificationPublisher = notificationPublisher;
             _userManager = userManager;
+            _repositoryLocation = repositoryLocation;
+            _repositoryOperationType = repositoryOperationType;
+            _repositoryClient = repositoryClient;
+            _repositoryOperationState = repositoryOperationState;
+            _sampleManager = sampleManager;
 
         }
 
@@ -85,10 +106,19 @@ namespace App.Caliset.Models.Operations
             return aux;
         }
 
-        public Operation GetOperationById(int id)
+        public  Operation GetOperationById(int id)
         {
-            var oper = _repositoryOperation.Get(id) ;
-          
+            var oper = _repositoryOperation.Get(id);
+            oper.Charger = _repositoryClient.FirstOrDefault(oper.ChargerId);
+            oper.Location = _repositoryLocation.FirstOrDefault(oper.LocationId);
+            //oper.Manager = await _userManager.(oper.ManagerId);
+            oper.Nominator = _repositoryClient.FirstOrDefault(oper.NominatorId);
+            oper.OperationState = _repositoryOperationState.FirstOrDefault(oper.OperationStateId);
+            oper.OperationType = _repositoryOperationType.FirstOrDefault(oper.OperationTypeId);
+            oper.Samples = _sampleManager.GetSamplesByOperation(id).ToList();
+
+
+
             return oper;
         }
 

@@ -132,7 +132,7 @@ namespace App.Caliset.Operations
 
         public GetOperationOutput GetOperationById(GetOperationInput input)
         {
-            var Oper = _operationManager.GetAll().FirstOrDefault(x => x.Id == input.Id);
+            var Oper = _operationManager.GetOperationById(input.Id);
             var ret = ObjectMapper.Map<GetOperationOutput>(Oper);
 
             return ret;

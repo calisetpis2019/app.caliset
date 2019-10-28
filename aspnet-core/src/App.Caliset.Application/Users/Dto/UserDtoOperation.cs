@@ -15,5 +15,7 @@ namespace App.Caliset.Users.Dto
         public string Surname { get; set; }
         public string EmailAddress { get; set; }
         public string Phone { get; set; }
+        public string CuentaGP { get; set; }
+        public string PasswordGP { get; set; }
     }
 }

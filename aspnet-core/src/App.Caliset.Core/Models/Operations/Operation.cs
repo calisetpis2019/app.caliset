@@ -68,6 +68,8 @@ namespace App.Caliset.Models.Operations
         public virtual ICollection<Assignation> Assignations { get; set; }
         public virtual IEnumerable<Comment> Comments { get; set; }
         public virtual IEnumerable<Sample> Samples { get; set; }
-        
+
     }
+
+    
 }

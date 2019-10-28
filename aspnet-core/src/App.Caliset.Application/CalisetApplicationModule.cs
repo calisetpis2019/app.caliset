@@ -69,6 +69,7 @@ namespace App.Caliset
                 mapper.CreateMap<CreateSampleInput, Sample>().ReverseMap();
                 mapper.CreateMap<GetSampleInput, Sample>().ReverseMap();
                 mapper.CreateMap<GetSampleOutput, Sample>().ReverseMap();
+                mapper.CreateMap<GetSampleOutputReduced, Sample>().ReverseMap();
                 mapper.CreateMap<DeleteSampleInput, Sample>().ReverseMap();
 
                 //Comment

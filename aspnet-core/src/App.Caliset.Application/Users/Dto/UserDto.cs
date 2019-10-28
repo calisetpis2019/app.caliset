@@ -46,6 +46,8 @@ namespace App.Caliset.Users.Dto
         public string Address { get; set; }
         public string Specialty { get; set; }
         public bool FirstLogin { get; set; }
+        public string CuentaGP { get; set; }
+        public string PasswordGP { get; set; }
 
     }
 }
