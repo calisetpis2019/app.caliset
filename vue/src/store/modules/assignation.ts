@@ -51,6 +51,9 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
             let response = await Ajax.get('/api/services/app/Assignation/GetAssignmentsByUser?userId=' + payload.data.id);
             context.state.loading = false;
             context.state.assignmentsByUsers = response.data.result;  
+        },
+        async delete(context: ActionContext<Assignation, any>, payload: any) {
+            await Ajax.delete('/api/services/app/Assignation/Delete?Id=' + payload.data.id);
         }
         
 

@@ -19,7 +19,7 @@ namespace App.Caliset.Models.UserFile
         [Required]
         public string Name { get; set; }
         [Required]
-        public string Path { get; set; }
+        public byte[] Photo { get; set; }
 
     }
 }

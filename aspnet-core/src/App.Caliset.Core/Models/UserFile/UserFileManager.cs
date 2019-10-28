@@ -5,6 +5,7 @@ using Abp.Linq.Extensions;
 using Abp.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace App.Caliset.Models.UserFile
     {
 
         private readonly IRepository<UserFile> _repositoryUserFile;
+        const string Path = @"\Users\Emilio\Downloads\";
 
         public UserFileManager(IRepository<UserFile> repositoryUserFile)
         {
@@ -29,6 +31,8 @@ namespace App.Caliset.Models.UserFile
             }
             else
             {
+                string PathCompleto = Path + entity.Name + ".jpg";
+                File.WriteAllBytes(PathCompleto, entity.Photo);
                 return await _repositoryUserFile.InsertAsync(entity);
 
             }

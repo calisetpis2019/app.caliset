@@ -151,6 +151,13 @@
             return user
         }
 
+        async deleteAssignation(){
+            await this.$store.dispatch({
+                type: 'assignation/delete',
+                data: this.pagerequest
+            })
+        }
+
         commentEdit(){
             this.editCommentOperationModalShow = true;
         }
@@ -290,7 +297,22 @@
                                         });
                                     }
                                 }
-                            },'Ver')
+                            },'Ver'),
+                            h('Button',{
+                                props:{
+                                    type: 'info',
+                                    size:'small'
+                                },
+                                style:{
+                                    marginRight:'5px'
+                                },
+                                on:{
+                                    click:()=>{
+                                        this.pagerequest.id = params.row.id;
+                                        this.deleteAssignation();
+                                    }
+                                }
+                            },'Quitar')
                         ]
                     
                     return toRender;

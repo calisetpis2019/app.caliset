@@ -14,6 +14,7 @@ namespace App.Caliset.Samples.Dto
         public int Id { get; set; }
         public string IdSample { get; set; }
         public string Comment { get; set; }
+        public DateTime CreationTime { get; set; }
         public int OperationId { get; set; }
         public virtual ReduceOperationOutput Operation { get; set; }
         public long InspectorId { get; set; }
