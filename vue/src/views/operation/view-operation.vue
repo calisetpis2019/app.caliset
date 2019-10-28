@@ -23,7 +23,7 @@
             <div slot="footer">
             </div>
         </Modal>
-        <edit-comment-operation v-model="editCommentOperationModalShow" ></edit-comment-operation>
+        <edit-comment-operation v-model="editCommentOperationModalShow" @save-success="visibleChange(true)"></edit-comment-operation>
         <view-user v-model="viewUserAssignedToOperationModalShow" ></view-user>
     </div>
 </template>
@@ -96,22 +96,18 @@
             }
             else {
                 this.operation = Util.extend(true, {}, this.$store.state.operation.viewOperation);
+                this.pagerequest["id"] = this.operation.locationId;
+                this.getLocation().then(result => {
+                    this.pagerequest["id"] = this.operation.id;
+                    this.getAssignations();
+
+                    this.pagerequest["id"] = this.operation.id;
+                    this.getComments();
+
+                    this.pagerequest["id"] = this.operation.id;
+                    this.getOperation();
+                });
             }
-
-            this.pagerequest["id"] = this.operation.locationId;
-            this.getLocation().then(result => {
-                this.pagerequest["id"] = this.operation.id;
-                this.getAssignations();
-
-                this.pagerequest["id"] = this.operation.id;
-                this.getComments();
-
-                this.pagerequest["id"] = this.operation.id;
-                this.getOperation();
-
-            });
-
-
         }
 
         async getOperation() {
@@ -321,32 +317,29 @@
 
         columnsSamples =[
             {
-                title: 'Id',
+                title: 'Código Muestra',
                 key: 'id'
             },
             {
-                title: 'Muestras',
+                title: 'Comentario',
                 key: 'comment'
-            }
+            },
+            {
+                title: 'Fecha',
+                render:(h:any,params:any)=>{
+                    return h('Span', moment(params.row.creationTime).locale('es').format("DD [de] MMMM [del] YYYY, h:mm:ss a"));
+                }
+            },
+            {
+                title: 'Creador',
+                render:(h:any,params:any)=>{
+                    return h('Span', 'holis');    
+                }
+            },
+
         ]
 
         columnsComments = [
-            {
-                title: 'Creador',
-                key: 'creator',
-                render:(h:any,params:any)=>{
-                    return h('Span', params.row.creatorUser.name + ' ' + params.row.creatorUser.surname );    
-                }
-            },
-            {
-                title: 'Fecha de creación',
-                key: 'date',
-                render:(h:any,params:any)=>{
-                    console.log('en la fecha');
-                    console.log(params);
-                    return h('Span', params.row.creationTime);    
-                }
-            },
             {
                 title: 'Comentario',
                 key: 'commentary'
