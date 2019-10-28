@@ -11,6 +11,7 @@ interface AssignationState extends ListState<Assignation> {
 	usersAssignedToOperation: Array<User>;
     assignmentsOfOperation: Array<Assignation>;
     assignmentsByUsers: Array<Assignation>;
+    lastAssignationOverlap: boolean;
 }
 class AssignationModule extends ListModule<AssignationState, any, Assignation>{
 	state = {
@@ -21,11 +22,14 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
         loading: false,
         usersAssignedToOperation: new Array<User>(),
         assignmentsOfOperation: new Array<Assignation>(),
-        assignmentsByUsers: new Array<Assignation>()
+        assignmentsByUsers: new Array<Assignation>(),
     }
     actions = {
         async create(context: ActionContext<AssignationState, any>, payload: any) {
-            await Ajax.post('/api/services/app/Assignation/Create', payload.data);
+            var result = await Ajax.post('/api/services/app/Assignation/Create', payload.data);
+            console.log("ASSIGNATION MODULE");
+            console.log(result.data.result);
+            context.state.lastAssignationOverlap = result.data.result;
         },
         async getUsersByOperation(context: ActionContext<AssignationState, any>, payload: any) {
             context.state.loading = true;
