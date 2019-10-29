@@ -333,7 +333,7 @@
             {
                 title: 'Creador',
                 render:(h:any,params:any)=>{
-                    return h('Span', 'holis');    
+                    return h('Span', params.row.inspector.name+" "+params.row.inspector.surname);    
                 }
             },
 
