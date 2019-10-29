@@ -106,12 +106,12 @@ namespace App.Caliset.Models.Operations
             return aux;
         }
 
-        public  Operation GetOperationById(int id)
+        public Operation GetOperationById(int id)
         {
             var oper = _repositoryOperation.Get(id);
             oper.Charger = _repositoryClient.FirstOrDefault(oper.ChargerId);
             oper.Location = _repositoryLocation.FirstOrDefault(oper.LocationId);
-            //oper.Manager = await _userManager.(oper.ManagerId);
+            oper.Manager =  _userManager.FindByIdAsync(oper.ManagerId.ToString()).Result;
             oper.Nominator = _repositoryClient.FirstOrDefault(oper.NominatorId);
             oper.OperationState = _repositoryOperationState.FirstOrDefault(oper.OperationStateId);
             oper.OperationType = _repositoryOperationType.FirstOrDefault(oper.OperationTypeId);

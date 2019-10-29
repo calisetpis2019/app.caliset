@@ -5,6 +5,7 @@ using Abp.Notifications;
 using Abp.UI;
 using App.Caliset.Assignations.Dto;
 using App.Caliset.Authorization;
+using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Assignations;
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Locations;
@@ -32,6 +33,10 @@ namespace App.Caliset.Operations
         private readonly UserDeviceTokenManager _userDeviceTokerManager;
         private readonly INotificationPublisher _notificationPublisher;
         private readonly IUserNotificationManager _notificationManagerFW;
+        private readonly ILocationManager _locationManager;
+        private readonly IOperationTypeManager _operationTypeManager;
+        private readonly IClientManager _clientManager;
+        private readonly UserManager _userManager;
 
 
 
@@ -41,6 +46,10 @@ namespace App.Caliset.Operations
                                     , UserDeviceTokenManager userDeviceTokerManager
                                     , INotificationPublisher notificationPublisher
                                     , IUserNotificationManager notificationManagerFW
+                                    , ILocationManager locationManager
+                                    , IOperationTypeManager operationTypeManager
+                                    , IClientManager clientManager
+                                    , UserManager userManager
 
             )
         {
@@ -50,6 +59,10 @@ namespace App.Caliset.Operations
             _userDeviceTokerManager = userDeviceTokerManager;
             _notificationPublisher = notificationPublisher;
             _notificationManagerFW = notificationManagerFW;
+            _locationManager = locationManager;
+            _operationTypeManager = operationTypeManager;
+            _clientManager = clientManager;
+            _userManager = userManager;
         }
 
 
@@ -146,33 +159,33 @@ namespace App.Caliset.Operations
             String Cambios = "";
 
             if (input.Date != operation.Date)
-                Cambios += "Fecha, ";
+                Cambios += " - Fecha: " + input.Date.ToString();
             if (input.Commodity != operation.Commodity)
-                Cambios += "Commodity, ";
+                Cambios += " - Mercaderia: " + input.Commodity;
             if (input.Package != operation.Package)
-                Cambios += "Package, ";
+                Cambios += " - Empaque: " + input.Package;
             if (input.ShipName != operation.ShipName)
-                Cambios += "ShipName, ";
+                Cambios += " - Nombre del Barco: " + input.ShipName;
             if (input.Destiny != operation.Destiny)
-                Cambios += "Destiny, ";
+                Cambios += " - Destino: " + input.Destiny;
             if (input.ClientReference != operation.ClientReference)
-                Cambios += "ClientReference, ";
+                Cambios += " - Referencia Cliente: " + input.ClientReference;
             if (input.Line != operation.Line)
-                Cambios += "Line, ";
+                Cambios += " - Linea: " + input.Line;
             if (input.BookingNumber != operation.BookingNumber)
-                Cambios += "BookingNumber, ";
+                Cambios += " - Numero de Booking: " + input.BookingNumber;
             if (input.Notes != operation.Notes)
-                Cambios += "Notes, ";
+                Cambios += " -  Notas: " + input.Notes;
             if (input.LocationId != operation.LocationId)
-                Cambios += "Location, ";
+                Cambios += " - Lugar: " + _locationManager.GetLocationById(input.LocationId).Name ;
             if (input.OperationTypeId != operation.OperationTypeId)
-                Cambios += "OperationType, ";
+                Cambios += " - Tipo: " +_operationTypeManager.GetOperationTypeById(input.OperationTypeId).Name ;
             if (input.NominatorId != operation.NominatorId)
-                Cambios += "Nominator, ";
+                Cambios += " - Nominador: " + _clientManager.GetClientById(input.NominatorId).Name ;
             if (input.ChargerId != operation.ChargerId)
-                Cambios += "Charger, ";
+                Cambios += " - Cargador: " + _clientManager.GetClientById(input.ChargerId).Name;
             if (input.ManagerId != operation.ManagerId)
-                Cambios += "Manager, ";
+                Cambios += " - Responsable: " + _userManager.FindByIdAsync(input.ManagerId.ToString()).Result.Name;
 
 
             ObjectMapper.Map(input, operation);
@@ -187,7 +200,7 @@ namespace App.Caliset.Operations
             {
                 if( (x.Aware==true || x.Aware == null) && (_userDeviceTokerManager.getById(x.InspectorId)!= null)) {
                     if (!userNotify.Contains(x.InspectorId)) { 
-                        _notificationManager.sendNotification("Operacion Modificada", "Se le ha modificado a una operacion a la que esta asignado los siguientes campos: " + Cambios, x.InspectorId);
+                        _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #"+ input.Id +" a la que esta asignado de la siguiente forma: " + Cambios, x.InspectorId);
                         userNotify.Add(x.InspectorId);
                     }
 
