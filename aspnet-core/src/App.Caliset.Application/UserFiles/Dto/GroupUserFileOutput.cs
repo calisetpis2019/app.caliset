@@ -1,16 +1,13 @@
-﻿using App.Caliset.Users.Dto;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace App.Caliset.UserFiles.Dto
 {
-    public class GetUserFileOutput
+    public class GroupUserFileOutput
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public byte[] Photo { get; set; }
-        public long UserId { get; set; }
-        public UserDtoOperation User { get; set; }
     }
 }

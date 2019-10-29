@@ -33,6 +33,8 @@ namespace App.Caliset.Models.UserFile
             {
                 string PathCompleto = Path + entity.Name + ".jpg";
                 File.WriteAllBytes(PathCompleto, entity.Photo);
+                entity.PathCompleto = PathCompleto;
+                entity.Photo = Encoding.ASCII.GetBytes("Insert photo here");
                 return await _repositoryUserFile.InsertAsync(entity);
 
             }
@@ -47,23 +49,45 @@ namespace App.Caliset.Models.UserFile
             }
             else
             {
+                if ((System.IO.File.Exists(UFile.PathCompleto)))
+                {
+                    System.IO.File.Delete(UFile.PathCompleto);
+                }
+                else
+                {
+                    throw new UserFriendlyException("Error", "No existe el archivo");
+                }
                 _repositoryUserFile.Delete(UFile);
             }
         }
 
         public IEnumerable<UserFile> GetAllByUser(long UserId)
         {
-            return _repositoryUserFile.GetAll().WhereIf(true, UF => UF.UserId == UserId);
+            var ret = _repositoryUserFile.GetAll().WhereIf(true, UF => UF.UserId == UserId);
+            
+            foreach ( var x in ret)
+            {
+                x.Photo = PhotoToByte(x.PathCompleto);
+            }
+
+            return ret;
         }
 
         public UserFile GetUserFileById(int id)
         {
-            return _repositoryUserFile.Get(id);
+            var ret = _repositoryUserFile.Get(id);
+            ret.Photo = PhotoToByte(ret.PathCompleto);
+            return ret;
         }
 
         public void Update(UserFile entity)
         {
             _repositoryUserFile.Update(entity);
+        }
+
+        public byte[] PhotoToByte(string Path)
+        {
+            return System.IO.File.ReadAllBytes(Path);
         }
     }
 }

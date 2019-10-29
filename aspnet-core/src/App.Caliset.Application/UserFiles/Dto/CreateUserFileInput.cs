@@ -10,7 +10,9 @@ namespace App.Caliset.UserFiles.Dto
     public class CreateUserFileInput
     {
         public string Name { get; set; }
-        public string Path { get; set; }
+
         public byte[] Photo { get; set; }
+
+        public long UserId { get; set; }
     }
 }

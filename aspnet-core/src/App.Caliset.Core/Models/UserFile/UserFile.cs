@@ -18,8 +18,10 @@ namespace App.Caliset.Models.UserFile
         public virtual User User { get; set; }
         [Required]
         public string Name { get; set; }
+
         [Required]
         public byte[] Photo { get; set; }
+        public string PathCompleto { get; set; }
 
     }
 }
