@@ -66,6 +66,7 @@
                 <Button @click="cancel">{{L('Cancel')}}</Button>
             </div>
         </Modal>
+        <view-operation v-model="viewOperationModalShow" ></view-operation>
     </div>
 </template>
 <script lang="ts">
@@ -74,13 +75,18 @@
     import Util from '../../../lib/util'
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
+    import ViewOperation from '../../operation/view-operation.vue'
 
-    @Component
+    @Component({
+        components:{ ViewOperation }
+    })
     export default class ViewUser extends AbpBase{
 
 
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
+
+        viewOperationModalShow:boolean = false;
 
         //datos hardcodeados en el backend:
         active=2;
@@ -137,6 +143,17 @@
             }
         }
 
+        async getOperation(pagerequest) {
+            return await this.$store.dispatch({
+                type: 'operation/get',
+                data: pagerequest
+            })
+        }
+
+        viewOperationDetail(){
+            this.viewOperationModalShow = true;
+        }
+
         assColumns=[
             {
                 title:'Operación',
@@ -184,6 +201,61 @@
                 title:'Asignación',
                 render:(h:any,params:any)=>{
                    return h('span',params.row.aware)
+                }
+            },
+            {
+                title:this.L('Actions'),
+                key:'Actions',
+                width:100,
+                render:(h:any,params:any)=>{
+                    var toRender = [
+                            h('Button',{
+                                props:{
+                                    type: 'info',
+                                    size:'small'
+                                },
+                                style:{
+                                    marginRight:'5px'
+                                },
+                                on:{
+                                    click:()=>{
+                                        let pagerequest = { 
+                                                id: params.row.operationId
+                                            }
+                                        this.getOperation(pagerequest).then(result =>{
+                                            let operation = {
+                                                id: result["id"],
+                                                bookingNumber: result["bookingNumber"],
+                                                chargerId: result["charger"]["id"],
+                                                chargerName: result["charger"]["name"],
+                                                clientReference: result["clientReference"],
+                                                commodity: result["commodity"],
+                                                date: result["date"],
+                                                destiny: result["destiny"],
+                                                line: result["line"],
+                                                location: result["location"]["name"],
+                                                locationId: result["location"]["id"],
+                                                managerId: result["manager"]["id"],
+                                                managerName: result["manager"]["name"],
+                                                nominatorId: result["nominator"]["id"],
+                                                nominatorName: result["nominator"]["name"],
+                                                notes: result["notes"],
+                                                operationState: result["operationState"]["name"],
+                                                operationStateId: result["operationState"]["id"],
+                                                operationTypeId: result["operationType"]["id"],
+                                                operationType: result["operationType"]["name"],
+                                                package: result["package"],
+                                                shipName: result["shipName"]
+                                            }
+                                            this.$store.commit('operation/view',operation);
+                                            this.viewOperationDetail();
+                                        });
+                                    }
+                                }
+                            },'Ver')
+                        ]
+                    
+                    return toRender;
                 }
             }
         ]

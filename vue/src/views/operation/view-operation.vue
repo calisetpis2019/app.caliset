@@ -85,7 +85,6 @@
 
         get operationDetails() {
             var obj: {[k: string]: any} = this.operation;
-            console.log(this.location);
             obj.location = this.location.name;
             return new Array<Object>(obj);
         }
