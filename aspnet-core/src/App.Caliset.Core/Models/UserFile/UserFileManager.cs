@@ -31,7 +31,8 @@ namespace App.Caliset.Models.UserFile
             }
             else
             {
-                string PathCompleto = Path + entity.Name + ".jpg";
+                string FileName = DateTime.Now.ToString().Replace(":","").Replace("/","") ;
+                string PathCompleto = Path + FileName + ".jpg";
                 File.WriteAllBytes(PathCompleto, entity.Photo);
                 entity.PathCompleto = PathCompleto;
                 entity.Photo = Encoding.ASCII.GetBytes("Insert photo here");
