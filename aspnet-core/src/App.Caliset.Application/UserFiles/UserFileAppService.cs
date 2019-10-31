@@ -35,10 +35,10 @@ namespace App.Caliset.UserFiles
             _userFileManager.Delete(input);
         }
 
-        public IEnumerable<GetUserFileOutput> GetAllByUser(long IdUser)
+        public IEnumerable<GetUserFileListOutput> GetAllByUser(long IdUser)
         {
             var getAll = _userFileManager.GetAllByUser(IdUser).ToList();
-            List<GetUserFileOutput> output = ObjectMapper.Map<List<GetUserFileOutput>>(getAll);
+            List<GetUserFileListOutput> output = ObjectMapper.Map<List<GetUserFileListOutput>>(getAll);
             return output;
         }
 
