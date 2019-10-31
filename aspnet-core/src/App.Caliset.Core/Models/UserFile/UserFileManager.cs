@@ -3,6 +3,7 @@ using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.Linq.Extensions;
 using Abp.UI;
+using App.Caliset.Authorization.Users;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,11 +16,13 @@ namespace App.Caliset.Models.UserFile
     {
 
         private readonly IRepository<UserFile> _repositoryUserFile;
+        private readonly UserManager _userManager;
         const string Path = @"\Users\Emilio\Downloads\";
 
-        public UserFileManager(IRepository<UserFile> repositoryUserFile)
+        public UserFileManager(IRepository<UserFile> repositoryUserFile, UserManager userManager)
         {
             _repositoryUserFile = repositoryUserFile;
+            _userManager = userManager;
         }
 
         public async Task<UserFile> Create(UserFile entity)
@@ -69,6 +72,7 @@ namespace App.Caliset.Models.UserFile
             foreach ( var x in ret)
             {
                 x.Photo = PhotoToByte(x.PathCompleto);
+               
             }
 
             return ret;
@@ -78,6 +82,7 @@ namespace App.Caliset.Models.UserFile
         {
             var ret = _repositoryUserFile.Get(id);
             ret.Photo = PhotoToByte(ret.PathCompleto);
+            ret.User = _userManager.FindByIdAsync(ret.UserId.ToString()).Result;
             return ret;
         }
 

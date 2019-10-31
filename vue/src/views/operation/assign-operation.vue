@@ -17,12 +17,12 @@
                 </FormItem>
 
                 <FormItem label="Fecha y hora de inicio" prop="date">
-                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true"/>
+                    <VueCtkDateTimePicker id="assignationStartingDate" label="Seleccionar" hint=" " v-model="assignation.date" locale="es" v-bind:right="true" :min-date="formattedDate" :format="'YYYY-MM-DD HH:mm'"/>
                     <!--<DatePicker type="datetime" format="dd-MM-yyyy HH:mm" v-model="assignation.date" style="width: 100%"></DatePicker>-->
                 </FormItem>
 
                 <FormItem label="Fecha y hora de fin" prop="dateFin">
-                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="assignation.dateFin" locale="es" v-bind:right="true"/>
+                    <VueCtkDateTimePicker id="assignationEndingDate" label="Seleccionar" hint=" " v-model="assignation.dateFin" locale="es" v-bind:right="true" :min-date="formattedDate" :format="'YYYY-MM-DD HH:mm'"/>
                 </FormItem>
             </Form>
             <div slot="footer">
