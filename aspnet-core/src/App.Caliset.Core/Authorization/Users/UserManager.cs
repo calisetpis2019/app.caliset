@@ -76,10 +76,11 @@ namespace App.Caliset.Authorization.Users
             _userRepository.FirstOrDefault(x => x.Id == idUser).LastLoginTime = DateTime.Now;
         }
 
-        public IEnumerable<User> GetAllFilter(string keyword, bool? active)
+        public IEnumerable<User> GetAllFilter(string keywordInput, bool? active)
         {
+            var keyword = keywordInput.ToUpper();
             return _userRepository.GetAllIncluding(x => x.Roles)
-                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(keyword) || x.Name.Contains(keyword) || x.EmailAddress.Contains(keyword))
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.UserName.Contains(keyword) || x.Name.Contains(keyword) || x.Surname.Contains(keyword) || x.EmailAddress.Contains(keyword) )
                 .WhereIf(active.HasValue, x => x.IsActive == active); ;
         }
 

@@ -76,18 +76,21 @@ namespace App.Caliset.Operations
                 operation.OperationStateId = 1;
 
 
-            await _operationManager.Create(operation);
+            var op =  _operationManager.Create(operation).Result;
 
-            var message = "Ha sido asignado como responsable de una operación.";
+            //var message = "Ha sido asignado como responsable de una operación.";
 
-            var userManager = new UserIdentifier(1, input.ManagerId);
+            //var userManager = new UserIdentifier(1, input.ManagerId);
 
-            await _notificationPublisher.PublishAsync(
-                "App.SimpleMessage",
-                new MessageNotificationData(message),
-                severity: NotificationSeverity.Info,
-                userIds: new[] { userManager }
-            );
+            //await _notificationPublisher.PublishAsync(
+            //    "App.SimpleMessage",
+            //    new MessageNotificationData(message),
+            //    severity: NotificationSeverity.Info,
+            //    userIds: new[] { userManager }
+            //);
+
+            if(_userDeviceTokerManager.getById(op.ManagerId) != null)
+                _notificationManager.sendNotification("Operacion nueva", "Se le asigno como responsable en la operacion #" ,op.Id);
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
@@ -103,14 +106,16 @@ namespace App.Caliset.Operations
             }
 
             //NOTIFICACION FW
-            var message = "Se ha eliminado una operación de la cual era responsable.";
-            var userManager = new UserIdentifier(1, operation.ManagerId);
-            await _notificationPublisher.PublishAsync(
-                "App.SimpleMessage",
-                new MessageNotificationData(message),
-                severity: NotificationSeverity.Info,
-                userIds: new[] { userManager }
-            );
+            //    var message = "Se ha eliminado una operación de la cual era responsable.";
+            //    var userManager = new UserIdentifier(1, operation.ManagerId);
+            //    await _notificationPublisher.PublishAsync(
+            //        "App.SimpleMessage",
+            //        new MessageNotificationData(message),
+            //        severity: NotificationSeverity.Info,
+            //        userIds: new[] { userManager }
+            //    );
+
+
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
@@ -207,15 +212,21 @@ namespace App.Caliset.Operations
                 }
             }//TERMINA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
 
-            //NOTIFICATION FW
+            ////NOTIFICATION FW
 
-            var userManager = new UserIdentifier(1, operation.ManagerId);
-            await _notificationPublisher.PublishAsync(
-                "App.SimpleMessage",
-                new MessageNotificationData("Se le ha modificado una operación de la cual es responsable los siguientes cambios: " + Cambios ),
-                severity: NotificationSeverity.Info,
-                userIds: new[] { userManager }
-            );
+            //var userManager = new UserIdentifier(1, operation.ManagerId);
+            //await _notificationPublisher.PublishAsync(
+            //    "App.SimpleMessage",
+            //    new MessageNotificationData("Se le ha modificado una operación de la cual es responsable los siguientes cambios: " + Cambios ),
+            //    severity: NotificationSeverity.Info,
+            //    userIds: new[] { userManager }
+            //);
+
+            // ARRANCA NOTIFICACION DE RESPONSABLE
+
+            if(_userDeviceTokerManager.getById(input.ManagerId) != null)
+                _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #" + input.Id + " en la que es Responsable de la siguiente forma: " + Cambios, input.ManagerId);
+
         }
 
         [AbpAuthorize(PermissionNames.Administrador)]
