@@ -82,8 +82,17 @@ namespace App.Caliset.Users
             }
             catch (System.Exception e)            {
 
-                string ExceptionMessage = "Error";    
-            throw new UserFriendlyException("Falló la creación del Usuario", ExceptionMessage);
+                string ExceptionMessage = "Error";
+                string errorAlcrear = e.Message;
+                if (errorAlcrear.Contains("Email") ) {
+                    errorAlcrear = "Email que se quiere registrar ya existe en el sistema";
+
+                }
+                else if (errorAlcrear.Contains("User name"))
+                {
+                    errorAlcrear = "Usuario que se quiere registrar ya existe en el sistema";
+                }
+                throw new UserFriendlyException(errorAlcrear, ExceptionMessage);
             }       
           
             if (input.RoleNames != null)
