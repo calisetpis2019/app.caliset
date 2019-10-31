@@ -91,6 +91,7 @@ namespace App.Caliset
                 //UserFile
                 mapper.CreateMap<CreateUserFileInput, UserFile>().ReverseMap();
                 mapper.CreateMap<GetUserFileOutput, UserFile>().ReverseMap();
+                mapper.CreateMap<GetUserFileListOutput, UserFile>().ReverseMap();
 
                 //Assignation
                 mapper.CreateMap<CreateAssignationInput, Assignation>().ReverseMap();
