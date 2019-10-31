@@ -1,6 +1,6 @@
 <template>
     <Modal
-        v-model="value"
+        :value="value"
         title="Atención"
         @on-ok="close"
         @on-cancel="close">

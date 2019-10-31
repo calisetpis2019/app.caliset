@@ -88,8 +88,6 @@
                     (this.$refs.assignationForm as any).resetFields();
                     this.$emit('save-success');
                     this.$emit('input',false);
-                    console.log("ASSIGNATION COMPONENT");
-                    console.log(this.$store.state.assignation.lastAssignationOverlap);
                     this.overlapModalShow =  this.$store.state.assignation.lastAssignationOverlap;
                     this.$Message.success({content:'Asignación creada exitosamente.',duration:3.5});
                 }
@@ -98,7 +96,6 @@
         cancel(){
             (this.$refs.assignationForm as any).resetFields();
             this.$emit('input',false);
-            
         }
         visibleChange(value:boolean){
             if(!value){
@@ -109,8 +106,8 @@
             else{
                 //Si abre
                 this.operation = Util.extend(true, {}, this.$store.state.operation.editOperation);
+                this.$store.commit('assignation/setOperationDate', this.operation.date);
                 this.getEligibleUsers();
-
             }
         }
 
@@ -127,8 +124,23 @@
         }
 
         validate_dates = (rule:any, value:any, callback:any) => {
-            if(typeof value !== "undefined" && typeof this.assignation.date !== "undefined" && value <= this.assignation.date){
-                callback(new Error(this.L('Fecha de Inicio debe ser anteior a Fecha de Fin')));
+            var assign_ini=moment.utc(this.assignation.date, "YYYY-MM-DD HH:mm A");
+            var assign_fin=moment.utc(value, "YYYY-MM-DD HH:mm A");
+            var oper_ini=moment.utc(this.$store.state.assignation.operationCreationDate);
+
+            if(assign_ini.isValid()){
+
+                if(assign_fin.isValid() && assign_fin < assign_ini){
+                    console.log("1");
+                    callback(new Error(this.L('Fecha de Inicio debe ser anteior a Fecha de Fin')));
+                }
+                else if(assign_ini < oper_ini){
+                    console.log("2");
+                    callback(new Error(this.L('Fecha de Inicio de la Asignación es anterior a la Fecha de Inicio de la Operación')));
+                }
+                else{
+                    callback();
+                }
             }
             else{
                 callback();

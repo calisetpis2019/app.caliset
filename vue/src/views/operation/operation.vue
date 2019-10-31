@@ -67,17 +67,17 @@
                 </Row>
                 <div class="margin-top-10">
                     <h4>Operaciones Activas</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_active.sort(dynamicSort_desc('date'))">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_active.sort(dynamicSort_asc('date'))">
                     </Table>
                 </div>
                 <div class="margin-top-10">
                     <h4>Operaciones Futuras</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_future.sort(dynamicSort_desc('date'))">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_future.sort(dynamicSort_asc('date'))">
                     </Table>
                 </div>
                 <div class="margin-top-10">
                     <h4>Operaciones Finalizadas</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_finished.sort(dynamicSort_asc('date'))">
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_finished.sort(dynamicSort_desc('date'))">
                     </Table>
                 </div>
                 <div><Page show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page></div>
@@ -407,7 +407,7 @@
                 key: 'date',
                 render: (h, params) => {
                     return h('div', [
-                        h('span', moment(params.row.date).locale('es').format(" DD [de] MMMM [del] YYYY"))
+                        h('span', moment(params.row.date).locale('es').format("DD/MM/YYYY"))
                     ]);
                 }
             },
