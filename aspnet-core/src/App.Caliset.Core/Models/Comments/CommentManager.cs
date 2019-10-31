@@ -38,6 +38,19 @@ namespace App.Caliset.Models.Comments
             }
         }
 
+        public async Task<Comment> CreateFO(Comment entity)
+        {
+            var Comment = _repositoryComments.FirstOrDefault(x => x.Id == entity.Id);
+            if (Comment != null)
+            {
+                throw new UserFriendlyException("Error", "Ya existe comentario.");
+            }
+            else
+            {
+                return await _repositoryComments.InsertAsync(entity);
+            }
+        }
+
         public void Delete(int id)
         {
             var Comment = _repositoryComments.FirstOrDefault(x => x.Id == id);

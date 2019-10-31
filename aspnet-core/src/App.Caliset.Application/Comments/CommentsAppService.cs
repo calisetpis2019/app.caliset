@@ -31,6 +31,15 @@ namespace App.Caliset.Comments
             var Comment = ObjectMapper.Map<Comment>(input);
             await _commentManager.Create(Comment);
         }
+        public async Task CreateFinishedOp(CreateCommentInput input)
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+            var Comment = ObjectMapper.Map<Comment>(input);
+            await _commentManager.CreateFO(Comment);
+        }
 
         public void Delete(DeleteCommentInput input)
         {
