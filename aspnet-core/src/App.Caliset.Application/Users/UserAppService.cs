@@ -102,16 +102,31 @@ namespace App.Caliset.Users
             CheckUpdatePermission();
 
             var user = await _userManager.GetUserByIdAsync(input.Id);
-            input.RoleNames = null;
-            input.LastLoginTime = null;
+
 
             MapToEntity(input, user); 
 
             CheckErrors(await _userManager.UpdateAsync(user));
 
-           
+            if (input.RoleNames != null)
+            {
+                CheckErrors(await _userManager.SetRoles(user, input.RoleNames));
+            }
+
+            
 
             return await Get(input);
+
+        }
+
+        [AbpAuthorize(PermissionNames.Administrador)]
+        public  void UpdateRolesUser(UserUpdateRolesDto input)
+        {
+
+            var role = this.GetRoles().Result.Items.Where(x => x.Name == input.Role).First();
+          
+          
+            _userManager.SetUserRole(input.IdUser , role.Id);
         }
 
         [AbpAuthorize(PermissionNames.Administrador)]
@@ -149,6 +164,12 @@ namespace App.Caliset.Users
         }
 
         protected override void MapToEntity(UserDto input, User user)
+        {
+            ObjectMapper.Map(input, user);
+            user.SetNormalizedNames();
+        }
+
+        protected  void MapToEntity(UserUpdateRolesDto input, User user)
         {
             ObjectMapper.Map(input, user);
             user.SetNormalizedNames();
@@ -289,8 +310,9 @@ namespace App.Caliset.Users
 
             _userManager.SetLastLoginTime(userId);
         }
-
         
+
+ 
     }
 }
 

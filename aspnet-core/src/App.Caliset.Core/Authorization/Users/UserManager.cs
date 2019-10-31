@@ -21,6 +21,7 @@ namespace App.Caliset.Authorization.Users
     public class UserManager : AbpUserManager<Role, User>
     {
         private readonly IRepository<User, long> _userRepository;
+        private readonly IRepository<UserRole, long> _userRoleRepository;
 
         public UserManager(
             RoleManager roleManager,
@@ -39,7 +40,8 @@ namespace App.Caliset.Authorization.Users
             IRepository<OrganizationUnit, long> organizationUnitRepository, 
             IRepository<UserOrganizationUnit, long> userOrganizationUnitRepository, 
             IOrganizationUnitSettings organizationUnitSettings, 
-            ISettingManager settingManager
+            ISettingManager settingManager,
+            IRepository<UserRole, long> userRoleRepository
             )
             : base(
                 roleManager, 
@@ -61,6 +63,7 @@ namespace App.Caliset.Authorization.Users
                 settingManager)
         {
             _userRepository = store.UserRepository;
+            _userRoleRepository = userRoleRepository;
         }
 
         public IEnumerable<User> GetAll()
@@ -80,6 +83,26 @@ namespace App.Caliset.Authorization.Users
                 .WhereIf(active.HasValue, x => x.IsActive == active); ;
         }
 
-       
+        public void SetUserRole(long IdUSer, int IdRole)
+        {
+        
+            IEnumerable<UserRole> Todos = _userRoleRepository.GetAll();
+            
+            foreach (UserRole usr_role in Todos)
+            {
+                if (usr_role.UserId == IdUSer){
+                    _userRoleRepository.Delete(usr_role.Id);
+                }
+            }
+
+            UserRole coso = new UserRole
+            {
+                RoleId = IdRole,
+                UserId = IdUSer
+            };
+
+            _userRoleRepository.InsertAsync(coso);
+        }
+    
     }
 }

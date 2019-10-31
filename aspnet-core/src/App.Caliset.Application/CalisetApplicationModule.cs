@@ -40,6 +40,7 @@ namespace App.Caliset
                 //User
                 mapper.CreateMap<UserDtoOperation, User>().ReverseMap();
                 mapper.CreateMap<UserDtoUpdate, User>().ReverseMap();
+                mapper.CreateMap<UserUpdateRolesDto, User>().ReverseMap();
 
                 //OperationType
                 mapper.CreateMap<CreateOperationTypeInput, OperationType>().ReverseMap();
