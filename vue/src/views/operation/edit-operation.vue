@@ -18,7 +18,7 @@
                 </FormItem>
 
                 <FormItem label="Fecha y hora de inicio" prop="date">
-                    <VueCtkDateTimePicker label="Seleccionar" hint=" " v-model="operation.date" locale="es" v-bind:right="true" />
+                    <VueCtkDateTimePicker id="operationStartingDateEdit" label="Seleccionar" hint=" " v-model="operation.date" locale="es" v-bind:right="true" />
                 </FormItem>
 
                 <FormItem label="Responsable" prop="managerId">
