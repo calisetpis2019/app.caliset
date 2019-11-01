@@ -105,17 +105,6 @@ namespace App.Caliset.Operations
                 _operationManager.Delete(input.Id);
             }
 
-            //NOTIFICACION FW
-            //    var message = "Se ha eliminado una operación de la cual era responsable.";
-            //    var userManager = new UserIdentifier(1, operation.ManagerId);
-            //    await _notificationPublisher.PublishAsync(
-            //        "App.SimpleMessage",
-            //        new MessageNotificationData(message),
-            //        severity: NotificationSeverity.Info,
-            //        userIds: new[] { userManager }
-            //    );
-
-
         }
 
         [AbpAuthorize(PermissionNames.Operador)]

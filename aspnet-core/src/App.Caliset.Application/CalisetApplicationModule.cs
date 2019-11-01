@@ -24,6 +24,8 @@ using App.Caliset.Models.UserFile;
 using App.Caliset.UserFiles.Dto;
 using App.Caliset.HoursRecord.Dto;
 using App.Caliset.Models.HoursRecords;
+using App.Caliset.Models.LocationRecord;
+using App.Caliset.LocationRecords;
 
 namespace App.Caliset
 {
@@ -104,6 +106,10 @@ namespace App.Caliset
                 mapper.CreateMap<GetHoursRecordOutput, HourRecord>().ReverseMap();
                 mapper.CreateMap<UpdateHoursRecordInput, HourRecord>().ReverseMap();
 
+                //Location Record
+                mapper.CreateMap<CreateLocationRecordInput, LocationRecord>().ReverseMap();
+                mapper.CreateMap<GetLocationRecordOutput, LocationRecord>().ReverseMap();
+                mapper.CreateMap<UpdateLocationRecordInput, LocationRecord>().ReverseMap();
             });
         }
 
