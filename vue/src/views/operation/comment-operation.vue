@@ -43,13 +43,22 @@
             this.comment.operationId = this.operation.id;
             (this.$refs.commentForm as any).validate(async (valid:boolean)=>{
                 if (valid) {
-                    await this.$store.dispatch({
-                        type:'comment/create',
-                        data:this.comment
-                    });
+                    if(this.operation.operationStateId == 3){
+                        await this.$store.dispatch({
+                            type:'comment/createFinished',
+                            data:this.comment
+                        });
+                    }
+                    else{
+                        await this.$store.dispatch({
+                            type:'comment/create',
+                            data:this.comment
+                        });
+                    }                   
                     (this.$refs.commentForm as any).resetFields();
                     this.$emit('save-success');
                     this.$emit('input',false);
+                    this.$Message.success({content:'Comentario creado exitosamente.',duration:3.5});
                 }
             })
         }

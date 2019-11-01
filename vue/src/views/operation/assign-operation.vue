@@ -89,7 +89,7 @@
                     this.$emit('save-success');
                     this.$emit('input',false);
                     this.overlapModalShow =  this.$store.state.assignation.lastAssignationOverlap;
-                    this.$Message.success({content:'Asignación creada exitosamente.',duration:3.5});
+                    this.$Message.success({content:'Asignación creada exitosamente.',duration:4});
                 }
             })
         }

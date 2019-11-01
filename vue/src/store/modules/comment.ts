@@ -32,6 +32,9 @@ class CommentModule extends ListModule<CommentState, any, Comment>{
         async create(context: ActionContext<CommentState, any>, payload: any) {
             await Ajax.post('/api/services/app/Comments/Create', payload.data);
         },
+        async createFinished(context: ActionContext<CommentState, any>, payload: any) {
+            await Ajax.post('/api/services/app/Comments/CreateFinishedOp', payload.data);
+        },
         async update(context: ActionContext<CommentState, any>, payload: any) {
             await Ajax.put('/api/services/app/Comments/Update', payload.data);
         },

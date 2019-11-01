@@ -149,7 +149,7 @@
                return h('span',params.row.isActive?this.L('Yes'):this.L('No'))
             }
         },{
-            title:"Roles",
+            title:"Rol",
             render:(h:any,params:any)=>{
                 var roles=params.row.roleNames;
                 var concatenacion="";

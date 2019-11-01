@@ -50,13 +50,11 @@
                         <FormItem label="Especialidad">
                             <Input v-model="user.specialty"></Input>
                         </FormItem>
-
                         <FormItem label="Rol" prop="roleNames" >
-                            <CheckboxGroup v-model="user.roleNames">
-                                <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
-                            </CheckboxGroup>
+                            <RadioGroup v-model="user.roleNames">
+                                <Radio v-for="role in roles" :label="normalize_role(role.normalizedName)" :key="role.id"></Radio>
+                            </RadioGroup>
                         </FormItem>
-
                     </TabPane>
                 </Tabs>
             </Form>
@@ -79,11 +77,13 @@
         get roles(){
             return this.$store.state.user.roles;
         }
+        normalize_role(role){
+            return role[0]+role.substring(1,role.length).toLowerCase();
+        }
         save() {
             this.user.userName = this.user.emailAddress;
             (this.$refs.userForm as any).validate(async (valid:boolean)=>{
                 if(valid){
-                    //this.user.isActive=true;
                     await this.$store.dispatch({
                         type:'user/create',
                         data:this.user
@@ -91,6 +91,7 @@
                     (this.$refs.userForm as any).resetFields();
                     this.$emit('save-success');
                     this.$emit('input',false);
+                    this.$Message.success({content:'Usuario creado exitosamente.',duration:4});
                 }
             })
         }
@@ -128,7 +129,8 @@
                 {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
             ],
             emailAddress:[
-                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},{type: 'email',message: 'El formato del email es incorrecto'}
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},
+                {type: 'email',message: 'El formato del email es incorrecto'}
             ],
             phone:[
                 {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
@@ -140,7 +142,7 @@
                 {required:true,validator:this.validatePassCheck,trigger: 'blur'}
             ],
             roleNames:[
-                {type: "array", required: true, min: 1, message: 'Seleccionar mínimo uno', trigger: 'change' }
+                {required: true, message: 'Seleccionar uno', trigger: 'change'}
             ]
         }
     }

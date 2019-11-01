@@ -36,17 +36,13 @@
                         <FormItem label="Especialidad" prop="speciality">
                             <input :readonly="true" v-model="user.specialty" style="width:100%"></input>
                         </FormItem>
+                        <FormItem label="Rol">
+                            <input :readonly="true" :value="single_role()" style="width:100%"></input>
+                        </FormItem>
                         <FormItem>
                             <h2 v-if="user.isActive" style="color:green;">{{L('IsActive')}}</h2>
                             <h2 v-else style="color:red;" >Inactivo </h2>
                         </FormItem>
-                    </TabPane>
-                    <TabPane :label="L('Roles')" name="roles">
-                        <ul>
-                            <li v-for="role in roles" style="font-size: 20px;margin-left: 30px">
-                                {{role.name}}
-                            </li>
-                        </ul>
                     </TabPane>
                     <TabPane :label="L('Asignaciones')" name="assignations">
                         <!-- Aca van las asignaciones del usuario sobre operaciones -->
@@ -93,9 +89,8 @@
         active=2;
         future=1;
 
-
-        get roles(){
-            return this.$store.state.user.roles;
+        single_role(){
+            return this.$store.state.user.roles[0];
         }
 
         get loading(){

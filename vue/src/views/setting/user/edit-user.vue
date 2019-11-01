@@ -34,15 +34,15 @@
                         <FormItem label="Dirección" prop="adress">
                             <Input v-model="user.adress"></Input>
                         </FormItem>
+                        <FormItem label="Rol" prop="roleNames" >
+                            <RadioGroup v-model="user.roleNames">
+                                <Radio v-for="role in roles" :label="normalize_role(role.normalizedName)" :key="role.id"></Radio>
+                            </RadioGroup>
+                        </FormItem>
                         <FormItem>
                             <Checkbox v-if="differentUser()" v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
                     </TabPane>
-                    <!--<TabPane :label="L('Roles')" name="roles">
-                        <CheckboxGroup v-model="user.roleNames">
-                            <Checkbox :label="role.normalizedName" v-for="role in roles" :key="role.id"><span>{{role.name}}</span></Checkbox>
-                        </CheckboxGroup>
-                    </TabPane>-->
                 </Tabs>
             </Form>
             <div slot="footer">
@@ -57,12 +57,15 @@
     import Util from '../../../lib/util'
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
+    import update from 'immutability-helper'
     @Component
     export default class EditUser extends AbpBase{
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
-        created(){
-            
+        created(){ }
+
+        normalize_role(role){
+            return role[0]+role.substring(1,role.length).toLowerCase();
         }
         get roles(){
             return this.$store.state.user.roles;
@@ -91,7 +94,8 @@
             }
             else{
                 this.$store.state.user.editUser.birthDate=this.parse_date(this.$store.state.user.editUser.birthDate);
-                this.user=Util.extend(true,{},this.$store.state.user.editUser);
+                var rol=this.normalize_role(this.$store.state.user.editUser.roleNames[0]);
+                this.user=Util.extend(true,{},update(this.$store.state.user.editUser,{roleNames:{$set:rol}}));
             }
         }
         parse_date(date:string){
