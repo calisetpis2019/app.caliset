@@ -140,12 +140,12 @@ namespace App.Caliset.Models.Operations
                 .WhereIf(nominatorId.HasValue, oper => oper.NominatorId == nominatorId)
                 .WhereIf(chargerId.HasValue, oper => oper.ChargerId == chargerId)
                 .WhereIf(managerId.HasValue, oper => oper.ManagerId == managerId)
-                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => (x.Commodity != null && x.Commodity.Contains(keyword)) || (x.Package != null && x.Package.Contains(keyword))
-                                                     || (x.ShipName != null && x.ShipName.Contains(keyword)) || (x.Destiny != null && x.Destiny.Contains(keyword)) 
-                                                     || (x.ClientReference != null && x.ClientReference.Contains(keyword)) || (x.Line != null && x.Destiny.Contains(keyword)) 
-                                                     || (x.BookingNumber != null && x.Destiny.Contains(keyword)) || (x.Notes != null && x.Notes.Contains(keyword))
-                                                     || x.OperationType.Name.Contains(keyword) || x.Manager.Name.Contains(keyword) || x.Nominator.Name.Contains(keyword)
-                                                     || x.Charger.Name.Contains(keyword) || x.Location.Name.Contains(keyword) || x.OperationState.Name.Contains(keyword)
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => (x.Commodity != null && x.Commodity.ToUpper().Contains(keyword.ToUpper())) || (x.Package != null && x.Package.ToUpper().Contains(keyword.ToUpper()))
+                                                     || (x.ShipName != null && x.ShipName.ToUpper().Contains(keyword.ToUpper())) || (x.Destiny != null && x.Destiny.ToUpper().Contains(keyword.ToUpper())) 
+                                                     || (x.ClientReference != null && x.ClientReference.ToUpper().Contains(keyword.ToUpper())) || (x.Line != null && x.Line.ToUpper().Contains(keyword.ToUpper())) 
+                                                     || (x.BookingNumber != null && x.BookingNumber.ToUpper().Contains(keyword.ToUpper())) || (x.Notes != null && x.Notes.ToUpper().Contains(keyword.ToUpper()))
+                                                     || x.OperationType.Name.ToUpper().Contains(keyword.ToUpper()) || x.Manager.Name.ToUpper().Contains(keyword.ToUpper()) || x.Nominator.Name.ToUpper().Contains(keyword.ToUpper())
+                                                     || x.Charger.Name.ToUpper().Contains(keyword.ToUpper()) || x.Location.Name.ToUpper().Contains(keyword.ToUpper()) || x.OperationState.Name.ToUpper().Contains(keyword.ToUpper())
 
                );
         }
