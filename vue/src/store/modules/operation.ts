@@ -64,6 +64,7 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
             await Ajax.post('/api/services/app/Operation/EndOperation', payload);
         },
         async activate(context: ActionContext<OperationState, any>, payload: any) {
+            console.log(payload);
             await Ajax.post('/api/services/app/Operation/ActivateOperationById?id=' + payload.id);
         }
 
@@ -84,7 +85,6 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         comment(state: OperationState, operation: Operation) {
             state.commentOperation = operation;
         }
-
     }
 }
 const operationModule = new OperationModule();

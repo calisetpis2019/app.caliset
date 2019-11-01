@@ -20,9 +20,9 @@ namespace App.Caliset.Authorization.Users
         public string Address { get; set; }
         public string Specialty { get; set; }
         public bool FirstLogin { get; set; }
-        [Required]
+     
         public string CuentaGP { get; set; }
-        [Required]
+      
         public string PasswordGP { get; set; }
 
         public virtual ICollection<Assignation> Assignations { get; set; }

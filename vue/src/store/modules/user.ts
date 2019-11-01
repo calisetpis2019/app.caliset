@@ -6,6 +6,7 @@ import Role from '../entities/role'
 import Ajax from '../../lib/ajax'
 import PageResult from '@/store/entities/page-result';
 import ListMutations from './list-mutations'
+import update from 'immutability-helper';
 
 interface UserState extends ListState<User>{
     viewUser:User,
@@ -57,22 +58,22 @@ class UserModule extends ListModule<UserState,any,User>{
         async create(context: ActionContext<UserState, any>, payload: any) {
             payload.data.isActive=true;
 
-            payload.data.roleNames = payload.data.roleNames.filter(function(value, index, arr){
-                return value != null;
-            });
+            var newRole=payload.data.roleNames;
+            var newPayload=update(payload.data,{roleNames:{$set:[newRole]}});
 
-            await Ajax.post('/api/services/app/User/Create',payload.data);
+            await Ajax.post('/api/services/app/User/Create',newPayload);
         },
         async update(context:ActionContext<UserState,any>,payload:any){
-            payload.data.roleNames=null;
             payload.data.lastLoginTime=null;
-            await Ajax.put('/api/services/app/User/Update',payload.data);
+            var newRole=payload.data.roleNames;
+            var newPayload=update(payload.data,{roleNames:{$set:null}});
+            await Ajax.put('/api/services/app/User/UpdateRolesUser',{"idUser":payload.data.id,"role":payload.data.roleNames});
+            await Ajax.put('/api/services/app/User/Update',newPayload);
         },
         async delete(context:ActionContext<UserState,any>,payload:any){
             await Ajax.delete('/api/services/app/User/Delete?Id='+payload.data.id);
         },
         async get(context:ActionContext<UserState,any>,payload:any){
-            console.log(payload);
             let reponse=await Ajax.get('/api/services/app/User/Get?Id='+payload.data.id);
             return reponse.data.result as User;
         },

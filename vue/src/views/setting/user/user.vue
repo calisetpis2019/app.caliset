@@ -51,6 +51,7 @@
     import EditUser from './edit-user.vue'
     import ViewUser from './view-user.vue'
     import AssignationModule from '@/store/entities/assignation'
+    import moment from 'moment'
 
     class  PageUserRequest extends PageRequest{
         keyword:string;
@@ -148,7 +149,7 @@
                return h('span',params.row.isActive?this.L('Yes'):this.L('No'))
             }
         },{
-            title:"Roles",
+            title:"Rol",
             render:(h:any,params:any)=>{
                 var roles=params.row.roleNames;
                 var concatenacion="";
@@ -167,10 +168,10 @@
             title:"Último Login",
             render:(h:any,params:any)=>{
                 if(params.row.lastLoginTime=="Nunca"){
-                    return h('span',params.row.lastLoginTime)    
+                    return h('span',params.row.lastLoginTime)  
                 }
                 else{
-                    return h('span',new Date(params.row.lastLoginTime).toLocaleString())
+                    return h('span', moment(params.row.lastLoginTime).locale('es').format("DD/MM/YYYY, HH:mm"))
                 }
             }
         },{

@@ -18,35 +18,31 @@
                         <FormItem :label="L('Surname')" prop="surname">
                             <input :readonly="true" v-model="user.surname" style="width:100%"></input>
                         </FormItem>
-                        <FormItem :label="L('Document')" prop="document">
+                        <FormItem label="Documento" prop="document">
                             <input :readonly="true" v-model="user.document" style="width:100%"></input>
                         </FormItem>
-                        <FormItem :label="L('Phone')" prop="phone">
-                            <input :readonly="true" v-model="user.phone" style="width:100%"></input>
+                        <FormItem label="Teléfono" prop="phone">
+                               <input :readonly="true" v-model="user.phone" style="width:100%"></input>
                         </FormItem>
-                        <FormItem :label="L('BirthDate')" prop="birthDate">
+                        <FormItem label="Fecha Nacimiento" prop="birthDate">
                             <input :readonly="true" v-model="user.birthDate" type="datetime" style="width:100%"></input>
                         </FormItem>
-                        <FormItem :label="L('City')" prop="city">
+                        <FormItem label="Ciudad" prop="city">
                             <input :readonly="true" v-model="user.city" style="width:100%"></input>
                         </FormItem>
-                        <FormItem :label="L('Adress')" prop="adress">
+                        <FormItem label="Dirección" prop="adress">
                             <input :readonly="true" v-model="user.adress" style="width:100%"></input>
                         </FormItem>
-                        <FormItem :label="L('Speciality')" prop="speciality">
+                        <FormItem label="Especialidad" prop="speciality">
                             <input :readonly="true" v-model="user.specialty" style="width:100%"></input>
+                        </FormItem>
+                        <FormItem label="Rol">
+                            <input :readonly="true" :value="single_role()" style="width:100%"></input>
                         </FormItem>
                         <FormItem>
                             <h2 v-if="user.isActive" style="color:green;">{{L('IsActive')}}</h2>
                             <h2 v-else style="color:red;" >Inactivo </h2>
                         </FormItem>
-                    </TabPane>
-                    <TabPane :label="L('Roles')" name="roles">
-                        <ul>
-                            <li v-for="role in roles" style="font-size: 20px;margin-left: 30px">
-                                {{role.name}}
-                            </li>
-                        </ul>
                     </TabPane>
                     <TabPane :label="L('Asignaciones')" name="assignations">
                         <!-- Aca van las asignaciones del usuario sobre operaciones -->
@@ -76,6 +72,7 @@
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
     import ViewOperationDummy from '../../operation/view-operation-dummy.vue'
+    import moment from 'moment'
 
     @Component({
         components:{ ViewOperationDummy }
@@ -92,9 +89,8 @@
         active=2;
         future=1;
 
-
-        get roles(){
-            return this.$store.state.user.roles;
+        single_role(){
+            return this.$store.state.user.roles[0];
         }
 
         get loading(){
@@ -174,21 +170,21 @@
                 }
             },
             {
-                title:'Fecha',
+                title:'Fecha creación',
                 render:(h:any,params:any)=>{
-                   return h('span',new Date(params.row.operation.date).toLocaleString())
+                   return h('span',moment(params.row.operation.date).locale('es').format("DD/MM/YYYY, HH:mm"))
                 }
             },
             {
                 title:'Comienzo',
                 render:(h:any,params:any)=>{
-                   return h('span',new Date(params.row.date).toLocaleString())
+                   return h('span',moment(params.row.date).locale('es').format("DD/MM/YYYY, HH:mm"))
                 }
             },
             {
                 title:'Fin',
                 render:(h:any,params:any)=>{
-                   return h('span',new Date(params.row.dateFin).toLocaleString())
+                   return h('span',moment(params.row.dateFin).locale('es').format("DD/MM/YYYY, HH:mm"))
                 }
             },
             {

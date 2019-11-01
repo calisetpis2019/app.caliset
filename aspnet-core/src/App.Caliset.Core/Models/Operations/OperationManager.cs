@@ -165,6 +165,7 @@ namespace App.Caliset.Models.Operations
                 throw new UserFriendlyException("Error", "La operación debe estar en estado Futura");
             }
             operation.OperationStateId = 2;
+            operation.OperationState = _repositoryOperationState.FirstOrDefault(x => x.Id == 2);
             var manager = operation.ManagerId;
 
             this.Update(operation);
@@ -187,13 +188,17 @@ namespace App.Caliset.Models.Operations
             }
 
             //NOTIFICATIONS FW
-            var userManager = new UserIdentifier(1, manager);
-            await _notificationPublisher.PublishAsync(
-                "App.SimpleMessage",
-                new MessageNotificationData("Se ha activado una operación de la cual es responsable."),
-                severity: NotificationSeverity.Info,
-                userIds: new[] { userManager }
-            );
+            //var userManager = new UserIdentifier(1, manager);
+            //await _notificationPublisher.PublishAsync(
+            //    "App.SimpleMessage",
+            //    new MessageNotificationData("Se ha activado una operación de la cual es responsable."),
+            //    severity: NotificationSeverity.Info,
+            //    userIds: new[] { userManager }
+            //);
+
+            // NOTIFICACION A RESPONSABLE
+            if (_userDeviceTokenManager.getById(manager) != null)
+                _notificationManager.sendNotification("Operacion Activa", "Se ha activado una operacion a la que está asignado.", manager);
         }
 
         public async Task ActvateOperations()

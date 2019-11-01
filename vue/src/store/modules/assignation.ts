@@ -12,6 +12,7 @@ interface AssignationState extends ListState<Assignation> {
     assignmentsOfOperation: Array<Assignation>;
     assignmentsByUsers: Array<Assignation>;
     lastAssignationOverlap: boolean;
+    operationCreationDate: string;
 }
 class AssignationModule extends ListModule<AssignationState, any, Assignation>{
 	state = {
@@ -27,8 +28,6 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
     actions = {
         async create(context: ActionContext<AssignationState, any>, payload: any) {
             var result = await Ajax.post('/api/services/app/Assignation/Create', payload.data);
-            console.log("ASSIGNATION MODULE");
-            console.log(result.data.result);
             context.state.lastAssignationOverlap = result.data.result;
         },
         async getUsersByOperation(context: ActionContext<AssignationState, any>, payload: any) {
@@ -55,10 +54,18 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
         async delete(context: ActionContext<Assignation, any>, payload: any) {
             await Ajax.delete('/api/services/app/Assignation/Delete?Id=' + payload.data.id);
         }
-        
-
-
     };
+    mutations = {
+        setCurrentPage(state: AssignationState, page: number) {
+            state.currentPage = page;
+        },
+        setPageSize(state: AssignationState, pagesize: number) {
+            state.pageSize = pagesize;
+        },
+        setOperationDate(state: AssignationState, operation_date: any) {
+            state.operationCreationDate = operation_date;
+        }
+    }
 }
 const assignationModule = new AssignationModule();
 export default assignationModule;

@@ -4,14 +4,14 @@
                :value="value"
                @on-visible-change="visibleChange"
                width="90%">
-               <Table :loading="loadingOperation" :columns="infoColumns" no-data-text="No existe informacion." border :data="operationDetails" size="small" style="margin-bottom:20px;">
+               <Table :loading="loadingOperation" :columns="columnsInfoOperacion" no-data-text="No existe informacion." border :data="operationDetails" size="small" style="margin-bottom:20px;">
               </Table>
-              <Table :loading="loadingOperation" :columns="infoColumns2" no-data-text="No existe informacion." border :data="operationDetails" size="small">
+              <Table :loading="loadingOperation" :columns="columnsInfoOperacion_2" no-data-text="No existe informacion." border :data="operationDetails" size="small">
               </Table>
               <Divider />
                <Tabs value="assignations" type="card">
                     <TabPane label="Asignaciones" name="assignations">
-                        <Table :loading="loadingAssignation" :columns="columns" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
+                        <Table :loading="loadingAssignation" :columns="columnsAssignation" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
                     </TabPane>
                     <TabPane label="Comentarios" name="comments">
                        <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
@@ -161,7 +161,7 @@
           this.viewUserAssignedToOperationModalShow = true;
         }
 
-        infoColumns = [
+        columnsInfoOperacion = [
             {
                 title: 'Id',
                 key: 'id'
@@ -183,8 +183,10 @@
                 key: 'location'
             },
             {
-                title: 'Fecha y hora de inicio',
-                key: 'date'
+                title: 'Fecha creación',
+                render:(h:any,params:any)=>{
+                    return h('Span', moment(params.row.date).locale('es').format("DD/MM/YYYY, HH:mm"));
+                }
             },
             {
                 title: 'Responsable',
@@ -200,7 +202,7 @@
             }
 
         ]
-        infoColumns2 = [
+        columnsInfoOperacion_2 = [
             {
                 title: 'Nombre del barco',
                 key: 'shipName'
@@ -227,7 +229,7 @@
             }
         ]
 
-        columns = [
+        columnsAssignation = [
             {
                 title: 'Nombre',
                 key: 'name',
@@ -243,10 +245,9 @@
                 }
             },
             {
-                title: 'Fecha de inicio',
-                key: 'date',
+                title: 'Fecha creación',
                 render:(h:any,params:any)=>{
-                  return h('Span', params.row.date);
+                    return h('Span', moment(params.row.date).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
             },
             {
@@ -326,7 +327,7 @@
             {
                 title: 'Fecha',
                 render:(h:any,params:any)=>{
-                    return h('Span', moment(params.row.creationTime).locale('es').format("DD [de] MMMM [del] YYYY, h:mm:ss a"));
+                    return h('Span', moment(params.row.creationTime).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
             },
             {
@@ -344,11 +345,10 @@
                 key: 'commentary'
             },
             {
-                title: 'Fecha',
+                title: 'Fecha creación',
                 render:(h:any,params:any)=>{
-                    return h('Span', moment(params.row.creationTime).locale('es').format("DD [de] MMMM [del] YYYY, h:mm:ss a"));
+                    return h('Span', moment(params.row.creationTime).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
-
             },
             {
                 title: 'Creador',
