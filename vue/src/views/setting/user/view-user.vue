@@ -67,6 +67,15 @@
                     <TabPane :label="L('Adjuntos')" name="attachments">
                         <!-- Aca van documentos adjuntos del usuario -->
                     </TabPane>
+                    <TabPane label="Registro de horas" name="hours">
+                        <!-- Aca van documentos adjuntos del usuario -->
+                        <Table  :loading="loading" 
+                                :columns="hoursColumns"
+                                no-data-text="No se han ingresado horas" 
+                                border 
+                                :data="hoursRecords"></Table>
+                    </TabPane>
+
                 </Tabs>
             </Form>
             <div slot="footer">
@@ -83,6 +92,7 @@
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
     import ViewOperationDummy from '../../operation/view-operation-dummy.vue'
+    import HoursRecord from '../../../store/entities/hoursRecord'
     import moment from 'moment'
 
     @Component({
@@ -93,6 +103,7 @@
 
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
+        hoursRecord:HoursRecord=new HoursRecord();
 
         viewOperationModalShow:boolean = false;
 
@@ -133,11 +144,15 @@
             return assignationsReturn;
         }
 
+        get hoursRecords() {
+            return this.$store.state.hoursRecord.list;
+        }
 
         cancel(){
             (this.$refs.userForm as any).resetFields();
             this.$emit('input',false);
         }
+
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
@@ -146,6 +161,14 @@
                 this.$store.dispatch({
                     type: 'assignation/getAssignationsByUser',
                     data: this.user,
+                });
+
+                let pagerequest = { 
+                                    id: this.user.id
+                                }
+                this.$store.dispatch({
+                    type: 'hoursRecord/getAllByUser',
+                    data: pagerequest
                 });
                 
             }
@@ -164,6 +187,7 @@
                 data: pagerequest
             })
         }
+
         viewOperationDetail(){
             this.viewOperationModalShow = true;
         }
@@ -279,6 +303,25 @@
                     
                     return toRender;
                 }
+            }
+        ]
+
+        hoursColumns=[
+            {
+                title:'Entrada',
+                render:(h:any,params:any)=>{
+                   return h('span',moment(params.row.startDate).locale('es').format("DD/MM/YYYY, HH:mm"))
+                }
+            },
+            {
+                title:'Salida',
+                render:(h:any,params:any)=>{
+                   return h('span',moment(params.row.endDate).locale('es').format("DD/MM/YYYY, HH:mm"))
+                }
+            },
+            {
+                title:'Operacion',
+                key: 'operationId'
             }
         ]
 
