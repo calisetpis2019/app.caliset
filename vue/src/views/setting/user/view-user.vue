@@ -66,7 +66,7 @@
                 <Button @click="cancel">{{L('Cancel')}}</Button>
             </div>
         </Modal>
-        <view-operation v-model="viewOperationModalShow" ></view-operation>
+        <view-operation-dummy v-model="viewOperationModalShow" ></view-operation-dummy>
     </div>
 </template>
 <script lang="ts">
@@ -75,10 +75,10 @@
     import Util from '../../../lib/util'
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
-    import ViewOperation from '../../operation/view-operation.vue'
+    import ViewOperationDummy from '../../operation/view-operation-dummy.vue'
 
     @Component({
-        components:{ ViewOperation }
+        components:{ ViewOperationDummy }
     })
     export default class ViewUser extends AbpBase{
 
