@@ -45,13 +45,24 @@
                         </FormItem>
                     </TabPane>
                     <TabPane :label="L('Asignaciones')" name="assignations">
+                        <Row :gutter="20" type="flex" align="middle" style="margin-bottom: 30px; margin-left: 20px">
+                            <Col span="3">
+                                Filtrar por estado:  
+                            </Col>
+                            <Col span="4">
+                                <Select placeholder="Estado" @on-change="stateFilter">
+                                            <Option :value=this.active>Activa</Option>
+                                            <Option :value=this.future>Futura</Option>
+                                            <Option :value=this.finished>Finalizada</Option>
+                                </Select>
+                            </Col>
+                        </Row>
                         <!-- Aca van las asignaciones del usuario sobre operaciones -->
                         <Table  :loading="loading" 
                                 :columns="assColumns"
                                 no-data-text="No existen registros" 
                                 border 
                                 :data="assignations"></Table>
-
                     </TabPane>
                     <TabPane :label="L('Adjuntos')" name="attachments">
                         <!-- Aca van documentos adjuntos del usuario -->
@@ -86,6 +97,7 @@
         viewOperationModalShow:boolean = false;
 
         //datos hardcodeados en el backend:
+        finished=3;
         active=2;
         future=1;
 
@@ -146,8 +158,22 @@
             })
         }
 
+        async getAssignationsByUserAndState(pagerequest) {
+            return await this.$store.dispatch({
+                type: 'assignation/getAssignationsByUserAndState',
+                data: pagerequest
+            })
+        }
         viewOperationDetail(){
             this.viewOperationModalShow = true;
+        }
+
+        stateFilter(val:number){
+            let pagerequest = { 
+                                id: this.user.id,
+                                state: val
+                            }
+            this.getAssignationsByUserAndState(pagerequest);
         }
 
         assColumns=[

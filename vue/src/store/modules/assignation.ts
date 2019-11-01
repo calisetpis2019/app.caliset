@@ -51,6 +51,18 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
             context.state.loading = false;
             context.state.assignmentsByUsers = response.data.result;  
         },
+        async getAssignationsByUserAndState(context: ActionContext<AssignationState, any>, payload: any){
+            context.state.loading = true;
+            let response = await Ajax.get('/api/services/app/Assignation/GetAssignmentsByUser?userId=' + payload.data.id);
+            let assignments = new Array<Assignation>();
+            response.data.result.forEach( element => {
+                if (element.operation.operationState.id == payload.data.state){
+                    assignments.push(element);
+                }
+            });
+            context.state.loading = false;
+            context.state.assignmentsByUsers = assignments;  
+        },
         async delete(context: ActionContext<Assignation, any>, payload: any) {
             await Ajax.delete('/api/services/app/Assignation/Delete?Id=' + payload.data.id);
         }
