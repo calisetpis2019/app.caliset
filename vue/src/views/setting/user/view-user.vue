@@ -45,17 +45,37 @@
                         </FormItem>
                     </TabPane>
                     <TabPane :label="L('Asignaciones')" name="assignations">
+                        <Row :gutter="20" type="flex" align="middle" style="margin-bottom: 30px; margin-left: 20px">
+                            <Col span="3">
+                                Filtrar por estado:  
+                            </Col>
+                            <Col span="4">
+                                <Select placeholder="Estado" @on-change="stateFilter">
+                                            <Option :value=this.active>Activa</Option>
+                                            <Option :value=this.future>Futura</Option>
+                                            <Option :value=this.finished>Finalizada</Option>
+                                </Select>
+                            </Col>
+                        </Row>
                         <!-- Aca van las asignaciones del usuario sobre operaciones -->
                         <Table  :loading="loading" 
                                 :columns="assColumns"
                                 no-data-text="No existen registros" 
                                 border 
                                 :data="assignations"></Table>
-
                     </TabPane>
                     <TabPane :label="L('Adjuntos')" name="attachments">
                         <!-- Aca van documentos adjuntos del usuario -->
                     </TabPane>
+                    <TabPane label="Registro de horas" name="hours">
+                        <!-- Aca van documentos adjuntos del usuario -->
+                        <Table  :loading="loading" 
+                                :columns="hoursColumns"
+                                no-data-text="No se han ingresado horas" 
+                                border 
+                                :data="hoursRecords"></Table>
+                    </TabPane>
+
                 </Tabs>
             </Form>
             <div slot="footer">
@@ -72,6 +92,7 @@
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
     import ViewOperationDummy from '../../operation/view-operation-dummy.vue'
+    import HoursRecord from '../../../store/entities/hoursRecord'
     import moment from 'moment'
 
     @Component({
@@ -82,10 +103,12 @@
 
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
+        hoursRecord:HoursRecord=new HoursRecord();
 
         viewOperationModalShow:boolean = false;
 
         //datos hardcodeados en el backend:
+        finished=3;
         active=2;
         future=1;
 
@@ -121,11 +144,15 @@
             return assignationsReturn;
         }
 
+        get hoursRecords() {
+            return this.$store.state.hoursRecord.list;
+        }
 
         cancel(){
             (this.$refs.userForm as any).resetFields();
             this.$emit('input',false);
         }
+
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
@@ -134,6 +161,14 @@
                 this.$store.dispatch({
                     type: 'assignation/getAssignationsByUser',
                     data: this.user,
+                });
+
+                let pagerequest = { 
+                                    id: this.user.id
+                                }
+                this.$store.dispatch({
+                    type: 'hoursRecord/getAllByUser',
+                    data: pagerequest
                 });
                 
             }
@@ -146,8 +181,23 @@
             })
         }
 
+        async getAssignationsByUserAndState(pagerequest) {
+            return await this.$store.dispatch({
+                type: 'assignation/getAssignationsByUserAndState',
+                data: pagerequest
+            })
+        }
+
         viewOperationDetail(){
             this.viewOperationModalShow = true;
+        }
+
+        stateFilter(val:number){
+            let pagerequest = { 
+                                id: this.user.id,
+                                state: val
+                            }
+            this.getAssignationsByUserAndState(pagerequest);
         }
 
         assColumns=[
@@ -253,6 +303,25 @@
                     
                     return toRender;
                 }
+            }
+        ]
+
+        hoursColumns=[
+            {
+                title:'Entrada',
+                render:(h:any,params:any)=>{
+                   return h('span',moment(params.row.startDate).locale('es').format("DD/MM/YYYY, HH:mm"))
+                }
+            },
+            {
+                title:'Salida',
+                render:(h:any,params:any)=>{
+                   return h('span',moment(params.row.endDate).locale('es').format("DD/MM/YYYY, HH:mm"))
+                }
+            },
+            {
+                title:'Operacion',
+                key: 'operationId'
             }
         ]
 
