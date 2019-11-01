@@ -19,6 +19,10 @@
                     <TabPane label="Muestras" name="samples">
                         <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
                     </TabPane>
+                    <TabPane label="Fotos" name="photos">
+                        <Button @click="openGooglePhotos" long>Ver fotos de la operacion</Button>
+                        <Table :loading="loadingAssignation" :columns="columnsCredentials" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
+                    </TabPane>
                 </Tabs>
             <div slot="footer">
             </div>
@@ -158,7 +162,11 @@
         }
 
         viewUserDetail(){
-          this.viewUserAssignedToOperationModalShow = true;
+            this.viewUserAssignedToOperationModalShow = true;
+        }
+
+        openGooglePhotos() {
+            window.open("https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fphotos.google.com%2Fsearch%2FOperacion" + this.operation.id + "&flowName=GlifWebSignIn&flowEntry=AddSession", "_blank");
         }
 
         columnsInfoOperacion = [
@@ -382,6 +390,23 @@
                         ]
                     }
                     return toRender;
+                }
+            }
+        ]
+
+        columnsCredentials = [
+            {
+                title: 'Usuario',
+                key: 'user',
+                render:(h:any,params:any)=>{
+                    return h('Span', params.row.inspector.cuentaGP);
+                }
+            },
+            {
+                title: 'Contraseña',
+                key: 'password',
+                render:(h:any,params:any)=>{
+                    return h('Span', params.row.inspector.passwordGP);
                 }
             }
         ]
