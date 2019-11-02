@@ -1,6 +1,7 @@
 ﻿using Abp.Domain.Repositories;
 using Abp.Domain.Services;
 using Abp.UI;
+using App.Caliset.Models.Operations;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -15,10 +16,12 @@ namespace App.Caliset.Models.HoursRecords
 
 
         private readonly IRepository<HourRecord> _hoursRecordRepository;
+        private readonly IRepository<Operation> _operationRepository;
 
-        public HoursRecordManager(IRepository<HourRecord> hoursRecordRepository)
+        public HoursRecordManager(IRepository<HourRecord> hoursRecordRepository, IRepository<Operation> operationRepository)
         {
             _hoursRecordRepository = hoursRecordRepository;
+            _operationRepository = operationRepository;
         }
 
 
@@ -76,7 +79,9 @@ namespace App.Caliset.Models.HoursRecords
 
         public HourRecord GetHoursRecordById(int id)
         {
-            return _hoursRecordRepository.Get(id);
+            var ret =  _hoursRecordRepository.FirstOrDefault(id);
+           ret.Operation = _operationRepository.FirstOrDefault(ret.OperationId);
+            return ret;
         }
 
         public void Update(HourRecord entity)

@@ -13,5 +13,6 @@ namespace App.Caliset.Models.LocationRecord
         Task<LocationRecord> Create(LocationRecord entity);
         void Update(LocationRecord entity);
         void Delete(int id);
+        double GetDistance(double longitude, double latitude, double otherLongitude, double otherLatitude);
     }
 }

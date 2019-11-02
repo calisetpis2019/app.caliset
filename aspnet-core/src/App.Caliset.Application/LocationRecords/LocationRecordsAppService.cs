@@ -4,7 +4,9 @@ using Abp.Runtime.Session;
 using Abp.UI;
 using App.Caliset.Authorization;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Models.HoursRecords;
 using App.Caliset.Models.LocationRecord;
+using App.Caliset.Models.Locations;
 using App.Caliset.Samples.Dto;
 using System;
 using System.Collections.Generic;
@@ -19,18 +21,56 @@ namespace App.Caliset.LocationRecords
 
         private readonly UserManager _userManager;
         private readonly ILocationRecordManager _locationRecordManager;
+        private readonly IHoursRecordManager _hoursRecordManager;
         private readonly IAbpSession _abpSession;
+        private readonly ILocationManager _locationManager;
 
-        public LocationRecordsAppService(UserManager userManager, ILocationRecordManager locationRecordManager, IAbpSession abpSession)
+        public LocationRecordsAppService(UserManager userManager, ILocationRecordManager locationRecordManager, IAbpSession abpSession
+            , IHoursRecordManager hoursRecordManager, ILocationManager locationManager)
         {
             _userManager = userManager;
             _locationRecordManager = locationRecordManager;
             _abpSession = abpSession;
+            _hoursRecordManager = hoursRecordManager;
+            _locationManager = locationManager;
 
 
         }
 
-       public async Task Create(CreateLocationRecordInput input)
+        public IEnumerable<CompareLocationOutput> ControlRecord(long IdUser, int IdHourRecord)
+        {
+            var HorasRegistradas = _hoursRecordManager.GetHoursRecordById(IdHourRecord);
+
+            var LocationOperation = _locationManager.GetLocationById(HorasRegistradas.Operation.LocationId);
+            var HorasReales = this.GetLocationRecordByUserAndTime(IdUser, HorasRegistradas.StartDate, HorasRegistradas.EndDate);
+            List<CompareLocationOutput> resultado = new List<CompareLocationOutput>();
+
+            double lat1;
+            double lon1;
+            double latLocation = Convert.ToDouble(LocationOperation.Latitude);
+            double lonLocation = Convert.ToDouble(LocationOperation.Longitude);
+            double Radio = Convert.ToDouble(LocationOperation.Radius);
+            double Distancia;
+            foreach (var CadaRegistro in HorasReales)
+            {
+                lon1 = Convert.ToDouble(CadaRegistro.Latitude);
+                lat1 = Convert.ToDouble(CadaRegistro.Longitude);
+
+                Distancia =_locationRecordManager.GetDistance(lon1, lat1, latLocation, lonLocation);
+                CompareLocationOutput item = new CompareLocationOutput
+                {
+                    IsThere = Distancia < Radio,
+                    LocationRegistrado = CadaRegistro
+                };
+
+                resultado.Add(item);
+
+            }
+
+            return resultado;
+        }
+
+        public async Task Create(CreateLocationRecordInput input)
         {
 
             if (_abpSession.UserId == null)
