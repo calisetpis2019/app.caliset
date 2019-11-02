@@ -83,7 +83,7 @@ namespace App.Caliset.LocationRecords
             var LRecord = ObjectMapper.Map<LocationRecord>(input);
 
             LRecord.InspectorId = userId;
-            LRecord.When = System.DateTime.Now;
+
 
             await _locationRecordManager.Create(LRecord);
         }
