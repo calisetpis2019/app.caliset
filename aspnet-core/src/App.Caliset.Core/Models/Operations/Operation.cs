@@ -3,6 +3,7 @@ using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Assignations;
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Comments;
+using App.Caliset.Models.HoursRecords;
 using App.Caliset.Models.Locations;
 using App.Caliset.Models.OperationStates;
 using App.Caliset.Models.OperationTypes;
@@ -68,6 +69,8 @@ namespace App.Caliset.Models.Operations
         public virtual ICollection<Assignation> Assignations { get; set; }
         public virtual IEnumerable<Comment> Comments { get; set; }
         public virtual IEnumerable<Sample> Samples { get; set; }
+
+        public virtual IEnumerable<HourRecord> HoursRecord { get; set; }
 
     }
 

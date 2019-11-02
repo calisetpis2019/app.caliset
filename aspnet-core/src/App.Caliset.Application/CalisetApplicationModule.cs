@@ -89,6 +89,7 @@ namespace App.Caliset
                 mapper.CreateMap<DeleteOperationInput, Operation>().ReverseMap();
                 mapper.CreateMap<UpdateOperationInput, Operation>().ReverseMap();
                 mapper.CreateMap<ReduceOperationOutput, Operation>().ReverseMap();
+                mapper.CreateMap<GetOperationHourRecordOutput, Operation>().ReverseMap();
 
                 //UserFile
                 mapper.CreateMap<CreateUserFileInput, UserFile>().ReverseMap();

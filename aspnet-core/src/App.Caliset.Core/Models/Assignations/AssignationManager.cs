@@ -87,7 +87,8 @@ namespace App.Caliset.Models.Assignations
                 .Include(asset => asset.Operation).ThenInclude(oper => oper.Charger)
                 .Include(asset => asset.Operation).ThenInclude(oper => oper.OperationState)
                  .Include(asset => asset.Operation).ThenInclude(oper => oper.Manager)
-                .Include(asset => asset.Operation).ThenInclude(oper => oper.Samples);
+                .Include(asset => asset.Operation).ThenInclude(oper => oper.Samples)
+                .Include(asset => asset.Operation).ThenInclude(oper => oper.HoursRecord);
         }
 
         public Assignation GetAssignationById(int id)
@@ -123,6 +124,27 @@ namespace App.Caliset.Models.Assignations
 
             return operations;
         }
+
+        public IEnumerable<Operation> GetOperationsFinishedByUser(long userId)
+        {
+            var operations = (from Oper in _operationManager.GetAll().Where(oper => oper.OperationStateId == 3).Where(oper => oper.Date >= DateTime.Now.AddMonths(-2))
+                              join Assign in this.GetAssignmentsFilter(userId, null, null, true)
+                              on Oper.Id equals Assign.OperationId
+                              select Oper).Distinct();
+
+            return operations;
+        }
+
+        public IEnumerable<Operation> GetMyOperationsRecord(long userId)
+        {
+            var operations = (from Oper in _operationManager.GetAll().Where(oper => oper.OperationStateId != 1).Where(oper => oper.Date >= DateTime.Now.AddMonths(-2))
+                              join Assign in this.GetAssignmentsFilter(userId, null, null, true)
+                              on Oper.Id equals Assign.OperationId
+                              select Oper).Distinct();
+
+            return operations;
+        }
+
         public void ConfirmAssignation(int idAssignation)
         {
             var Asign = _repositoryAssignation.FirstOrDefault(x => x.Id == idAssignation);
