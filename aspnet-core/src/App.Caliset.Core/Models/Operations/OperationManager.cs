@@ -62,7 +62,7 @@ namespace App.Caliset.Models.Operations
 
 
 
-        public async Task<Operation> Create(Operation entity)
+        public async Task<int> Create(Operation entity)
         {
             var oper = _repositoryOperation.FirstOrDefault(x => x.Id == entity.Id);
             if (oper != null)
@@ -71,7 +71,7 @@ namespace App.Caliset.Models.Operations
             }
             else
             {
-                return await _repositoryOperation.InsertAsync(entity);
+                return  await _repositoryOperation.InsertAndGetIdAsync(entity);
             }
         }
 

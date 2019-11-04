@@ -10,7 +10,7 @@ namespace App.Caliset.Models.Operations
     {
         IEnumerable<Operation> GetAll();
         Operation GetOperationById(int id);
-        Task<Operation> Create(Operation entity);
+        Task<int> Create(Operation entity);
         void Update(Operation entity);
         void Delete(int id);
         IEnumerable<Operation> GetAllFilters(string keyword, int? operationstateId, int? operationTypeId, int? locationId, int? nominatorId, int? chargerId, int? managerId);
