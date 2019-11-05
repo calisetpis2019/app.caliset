@@ -224,18 +224,6 @@ namespace App.Caliset.Assignations
             return output;
         }
 
-        public IEnumerable<GetOperationHourRecordOutput> GetMyOperationsHoursRecord()
-        {
-            if (_abpSession.UserId == null)
-            {
-                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
-            }
-            long userId = _abpSession.UserId.Value;
-            List<GetOperationHourRecordOutput> output = ObjectMapper.Map<List<GetOperationHourRecordOutput>>(_assignationManager.GetMyOperationsRecord(userId));
-
-            return output;
-        }
-
         public void RefuseAssignation(int AssignationId)
         {
             if (_abpSession.UserId == null)
