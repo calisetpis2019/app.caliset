@@ -35,6 +35,7 @@
                     </Table>
                     <Page  show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
                 </div>
+                <input style="visibility:hidden" id="uploadFileElement" type="file" @change="onFileChanged">
             </div>
         </Card>
         <create-user v-model="createModalShow" @save-success="getpage"></create-user>
@@ -129,11 +130,48 @@
         get currentPage(){
             return this.$store.state.user.currentPage;
         }
+
+
+        selectedFileName:string;
+        uploadButton:any;
+        onFileChanged(e){
+            var thisthis = this;
+            if (e.target.files && e.target.files[0]) {
+                this.selectedFileName=e.target.files[0].name;
+                this.readFile(e.target.files[0], async function(e) {
+                    let encoded = e.target.result.toString().replace(/^data:(.*,)?/, '');
+                    if ((encoded.length % 4) > 0) {
+                        encoded += '='.repeat(4 - (encoded.length % 4));
+                    }
+                    let pagerequest = { 
+                        userId: thisthis.$store.state.user.editUser.id,
+                        name: thisthis.selectedFileName,
+                        photo: encoded
+                    }
+                    await thisthis.$store.dispatch({
+                        type:'user/uploadPicture',
+                        data: pagerequest
+                    });
+                    thisthis.$Message.success({content:'Archivo subido exitosamente.',duration:4});
+                });
+            }
+        }
+        readFile(file, onLoadCallback){
+            var reader = new FileReader();
+            reader.onload = onLoadCallback;
+            reader.readAsDataURL(file);
+        }
+        uploadClick(){
+            this.uploadButton.click();
+        }
+
+
+
         columns=[{
             title:'Usuario',
             key:'userName'
         },{
-            title:'Nombre y apellido',
+            title:'Nombre',
             render:(h:any,params:any)=>{
                 return h('span',params.row.name+' '+params.row.surname)
             }
@@ -145,11 +183,13 @@
             key: 'phone'  
         },{
             title:this.L('IsActive'),
+            width:80,
             render:(h:any,params:any)=>{
                return h('span',params.row.isActive?this.L('Yes'):this.L('No'))
             }
         },{
             title:"Rol",
+            width:115,
             render:(h:any,params:any)=>{
                 var roles=params.row.roleNames;
                 var concatenacion="";
@@ -166,6 +206,7 @@
             }
         },{
             title:"Último Login",
+            width:135,
             render:(h:any,params:any)=>{
                 if(params.row.lastLoginTime=="Nunca"){
                     return h('span',params.row.lastLoginTime)  
@@ -177,7 +218,7 @@
         },{
             title:this.L('Actions'),
             key:'Actions',
-            width:200,
+            width:270,
             render:(h:any,params:any)=>{
                 var toRender = [
                     h('Button',{
@@ -215,7 +256,24 @@
                             }
                         },this.L('Edit'))
                     )
-                
+                    toRender.push(
+                        h('Button',{
+                            props:{
+                                type:'info',
+                                size:'small',
+                                icon:'ios-cloud-upload-outline'
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:()=>{
+                                    this.$store.commit('user/edit',params.row);
+                                    this.uploadClick();
+                                }
+                            }
+                        },this.L('Imagen'))
+                    )
                     toRender.push(
                         h('Button',{
                             props:{
@@ -251,6 +309,8 @@
                 type:'user/getRoles'
             });
         }
-
+        async mounted(){
+            this.uploadButton=document.getElementById('uploadFileElement');
+        }
     }
 </script>
