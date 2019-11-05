@@ -4,14 +4,16 @@ using App.Caliset.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace App.Caliset.Migrations
 {
     [DbContext(typeof(CalisetDbContext))]
-    partial class CalisetDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191105004915_cambios en Operacion y se agrega Forms")]
+    partial class cambiosenOperacionyseagregaForms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1183,6 +1185,8 @@ namespace App.Caliset.Migrations
                     b.Property<string>("Name")
                         .IsRequired();
 
+                    b.Property<int?>("OperationId");
+
                     b.Property<string>("PathCompleto");
 
                     b.Property<byte[]>("Photo")
@@ -1190,40 +1194,9 @@ namespace App.Caliset.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Forms");
-                });
-
-            modelBuilder.Entity("App.Caliset.Models.Forms.FormOperation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreationTime");
-
-                    b.Property<long?>("CreatorUserId");
-
-                    b.Property<long?>("DeleterUserId");
-
-                    b.Property<DateTime?>("DeletionTime");
-
-                    b.Property<int>("FormId");
-
-                    b.Property<bool>("IsDeleted");
-
-                    b.Property<DateTime?>("LastModificationTime");
-
-                    b.Property<long?>("LastModifierUserId");
-
-                    b.Property<int>("OperationId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FormId");
-
                     b.HasIndex("OperationId");
 
-                    b.ToTable("FormOperations");
+                    b.ToTable("Forms");
                 });
 
             modelBuilder.Entity("App.Caliset.Models.HoursRecords.HourRecord", b =>
@@ -1828,15 +1801,10 @@ namespace App.Caliset.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("App.Caliset.Models.Forms.FormOperation", b =>
+            modelBuilder.Entity("App.Caliset.Models.Forms.Form", b =>
                 {
-                    b.HasOne("App.Caliset.Models.Forms.Form", "Form")
-                        .WithMany()
-                        .HasForeignKey("FormId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("App.Caliset.Models.Operations.Operation", "Operation")
-                        .WithMany()
+                    b.HasOne("App.Caliset.Models.Operations.Operation")
+                        .WithMany("Forms")
                         .HasForeignKey("OperationId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

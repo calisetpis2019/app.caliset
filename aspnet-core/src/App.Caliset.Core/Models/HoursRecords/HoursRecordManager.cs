@@ -64,6 +64,11 @@ namespace App.Caliset.Models.HoursRecords
             return _hoursRecordRepository.GetAll()
                  .Include(x => x.Inspector)
                  .Include(x => x.Operation)
+                 .Include(x => x.Operation.Charger)
+                 .Include(x => x.Operation.Location)
+                 .Include(x => x.Operation.Manager)
+                 .Include(x => x.Operation.OperationState)
+                 .Include(x => x.Operation.OperationType)
                  ;
         }
 

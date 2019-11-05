@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Services;
+using App.Caliset.Models.Forms;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,5 +17,7 @@ namespace App.Caliset.Models.Operations
         IEnumerable<Operation> GetAllFilters(string keyword, int? operationstateId, int? operationTypeId, int? locationId, int? nominatorId, int? chargerId, int? managerId);
         Task ActivateOperationById(int idOperation);
         Task ActvateOperations();
+        void AddForm(FormOperation FO);
+        IEnumerable<Form> GetFormsByOperation(int IdOperation);
     }
 }

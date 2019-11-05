@@ -20,7 +20,7 @@ namespace App.Caliset.Operations.Dto
         public string ClientReference { get; set; }
         public string Line { get; set; }
         public string BookingNumber { get; set; }
-        public virtual GetLocationOutput Location { get; set; }
+        public virtual GetLocationReducedOutput Location { get; set; }
         public virtual GetOperationTypeOutput OperationType { get; set; }
         public virtual GetClientOutput Nominator { get; set; }
         public virtual GetClientOutput Charger { get; set; }

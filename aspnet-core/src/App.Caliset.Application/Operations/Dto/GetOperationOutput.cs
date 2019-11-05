@@ -1,5 +1,6 @@
 ﻿using App.Caliset.Clients.Dto;
 using App.Caliset.Comments.Dto;
+using App.Caliset.Forms;
 using App.Caliset.Locations.Dto;
 using App.Caliset.OperationStates.Dto;
 using App.Caliset.OperationTypes.Dto;
@@ -31,6 +32,6 @@ namespace App.Caliset.Operations.Dto
         public virtual UserDtoOperation Manager { get; set; }
         public List<GetSampleOutputReduced> Samples { get; set; }
         public List<GetCommentOutput> Comments { get; set; }
-
+        public List<GetFormOutput> Forms { get; set; }
     }
 }
