@@ -66,6 +66,8 @@
                     </TabPane>
                     <TabPane :label="L('Adjuntos')" name="attachments">
                         <!-- Aca van documentos adjuntos del usuario -->
+                        <input type="file" @change="preloadFile">
+                        <Button @click="loadFile" icon="md-cloud-upload" :disabled="this.disableLoadButton">Cargar</Button>
                     </TabPane>
                     <TabPane label="Registro de horas" name="hours">
                         <!-- Aca van documentos adjuntos del usuario -->
@@ -106,7 +108,11 @@
         user:User=new User();
         hoursRecord:HoursRecord=new HoursRecord();
 
+        fileName:string="";
+        fileData:any;      
+
         viewOperationModalShow:boolean = false;
+        disableLoadButton:boolean = true;
 
         //datos hardcodeados en el backend:
         finished=3;
@@ -182,6 +188,8 @@
             })
         }
 
+        getOperation.then()
+
         async getAssignationsByUserAndState(pagerequest) {
             return await this.$store.dispatch({
                 type: 'assignation/getAssignationsByUserAndState',
@@ -192,6 +200,13 @@
         async getLocationRecordByUserAndTime(pagerequest) {
             return await this.$store.dispatch({
                 type: 'locationRecord/getLocationRecordByUserAndTime',
+                data: pagerequest
+            })
+        }
+
+        async createUserFile(pagerequest){
+            return await this.$store.dispatch({
+                type: 'userFile/create',
                 data: pagerequest
             })
         }
@@ -207,6 +222,30 @@
                             }
             this.getAssignationsByUserAndState(pagerequest);
         }
+
+        preloadFile(event) {
+            var input = event.target;
+            if (input.files && input.files[0]) {
+                this.fileName = input.files[0].name;
+                var reader = new FileReader();
+                reader.onload = (e) => {
+                    this.fileData = e.target.result;
+                    this.disableLoadButton = false;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+
+        }
+
+        loadFile(){
+            let pagerequest = { 
+                                id: this.user.id,
+                                name: this.fileName,
+                                photo: this.fileData
+                            }
+        }
+
+
 
         assColumns=[
             {

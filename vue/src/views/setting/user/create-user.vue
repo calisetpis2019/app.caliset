@@ -74,6 +74,7 @@
     export default class CreateUser extends AbpBase{
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
+
         get roles(){
             return this.$store.state.user.roles;
         }
@@ -117,6 +118,7 @@
             var year=new Date().getFullYear()-20;
             return new Date(year, 1, 1);
         };
+
         userRule={
             //userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],
             name:[
