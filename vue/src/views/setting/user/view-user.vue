@@ -93,6 +93,7 @@
     import User from '../../../store/entities/user'
     import ViewOperationDummy from '../../operation/view-operation-dummy.vue'
     import HoursRecord from '../../../store/entities/hoursRecord'
+    import LocationRecord from '../../../store/entities/locationRecord'
     import moment from 'moment'
 
     @Component({
@@ -184,6 +185,13 @@
         async getAssignationsByUserAndState(pagerequest) {
             return await this.$store.dispatch({
                 type: 'assignation/getAssignationsByUserAndState',
+                data: pagerequest
+            })
+        }
+
+        async getLocationRecordByUserAndTime(pagerequest) {
+            return await this.$store.dispatch({
+                type: 'locationRecord/getLocationRecordByUserAndTime',
                 data: pagerequest
             })
         }
@@ -316,12 +324,70 @@
             {
                 title:'Salida',
                 render:(h:any,params:any)=>{
-                   return h('span',moment(params.row.endDate).locale('es').format("DD/MM/YYYY, HH:mm"))
+                    return h('span',moment(params.row.endDate).locale('es').format("DD/MM/YYYY, HH:mm"))
                 }
             },
             {
                 title:'Operacion',
                 key: 'operationId'
+            },
+            {
+                title:'Se mantuvo en posicion',
+                render:(h:any,params:any)=>{
+
+                    let operationLatitude = params.row.operation.location.latitude;
+                    let operationLongitude = params.row.operation.location.longitude;
+                    let operationRadius = params.row.operation.location.radius;
+
+                    let pagerequest = { 
+                                        id: params.row.inspectorId,
+                                        begin: params.row.startDate,
+                                        end: params.row.endDate
+                                    }
+                                    
+                    let inPosition = true;
+                    this.getLocationRecordByUserAndTime(pagerequest).then(result => { 
+
+                        // Se revisan cada una de las ubicaciones provenientes del gps
+                        // del celular, si tan solo una de esas ubicaciones esta por fuera
+                        // del operation.radius se da como falso.
+                        result.forEach((location)=>{
+                            if( Math.sqrt(
+                                    Math.pow(operationLatitude - location.latitude ,2) + 
+                                    Math.pow(operationLongitude - location.longitude ,2)) > operationRadius){
+                                inPosition = false;
+                            }
+                        });
+
+                    });
+
+                    let toRender;
+
+                    if (inPosition){
+                        toRender =  h('Icon', 
+                                { 
+                                    attrs: 
+                                        { 
+                                            type : 'md-checkmark-circle',
+                                            size : 25,
+                                            color: 'green'
+                                        }
+                                });
+                    } else {
+                         toRender =  h('Icon', 
+                                { 
+                                    attrs: 
+                                        { 
+                                            type : 'md-close-circle',
+                                            size : 25,
+                                            color: 'red'
+                                        }
+                                });   
+                    }
+
+                    return toRender;
+
+                }
             }
         ]
 
