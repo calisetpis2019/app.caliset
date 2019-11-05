@@ -16,6 +16,7 @@ import assignation from './modules/assignation'
 import comment from './modules/comment'
 import changepasswordentity from './modules/change-password'
 import hoursRecord from './modules/hoursRecord'
+import locationRecord from './modules/locationRecord'
 const store = new Vuex.Store({
     state: {
         //
@@ -41,7 +42,8 @@ const store = new Vuex.Store({
         assignation,
         comment,
         changepasswordentity,
-        hoursRecord
+        hoursRecord,
+        locationRecord
     }
 });
 
