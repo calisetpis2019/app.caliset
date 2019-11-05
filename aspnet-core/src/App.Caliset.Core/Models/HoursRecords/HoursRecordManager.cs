@@ -64,6 +64,11 @@ namespace App.Caliset.Models.HoursRecords
             return _hoursRecordRepository.GetAll()
                  .Include(x => x.Inspector)
                  .Include(x => x.Operation)
+                 .Include(x => x.Operation.Charger)
+                 .Include(x => x.Operation.Location)
+                 .Include(x => x.Operation.Manager)
+                 .Include(x => x.Operation.OperationState)
+                 .Include(x => x.Operation.OperationType)
                  ;
         }
 
@@ -88,5 +93,15 @@ namespace App.Caliset.Models.HoursRecords
         {
             _hoursRecordRepository.Update(entity);
         }
+
+        public IEnumerable<HourRecord> GetMyRecordsFiltered(long userId) {
+            var records = (from Record in this.GetAllByUser(userId)
+                              join Oper in _operationRepository.GetAll().Where(oper => oper.OperationStateId != 1).Where(oper => oper.Date >= DateTime.Now.AddMonths(-2))
+                              on Record.OperationId equals Oper.Id
+                              select Record);
+
+            return records;
+        }
+        
     }
 }

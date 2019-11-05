@@ -31,6 +31,9 @@ namespace App.Caliset.EntityFrameworkCore
         public virtual DbSet<Models.HoursRecords.HourRecord> HoursRecord { get; set; }
         public virtual DbSet<Models.LocationRecord.LocationRecord> LocationRecords { get; set; }
 
+        public virtual DbSet<Models.Forms.Form> Forms { get; set; }
+        public virtual DbSet<Models.Forms.FormOperation> FormsOperations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelbuilder)
         {
             foreach (var relationship in modelbuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))

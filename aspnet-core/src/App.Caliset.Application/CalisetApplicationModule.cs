@@ -26,6 +26,9 @@ using App.Caliset.HoursRecord.Dto;
 using App.Caliset.Models.HoursRecords;
 using App.Caliset.Models.LocationRecord;
 using App.Caliset.LocationRecords;
+using App.Caliset.Models.Forms;
+using App.Caliset.Forms;
+using App.Caliset.Forms.Dto;
 
 namespace App.Caliset
 {
@@ -59,6 +62,7 @@ namespace App.Caliset
                 mapper.CreateMap<CreateLocationInput, Location>().ReverseMap();
                 mapper.CreateMap<GetLocationInput, Location>().ReverseMap();
                 mapper.CreateMap<GetLocationOutput, Location>().ReverseMap();
+                mapper.CreateMap<GetLocationReducedOutput, Location>().ReverseMap();
                 mapper.CreateMap<UpdateLocationInput, Location>().ReverseMap();
 
                 //Client
@@ -95,6 +99,16 @@ namespace App.Caliset
                 mapper.CreateMap<CreateUserFileInput, UserFile>().ReverseMap();
                 mapper.CreateMap<GetUserFileOutput, UserFile>().ReverseMap();
                 mapper.CreateMap<GetUserFileListOutput, UserFile>().ReverseMap();
+
+                //Forms
+                mapper.CreateMap<CreateFormInput, Form>().ReverseMap();
+                mapper.CreateMap<GetFormOutput, Form>().ReverseMap();
+                mapper.CreateMap<UpdateFormInput, Form>().ReverseMap();
+
+                //FormOperations
+                mapper.CreateMap<CreateFormOperationInput, FormOperation>().ReverseMap();
+                mapper.CreateMap<GetFormOperationOutput, FormOperation>().ReverseMap();
+             
 
                 //Assignation
                 mapper.CreateMap<CreateAssignationInput, Assignation>().ReverseMap();

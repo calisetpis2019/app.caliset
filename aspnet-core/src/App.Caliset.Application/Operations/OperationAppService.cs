@@ -76,7 +76,7 @@ namespace App.Caliset.Operations
                 operation.OperationStateId = 1;
 
 
-            var op =  _operationManager.Create(operation).Result;
+            int op = await  _operationManager.Create(operation);
 
             //var message = "Ha sido asignado como responsable de una operación.";
 
@@ -89,8 +89,11 @@ namespace App.Caliset.Operations
             //    userIds: new[] { userManager }
             //);
 
-            if(_userDeviceTokerManager.getById(op.ManagerId) != null)
-                _notificationManager.sendNotification("Operacion nueva", "Se le asigno como responsable en la operacion #" ,op.Id);
+            if(_userDeviceTokerManager.getById(input.ManagerId) != null)
+            {
+                _notificationManager.sendNotification("Operacion nueva", "Se le asigno como responsable en la operacion #"+ op, input.ManagerId);
+            }
+                
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
@@ -182,24 +185,36 @@ namespace App.Caliset.Operations
                 Cambios += " - Responsable: " + _userManager.FindByIdAsync(input.ManagerId.ToString()).Result.Name;
 
 
-            ObjectMapper.Map(input, operation);
-            _operationManager.Update(operation);
-
-            List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(null,operation.Id));
-
-            List<long> userNotify = new List<long>();
-
-            //ARRANCA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
-            foreach (var x in output) 
+            if( Cambios != "")
             {
-                if( (x.Aware==true || x.Aware == null) && (_userDeviceTokerManager.getById(x.InspectorId)!= null)) {
-                    if (!userNotify.Contains(x.InspectorId)) { 
-                        _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #"+ input.Id +" a la que esta asignado de la siguiente forma: " + Cambios, x.InspectorId);
-                        userNotify.Add(x.InspectorId);
-                    }
+                ObjectMapper.Map(input, operation);
+                _operationManager.Update(operation);
 
+                List<GetAssignationOutput> output = ObjectMapper.Map<List<GetAssignationOutput>>(_assignationManager.GetAssignmentsFilter(null, operation.Id));
+
+                List<long> userNotify = new List<long>();
+
+                //ARRANCA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
+                foreach (var x in output)
+                {
+                    if ((x.Aware == true || x.Aware == null) && (_userDeviceTokerManager.getById(x.InspectorId) != null))
+                    {
+                        if (!userNotify.Contains(x.InspectorId))
+                        {
+                            _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #" + input.Id + " a la que esta asignado de la siguiente forma: " + Cambios, x.InspectorId);
+                            userNotify.Add(x.InspectorId);
+                        }
+
+                    }
                 }
+
+
+                if (_userDeviceTokerManager.getById(input.ManagerId) != null)
+                    _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #" + input.Id + " en la que es Responsable de la siguiente forma: " + Cambios, input.ManagerId);
+
             }//TERMINA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
+
+
 
             ////NOTIFICATION FW
 
@@ -212,9 +227,6 @@ namespace App.Caliset.Operations
             //);
 
             // ARRANCA NOTIFICACION DE RESPONSABLE
-
-            if(_userDeviceTokerManager.getById(input.ManagerId) != null)
-                _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #" + input.Id + " en la que es Responsable de la siguiente forma: " + Cambios, input.ManagerId);
 
         }
 

@@ -13,6 +13,7 @@ using Abp.UI;
 using App.Caliset.Authorization.Users;
 using App.Caliset.Models.Assignations;
 using App.Caliset.Models.Clients;
+using App.Caliset.Models.Forms;
 using App.Caliset.Models.Locations;
 using App.Caliset.Models.Notifications;
 using App.Caliset.Models.OperationStates;
@@ -31,7 +32,9 @@ namespace App.Caliset.Models.Operations
         private readonly NotificationPublisher _notificationPublisher;
         private readonly UserManager _userManager;
         private readonly IRepository<Assignation> _repositoryAssignation;
-   
+        private readonly IRepository<Form> _repositoryForms;
+        private readonly FormOperationManager _formOperationManager;
+
         private readonly IRepository<Location> _repositoryLocation;
         private readonly IRepository<OperationType> _repositoryOperationType;
         private readonly IRepository<Client> _repositoryClient;
@@ -44,7 +47,7 @@ namespace App.Caliset.Models.Operations
                                 NotificationManager notificationManager, NotificationPublisher notificationPublisher, UserManager userManager, 
                                 IRepository<Location> repositoryLocation , IRepository<OperationType> repositoryOperationType,
                                 IRepository<Client> repositoryClient, IRepository<OperationState> repositoryOperationState,
-                                SampleManager sampleManager)
+                                SampleManager sampleManager, IRepository<Form> repositoryForms , FormOperationManager formOperationManager)
         {
             _repositoryOperation = repositoryOperation;
             _repositoryAssignation = repositoryAssignation;
@@ -57,12 +60,13 @@ namespace App.Caliset.Models.Operations
             _repositoryClient = repositoryClient;
             _repositoryOperationState = repositoryOperationState;
             _sampleManager = sampleManager;
-
+            _repositoryForms = repositoryForms;
+            _formOperationManager = formOperationManager;
         }
 
 
 
-        public async Task<Operation> Create(Operation entity)
+        public async Task<int> Create(Operation entity)
         {
             var oper = _repositoryOperation.FirstOrDefault(x => x.Id == entity.Id);
             if (oper != null)
@@ -71,7 +75,7 @@ namespace App.Caliset.Models.Operations
             }
             else
             {
-                return await _repositoryOperation.InsertAsync(entity);
+                return  await _repositoryOperation.InsertAndGetIdAsync(entity);
             }
         }
 
@@ -117,8 +121,7 @@ namespace App.Caliset.Models.Operations
             oper.OperationState = _repositoryOperationState.FirstOrDefault(oper.OperationStateId);
             oper.OperationType = _repositoryOperationType.FirstOrDefault(oper.OperationTypeId);
             oper.Samples = _sampleManager.GetSamplesByOperation(id).ToList();
-
-
+         
 
             return oper;
         }
@@ -212,5 +215,21 @@ namespace App.Caliset.Models.Operations
             }
         }
 
+        public void AddForm(FormOperation FO)
+        {
+            _formOperationManager.Create(FO);
+        }
+
+    public IEnumerable<Form> GetFormsByOperation(int IdOperation)
+        {
+             var all = _formOperationManager.GetAll().Where(x => x.OperationId == IdOperation) ;
+
+            List<Form> ret = new List<Form>();
+
+            foreach (var x in all)
+                ret.Add(x.Form);
+
+            return ret;
+        }
     }
 }

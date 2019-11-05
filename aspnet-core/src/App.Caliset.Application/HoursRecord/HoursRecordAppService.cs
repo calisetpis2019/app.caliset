@@ -92,5 +92,17 @@ namespace App.Caliset.HoursRecord
             ObjectMapper.Map(input, HRecord);
             _hoursRecordManager.Update(HRecord);
         }
+
+        public IEnumerable<GetHoursRecordOutput> GetMyHoursRecordFiltered()
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+            long userId = _abpSession.UserId.Value;
+            List<GetHoursRecordOutput> output = ObjectMapper.Map<List<GetHoursRecordOutput>>(_hoursRecordManager.GetMyRecordsFiltered(userId));
+
+            return output;
+        }
     }
 }

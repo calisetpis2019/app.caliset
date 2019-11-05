@@ -15,5 +15,7 @@ namespace App.Caliset.Models.HoursRecords
         Task<HourRecord> Create(HourRecord entity);
         void Update(HourRecord entity);
         void Delete(int id);
+
+        IEnumerable<HourRecord> GetMyRecordsFiltered(long userId);
     }
 }
