@@ -7,13 +7,11 @@ import Ajax from '../../lib/ajax'
 import PageResult from '@/store/entities/page-result';
 import ListMutations from './list-mutations'
 import update from 'immutability-helper';
-import FileList from '../entities/fileList'
 
 interface UserState extends ListState<User>{
     viewUser:User,
     editUser:User,
-    roles:Role[],
-    fileList:FileList[];
+    roles:Role[]
 }
 class UserMutations extends ListMutations<User>{
 
@@ -27,8 +25,7 @@ class UserModule extends ListModule<UserState,any,User>{
         loading:false,
         viewUser:new User(),
         editUser:new User(),
-        roles:new Array<Role>(),
-        fileList:new Array<FileList>()
+        roles:new Array<Role>()
     }
     actions={
         async getAll(context:ActionContext<UserState,any>,payload:any){
@@ -77,13 +74,6 @@ class UserModule extends ListModule<UserState,any,User>{
         async uploadPicture(context:ActionContext<UserState,any>,payload:any){
             context.state.loading=true;
             await Ajax.post('/api/services/app/UserFile/Create',payload.data);
-            context.state.loading=false;
-        },
-
-        async getFileList(context:ActionContext<UserState,any>,payload:any){
-            context.state.loading=true;
-            let reponse=await Ajax.get('/api/services/app/UserFile/GetAllByUser?idUser='+payload.data.id);
-            context.state.fileList = reponse.data.result;
             context.state.loading=false;
         },
 

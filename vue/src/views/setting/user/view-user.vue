@@ -58,14 +58,14 @@
                             </Col>
                         </Row>
                         <!-- Aca van las asignaciones del usuario sobre operaciones -->
-                        <Table  :loading="loading" 
+                        <Table  :loading="loadingAssignation" 
                                 :columns="assColumns"
                                 no-data-text="No existen registros" 
                                 border 
                                 :data="assignations"></Table>
                     </TabPane>
                     <TabPane :label="L('Adjuntos')" name="attachments">
-                        <Table  :loading="loading" 
+                        <Table  :loading="loadingAttachment" 
                                 :columns="fileColumns"
                                 no-data-text="No se han subido archivos" 
                                 border 
@@ -98,7 +98,7 @@
     import ViewOperationDummy from '../../operation/view-operation-dummy.vue'
     import HoursRecord from '../../../store/entities/hoursRecord'
     import LocationRecord from '../../../store/entities/locationRecord'
-    //import FileRecord from '../../../store/entities/user-file'
+    import FileRecord from '../../../store/entities/user-file'
     import moment from 'moment'
 
     @Component({
@@ -128,12 +128,17 @@
             }
         }
 
+        get loadingAssignation(){
+            return this.$store.state.assignation.loading;
+        }
+        get loadingAttachment(){
+            return this.$store.state.userfile.loading;
+        }
         get loading(){
             return this.$store.state.assignation.loading;
         }
 
         get assignations(){
-
             let assignments = this.$store.state.assignation.assignmentsByUsers;
 
             var assignationsReturn = [];
@@ -152,7 +157,6 @@
                     assignationsReturn.push(assignments[i]);
                 }
             }
-
             return assignationsReturn;
         }
 
@@ -161,7 +165,7 @@
         }
 
         get fileList(){
-            return this.$store.state.user.fileList;
+            return this.$store.state.userfile.list;
         }
 
         cancel(){
@@ -190,12 +194,24 @@
                 });
                 
                 this.$store.dispatch({
-                    type: 'user/getFileList',
-                    data: this.user
+                    type: 'userfile/getFileList',
+                    data: this.user.id
                 });
             }
         }
 
+        async downloadFile(){
+            await this.$store.dispatch({
+                type: 'userfile/get',
+                data: this.$store.state.userfile.retrievedFile.id
+            })
+            var uri = "data:application/octet-stream;charset=utf-16le;base64,"+this.$store.state.userfile.retrievedFile.photo;
+            var link = document.createElement('a');
+            link.setAttribute("download", this.$store.state.userfile.retrievedFile.name);
+            link.setAttribute("href", uri);
+            link.click();
+        }
+        
         async getOperation(pagerequest) {
             return await this.$store.dispatch({
                 type: 'operation/get',
@@ -435,7 +451,8 @@
                             },
                             on:{
                                 click:()=>{
-                                    console.log("kk");
+                                    this.$store.commit('userfile/setDownloadFile',params.row);
+                                    this.downloadFile();
                                 }
                             }
                         },this.L('Descargar'))
