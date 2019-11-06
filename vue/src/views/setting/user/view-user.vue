@@ -51,21 +51,25 @@
                             </Col>
                             <Col span="4">
                                 <Select placeholder="Estado" @on-change="stateFilter">
-                                            <Option :value=this.active>Activa</Option>
-                                            <Option :value=this.future>Futura</Option>
-                                            <Option :value=this.finished>Finalizada</Option>
+                                    <Option :value=this.active>Activa</Option>
+                                    <Option :value=this.future>Futura</Option>
+                                    <Option :value=this.finished>Finalizada</Option>
                                 </Select>
                             </Col>
                         </Row>
                         <!-- Aca van las asignaciones del usuario sobre operaciones -->
-                        <Table  :loading="loading" 
+                        <Table  :loading="loadingAssignation" 
                                 :columns="assColumns"
                                 no-data-text="No existen registros" 
                                 border 
                                 :data="assignations"></Table>
                     </TabPane>
                     <TabPane :label="L('Adjuntos')" name="attachments">
-                        <!-- Aca van documentos adjuntos del usuario -->
+                        <Table  :loading="loadingAttachment" 
+                                :columns="fileColumns"
+                                no-data-text="No se han subido archivos" 
+                                border 
+                                :data="fileList"></Table>
                     </TabPane>
                     <TabPane label="Registro de horas" name="hours">
                         
@@ -94,14 +98,13 @@
     import ViewOperationDummy from '../../operation/view-operation-dummy.vue'
     import HoursRecord from '../../../store/entities/hoursRecord'
     import LocationRecord from '../../../store/entities/locationRecord'
+    import FileRecord from '../../../store/entities/user-file'
     import moment from 'moment'
 
     @Component({
         components:{ ViewOperationDummy }
     })
     export default class ViewUser extends AbpBase{
-
-
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
         hoursRecord:HoursRecord=new HoursRecord();
@@ -113,17 +116,30 @@
         finished=3;
         active=2;
         future=1;
-
+        normalize_role(role){
+            return role[0]+role.substring(1,role.length).toLowerCase();
+        }
         single_role(){
-            return this.$store.state.user.roles[0];
+            var store=this.$store.state.user;
+            if(typeof store.viewUser !== 'undefined' && typeof store.viewUser.roleNames !== 'undefined'){
+                return this.normalize_role(store.viewUser.roleNames[0]);
+            }
+            else{
+                return 'Default';
+            }
         }
 
+        get loadingAssignation(){
+            return this.$store.state.assignation.loading;
+        }
+        get loadingAttachment(){
+            return this.$store.state.userfile.loading;
+        }
         get loading(){
             return this.$store.state.assignation.loading;
         }
 
         get assignations(){
-
             let assignments = this.$store.state.assignation.assignmentsByUsers;
 
             var assignationsReturn = [];
@@ -142,7 +158,6 @@
                     assignationsReturn.push(assignments[i]);
                 }
             }
-
             return assignationsReturn;
         }
 
@@ -166,6 +181,10 @@
             return records;
         }
 
+        get fileList(){
+            return this.$store.state.userfile.list;
+        }
+
         cancel(){
             (this.$refs.userForm as any).resetFields();
             this.$emit('input',false);
@@ -174,7 +193,8 @@
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
-            }else{
+            }
+            else{
                 this.user=Util.extend(true,{},this.$store.state.user.viewUser);
                 this.$store.dispatch({
                     type: 'assignation/getAssignationsByUser',
@@ -182,16 +202,33 @@
                 });
 
                 let pagerequest = { 
-                                    id: this.user.id
-                                }
+                    id: this.user.id
+                }
+
                 this.$store.dispatch({
                     type: 'hoursRecord/getAllByUser',
                     data: pagerequest
                 });
                 
+                this.$store.dispatch({
+                    type: 'userfile/getFileList',
+                    data: this.user.id
+                });
             }
         }
 
+        async downloadFile(){
+            await this.$store.dispatch({
+                type: 'userfile/get',
+                data: this.$store.state.userfile.retrievedFile.id
+            })
+            var uri = "data:application/octet-stream;charset=utf-16le;base64,"+this.$store.state.userfile.retrievedFile.photo;
+            var link = document.createElement('a');
+            link.setAttribute("download", this.$store.state.userfile.retrievedFile.name);
+            link.setAttribute("href", uri);
+            link.click();
+        }
+        
         async getOperation(pagerequest) {
             return await this.$store.dispatch({
                 type: 'operation/get',
@@ -384,6 +421,40 @@
                 }
 
                 
+            }
+        ]
+
+        fileColumns=[
+            {
+                title:'Id',
+                key: 'id'
+            },
+            {
+                title:'Nombre',
+                key: 'name'
+            },
+            {
+                title:this.L('Actions'),
+                render:(h:any,params:any)=>{
+                    var toRender = [
+                        h('Button',{
+                            props:{
+                                type:'info',
+                                size:'small'
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:()=>{
+                                    this.$store.commit('userfile/setDownloadFile',params.row);
+                                    this.downloadFile();
+                                }
+                            }
+                        },this.L('Descargar'))
+                    ];
+                    return toRender;
+                }
             }
         ]
 

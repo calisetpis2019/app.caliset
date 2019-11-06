@@ -70,6 +70,13 @@ class UserModule extends ListModule<UserState,any,User>{
             await Ajax.put('/api/services/app/User/UpdateRolesUser',{"idUser":payload.data.id,"role":payload.data.roleNames});
             await Ajax.put('/api/services/app/User/Update',newPayload);
         },
+
+        async uploadPicture(context:ActionContext<UserState,any>,payload:any){
+            context.state.loading=true;
+            await Ajax.post('/api/services/app/UserFile/Create',payload.data);
+            context.state.loading=false;
+        },
+
         async delete(context:ActionContext<UserState,any>,payload:any){
             await Ajax.delete('/api/services/app/User/Delete?Id='+payload.data.id);
         },
