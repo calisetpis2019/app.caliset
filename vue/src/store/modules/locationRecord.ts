@@ -48,6 +48,10 @@ class LocationRecordModule extends ListModule<LocationRecordState, any, Location
             }
             let reponse = await Ajax.get('/api/services/app/LocationRecords/GetLocationRecordByUserAndTime' + responseString);
             return reponse.data.result as LocationRecord;
+        },
+        async controlRecord(context: ActionContext<LocationRecordState, any>, payload: any) {
+            let reponse = await Ajax.post('/api/services/app/LocationRecords/ControlRecord?IdUser=' + payload.data.idUser + '&IdHourRecord=' + payload.data.idHourRecord);
+            return reponse.data.result;
         }
     };
     mutations = {

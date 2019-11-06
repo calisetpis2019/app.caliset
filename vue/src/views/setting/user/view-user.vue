@@ -68,8 +68,8 @@
                         <!-- Aca van documentos adjuntos del usuario -->
                     </TabPane>
                     <TabPane label="Registro de horas" name="hours">
-                        <!-- Aca van documentos adjuntos del usuario -->
-                        <Table  :loading="loading" 
+                        
+                        <Table  :loading="loadingHours" 
                                 :columns="hoursColumns"
                                 no-data-text="No se han ingresado horas" 
                                 border 
@@ -105,6 +105,7 @@
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
         hoursRecord:HoursRecord=new HoursRecord();
+        loadingHours:boolean = false;
 
         viewOperationModalShow:boolean = false;
 
@@ -146,7 +147,23 @@
         }
 
         get hoursRecords() {
-            return this.$store.state.hoursRecord.list;
+            let records = this.$store.state.hoursRecord.list;
+            var recordsReturn;
+            records.forEach(record =>{
+                var entry = record;
+                let pagerequest = {
+                        idUser: this.user.id,
+                        idHourRecord: record.id
+                };
+                this.controlRecord(pagerequest).then(response =>{
+                    if (response.isThere != undefined){
+                        records.isThere = response.isThere;
+                    }else{
+                        records.isThere = false;
+                    }
+                });
+            })
+            return records;
         }
 
         cancel(){
@@ -194,6 +211,14 @@
                 type: 'locationRecord/getLocationRecordByUserAndTime',
                 data: pagerequest
             })
+        }
+
+        async controlRecord(pagerequest) {
+            let aux =await this.$store.dispatch({
+                type: 'locationRecord/controlRecord',
+                data: pagerequest
+            })    
+            return aux
         }
 
         viewOperationDetail(){
@@ -335,59 +360,30 @@
                 title:'Se mantuvo en posicion',
                 render:(h:any,params:any)=>{
 
-                    let operationLatitude = params.row.operation.location.latitude;
-                    let operationLongitude = params.row.operation.location.longitude;
-                    let operationRadius = params.row.operation.location.radius;
-
-                    let pagerequest = { 
-                                        id: params.row.inspectorId,
-                                        begin: params.row.startDate,
-                                        end: params.row.endDate
-                                    }
-                                    
-                    let inPosition = true;
-                    this.getLocationRecordByUserAndTime(pagerequest).then(result => { 
-
-                        // Se revisan cada una de las ubicaciones provenientes del gps
-                        // del celular, si tan solo una de esas ubicaciones esta por fuera
-                        // del operation.radius se da como falso.
-                        result.forEach((location)=>{
-                            if( Math.sqrt(
-                                    Math.pow(operationLatitude - location.latitude ,2) + 
-                                    Math.pow(operationLongitude - location.longitude ,2)) > operationRadius){
-                                inPosition = false;
-                            }
-                        });
-
-                    });
-
                     let toRender;
+                    let iconType = '';
+                    let iconColor ='';
 
-                    if (inPosition){
-                        toRender =  h('Icon', 
-                                { 
-                                    attrs: 
-                                        { 
-                                            type : 'md-checkmark-circle',
-                                            size : 25,
-                                            color: 'green'
-                                        }
-                                });
-                    } else {
-                         toRender =  h('Icon', 
-                                { 
-                                    attrs: 
-                                        { 
-                                            type : 'md-close-circle',
-                                            size : 25,
-                                            color: 'red'
-                                        }
-                                });   
+                    if(params.row.isThere){
+                        iconType = 'md-checkmark-circle';
+                        iconColor = 'green';
+                    }else {
+                        iconType = 'md-close-circle';
+                        iconColor = 'red';
                     }
 
-                    return toRender;
-
+                    return h('Icon', 
+                            { 
+                                attrs: 
+                                    { 
+                                        type : iconType,
+                                        size : 25,
+                                        color: iconColor
+                                    }
+                            });
                 }
+
+                
             }
         ]
 
