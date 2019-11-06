@@ -243,6 +243,7 @@ namespace App.Caliset.Users
             return true;
         }
 
+        [AbpAuthorize(PermissionNames.Administrador)]
         public async Task<bool> ResetPassword(ResetPasswordDto input)
         {
             if (_abpSession.UserId == null)
@@ -251,11 +252,11 @@ namespace App.Caliset.Users
             }
             long currentUserId = _abpSession.UserId.Value;
             var currentUser = await _userManager.GetUserByIdAsync(currentUserId);
-            var loginAsync = await _logInManager.LoginAsync(currentUser.UserName, input.AdminPassword, shouldLockout: false);
-            if (loginAsync.Result != AbpLoginResultType.Success)
-            {
-                throw new UserFriendlyException("Error", "La contraseña de administrador no es correcta.");
-            }
+          
+            //if (loginAsync.Result != AbpLoginResultType.Success)
+            //{
+            //    throw new UserFriendlyException("Error", "La contraseña de administrador no es correcta.");
+            //}
             if (currentUser.IsDeleted || !currentUser.IsActive)
             {
                 return false;
