@@ -4,7 +4,7 @@
          :title="L('EditUser')"
          :value="value"
          @on-ok="save"
-         @on-visible-change="visibleChange"        >
+         @on-visible-change="visibleChange">
             <Form ref="userForm"  label-position="top" :rules="userRule" :model="user">
                 <Tabs value="detail">
                     <TabPane :label="L('Details')" name="detail">
@@ -17,6 +17,7 @@
                         <FormItem label="Apellido" prop="surname">
                             <Input v-model="user.surname" :maxlength="1024"></Input>
                         </FormItem>
+
                         <FormItem label="Documento" prop="document">
                             <input type="number" class="ivu-input" v-model="user.document"/>
                         </FormItem>
@@ -49,7 +50,7 @@
                     </TabPane>
                     <TabPane label="Adjuntos">
                         <Row type="flex" justify="center" class="code-row-bg">
-                            <Button @click="uploadClick" icon="ios-cloud-upload-outline" type="info" size="large">Subir Imagen</Button>
+                            <Button @click="uploadClick" icon="ios-cloud-upload-outline" type="primary" size="large">Subir Imagen</Button>
                         </Row>
                         <Divider />
                         <Row type="flex" justify="center" class="code-row-bg"><h3>Imagenes subidas</h3></Row>
@@ -59,6 +60,20 @@
                                 border 
                                 :data="fileList">
                         </Table>
+                    </TabPane>
+                    <TabPane label="Resetear Contraseña">
+                        <FormItem label="Nueva Contraseña">
+                            <Input v-model="newPassword" type="password" :maxlength="32"></Input>
+                        </FormItem>
+
+                        <Divider/>
+
+                        <Row type="flex" justify="center" class="code-row-bg">
+                            <Button :loading="loadingV" @click="resetPassword" type="primary" size="large">
+                                <span v-if="!loadingV">Enviar</span>
+                                <span v-else>Cambiando...</span>
+                            </Button>
+                        </Row>
                     </TabPane>
                 </Tabs>
             </Form>
@@ -91,6 +106,32 @@
             return this.$store.state.user.roles;
         }
         
+        //Password Reset
+        loading:boolean=false;
+        get loadingV(){
+            return this.loading;
+        }
+        newPassword:string="";
+        async resetPassword(){
+            if(this.newPassword!=""){
+                this.loading=true;
+                let pagerequest = { 
+                    userId: this.user.id,
+                    newPassword: this.newPassword,
+                }
+                await this.$store.dispatch({
+                    type:'user/resetPassword',
+                    data: pagerequest
+                });
+                this.$Message.success({content:'Contraseña cambiada exitosamente.',duration:4});
+                this.newPassword="";
+            }
+            else{
+                this.$Message.warning({content:'Debe escribir una contraseña.',duration:4});
+            }
+            this.loading=false;
+        }
+        //END Password Reset
 
         //User File Code
         selectedFileName:string;
@@ -169,6 +210,7 @@
         visibleChange(value:boolean){
             if(!value){
                 (this.$refs.userForm as any).resetFields();
+                this.newPassword="";
                 this.$emit('input',value);
             }
             else{

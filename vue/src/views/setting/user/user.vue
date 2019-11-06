@@ -114,7 +114,6 @@
             if (this.creationTime.length>1) {
                 this.pagerequest.to=this.creationTime[1];
             }
-
             await this.$store.dispatch({
                 type:'user/getAll',
                 data:this.pagerequest

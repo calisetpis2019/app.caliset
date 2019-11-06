@@ -77,6 +77,10 @@ class UserModule extends ListModule<UserState,any,User>{
             context.state.loading=false;
         },
 
+        async resetPassword(context:ActionContext<UserState,any>,payload:any){
+            await Ajax.post('/api/services/app/User/ResetPassword',payload.data);
+        },
+
         async delete(context:ActionContext<UserState,any>,payload:any){
             await Ajax.delete('/api/services/app/User/Delete?Id='+payload.data.id);
         },
