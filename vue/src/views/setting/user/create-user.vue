@@ -28,14 +28,12 @@
                         </FormItem>
 
                         <FormItem :label="L('Documento')" prop="document">
-                            <!--<Input v-model="user.document" type="number"></Input>-->
                             <input type="number" class="ivu-input" v-model="user.document"/>
                         </FormItem>
                         <FormItem :label="L('Número de contacto')" prop="phone">
                             <Input v-model="user.phone" :maxlength="32"></Input>
                         </FormItem>
                         <FormItem :label="L('Fecha de nacimiento')" prop="birthDate">
-                            <!--<Input v-model="user.birthDate" type="date"></Input>-->
                             <DatePicker format="dd/MM/yyyy" type="date" :start-date="set_start_date()" v-model="user.birthDate" style="width:100%"></DatePicker>
                         </FormItem>
 
@@ -118,7 +116,6 @@
             return new Date(year, 1, 1);
         };
         userRule={
-            //userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],
             name:[
                 {required:true,message:this.L('FieldIsRequired',undefined,this.L('Name')),trigger: 'blur'}
             ],

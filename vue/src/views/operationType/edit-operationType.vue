@@ -36,7 +36,6 @@
         save() {
             (this.$refs.operationTypeForm as any).validate(async (valid:boolean)=>{
                 if (valid) {
-                    console.log(this.operationType);
                     await this.$store.dispatch({
                         type:'operationType/update',
                         data:this.operationType

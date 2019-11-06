@@ -34,6 +34,10 @@
                         <FormItem label="Dirección" prop="adress">
                             <Input v-model="user.adress"></Input>
                         </FormItem>
+
+                        <FormItem label="Especialidad">
+                            <Input v-model="user.specialty"></Input>
+                        </FormItem>
                         <FormItem label="Rol" prop="roleNames" >
                             <RadioGroup v-model="user.roleNames">
                                 <Radio v-for="role in roles" :label="normalize_role(role.normalizedName)" :key="role.id"></Radio>
@@ -43,12 +47,26 @@
                             <Checkbox v-if="differentUser()" v-model="user.isActive">{{L('IsActive')}}</Checkbox>
                         </FormItem>
                     </TabPane>
+                    <TabPane label="Adjuntos">
+                        <Row type="flex" justify="center" class="code-row-bg">
+                            <Button @click="uploadClick" icon="ios-cloud-upload-outline" type="info" size="large">Subir Imagen</Button>
+                        </Row>
+                        <Divider />
+                        <Row type="flex" justify="center" class="code-row-bg"><h3>Imagenes subidas</h3></Row>
+                        <Table  :loading="loadingAttachment" 
+                                :columns="fileColumns"
+                                no-data-text="No se han subido archivos" 
+                                border 
+                                :data="fileList">
+                        </Table>
+                    </TabPane>
                 </Tabs>
             </Form>
             <div slot="footer">
                 <Button @click="cancel">{{L('Cancel')}}</Button>
                 <Button @click="save" type="primary">{{L('OK')}}</Button>
             </div>
+            <input style="visibility:hidden" id="uploadFileElement" type="file" @change="onFileChanged">
         </Modal>
     </div>
 </template>
@@ -58,6 +76,8 @@
     import AbpBase from '../../../lib/abpbase'
     import User from '../../../store/entities/user'
     import update from 'immutability-helper'
+    import FileRecord from '../../../store/entities/user-file'
+
     @Component
     export default class EditUser extends AbpBase{
         @Prop({type:Boolean,default:false}) value:boolean;
@@ -70,6 +90,64 @@
         get roles(){
             return this.$store.state.user.roles;
         }
+        
+
+        //User File Code
+        selectedFileName:string;
+        uploadButton:any;
+        get loadingAttachment(){
+            return this.$store.state.userfile.loading;
+        }
+        get fileList(){
+            return this.$store.state.userfile.list;
+        }
+        onFileChanged(e){
+            var thisthis = this;
+            if (e.target.files && e.target.files[0]) {
+                this.selectedFileName=e.target.files[0].name;
+                this.readFile(e.target.files[0], async function(e) {
+                    let encoded = e.target.result.toString().replace(/^data:(.*,)?/, '');
+                    if ((encoded.length % 4) > 0) {
+                        encoded += '='.repeat(4 - (encoded.length % 4));
+                    }
+                    let pagerequest = { 
+                        userId: thisthis.user.id,
+                        name: thisthis.selectedFileName,
+                        photo: encoded
+                    }
+                    await thisthis.$store.dispatch({
+                        type:'user/uploadPicture',
+                        data: pagerequest
+                    });
+                    thisthis.reloadImages();
+                    thisthis.$Message.success({content:'Archivo subido exitosamente.',duration:4});
+                });
+            }
+        }
+        readFile(file, onLoadCallback){
+            var reader = new FileReader();
+            reader.onload = onLoadCallback;
+            reader.readAsDataURL(file);
+        }
+        uploadClick(){
+            this.uploadButton.click();
+        }
+        reloadImages(){
+            this.$store.dispatch({
+                type: 'userfile/getFileList',
+                data: this.user.id
+            });
+        }
+        async deleteFile(idFile){
+            await this.$store.dispatch({
+                type: 'userfile/delete',
+                data: idFile
+            });
+            this.reloadImages();
+        }
+        //END User File Code
+
+
         save() {
             this.user.userName = this.user.emailAddress;
             (this.$refs.userForm as any).validate(async (valid:boolean)=>{
@@ -90,12 +168,20 @@
         }
         visibleChange(value:boolean){
             if(!value){
+                (this.$refs.userForm as any).resetFields();
                 this.$emit('input',value);
             }
             else{
-                this.$store.state.user.editUser.birthDate=this.parse_date(this.$store.state.user.editUser.birthDate);
+                var birthDate=this.parse_date(this.$store.state.user.editUser.birthDate);
                 var rol=this.normalize_role(this.$store.state.user.editUser.roleNames[0]);
-                this.user=Util.extend(true,{},update(this.$store.state.user.editUser,{roleNames:{$set:rol}}));
+                var modUser=update(this.$store.state.user.editUser,{roleNames:{$set:rol}});
+                var modUser=update(modUser,{birthDate:{$set:birthDate}});
+                this.user=Util.extend(true,{},modUser);
+
+                this.$store.dispatch({
+                    type: 'userfile/getFileList',
+                    data: this.user.id
+                });
             }
         }
         parse_date(date:string){
@@ -119,11 +205,75 @@
                 }
             }
         }
+
+        fileColumns=[
+            {
+                title:'Id',
+                key: 'id',
+                width:70,
+            },
+            {
+                title:'Nombre',
+                key: 'name'
+            },
+            {
+                title:this.L('Actions'),
+                width:100,
+                render:(h:any,params:any)=>{
+                    var toRender = [
+                        h('Button',{
+                            props:{
+                                type:'error',
+                                size:'small'
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:()=>{
+                                    this.deleteFile(params.row.id);
+                                }
+                            }
+                        },this.L('Eliminar'))
+                    ];
+                    return toRender;
+                }
+            }
+        ]
+
+        validate_document = (rule:any, value:any, callback:any) => { 
+            var numString=value.toString();
+            if(numString.length<8){
+                callback(new Error(this.L('Documento debe tener al menos 8 digitos')));
+            }
+            else{
+                callback();
+            }
+        }
+
         userRule={
-            userName:[{required: true,message:this.L('FieldIsRequired',undefined,this.L('UserName')),trigger: 'blur'}],
-            name:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Name')),trigger: 'blur'}],
-            surname:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}],
-            emailAddress:[{required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},{type: 'email'}],
+            name:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Name')),trigger: 'blur'}
+            ],
+            surname:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
+            ],
+            document:[
+                {required:true,validator:this.validate_document,trigger: 'blur'}
+            ],
+            emailAddress:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Email')),trigger: 'blur'},
+                {type: 'email',message: 'El formato del email es incorrecto'}
+            ],
+            phone:[
+                {required:true,message:this.L('FieldIsRequired',undefined,this.L('Surname')),trigger: 'blur'}
+            ],
+            roleNames:[
+                {required: true, message: 'Seleccionar uno', trigger: 'change'}
+            ]
+        }
+        async mounted(){
+            this.uploadButton=document.getElementById('uploadFileElement');
         }
     }
 </script>

@@ -63,8 +63,10 @@ class AssignationModule extends ListModule<AssignationState, any, Assignation>{
             context.state.loading = false;
             context.state.assignmentsByUsers = assignments;  
         },
-        async delete(context: ActionContext<Assignation, any>, payload: any) {
+        async delete(context: ActionContext<AssignationState, any>, payload: any){
+            context.state.loading = true;
             await Ajax.delete('/api/services/app/Assignation/Delete?Id=' + payload.data.id);
+            context.state.loading = false; 
         }
     };
     mutations = {

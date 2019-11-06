@@ -101,7 +101,6 @@
                 this.operation = Util.extend(true, {}, this.$store.state.operation.viewOperation);
                 this.pagerequest["id"] = this.operation.locationId;
                 this.getLocation().then(result => {
-                    this.pagerequest["id"] = this.operation.id;
                     this.getAssignations();
 
                     this.pagerequest["id"] = this.operation.id;
@@ -128,6 +127,7 @@
         }
 
         async getAssignations() {
+            this.pagerequest["id"] = this.operation.id;
             await this.$store.dispatch({
                 type: 'assignation/getAssignmentsByOperation',
                 data: this.pagerequest
@@ -155,6 +155,7 @@
                 type: 'assignation/delete',
                 data: this.pagerequest
             })
+            this.getAssignations();
         }
 
         commentEdit(){
@@ -281,7 +282,7 @@
             {
                 title:this.L('Actions'),
                 key:'Actions',
-                width:100,
+                width:140,
                 render:(h:any,params:any)=>{
                     var toRender = [
                             h('Button',{

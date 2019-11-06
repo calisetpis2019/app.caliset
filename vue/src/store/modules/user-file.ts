@@ -32,7 +32,9 @@ class FileModule extends ListModule<FileState, any, File>{
             context.state.loading=false;
         },
         async delete(context: ActionContext<FileState, any>, payload: any) {
-            await Ajax.delete('/api/services/app/Assignation/Delete?Id=' + payload.data.id);
+            context.state.loading=true;
+            await Ajax.delete('/api/services/app/UserFile/Delete?input=' + payload.data);
+            context.state.loading=false;
         }
     };
     mutations = {

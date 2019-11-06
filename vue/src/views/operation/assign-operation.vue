@@ -131,11 +131,9 @@
             if(assign_ini.isValid()){
 
                 if(assign_fin.isValid() && assign_fin < assign_ini){
-                    console.log("1");
                     callback(new Error(this.L('Fecha de Inicio debe ser anteior a Fecha de Fin')));
                 }
                 else if(assign_ini < oper_ini){
-                    console.log("2");
                     callback(new Error(this.L('Fecha de Inicio de la Asignación es anterior a la Fecha de Inicio de la Operación')));
                 }
                 else{

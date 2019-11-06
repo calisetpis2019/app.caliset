@@ -35,7 +35,6 @@
                     </Table>
                     <Page  show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page>
                 </div>
-                <input style="visibility:hidden" id="uploadFileElement" type="file" @change="onFileChanged">
             </div>
         </Card>
         <create-user v-model="createModalShow" @save-success="getpage"></create-user>
@@ -131,42 +130,6 @@
             return this.$store.state.user.currentPage;
         }
 
-
-        selectedFileName:string;
-        uploadButton:any;
-        onFileChanged(e){
-            var thisthis = this;
-            if (e.target.files && e.target.files[0]) {
-                this.selectedFileName=e.target.files[0].name;
-                this.readFile(e.target.files[0], async function(e) {
-                    let encoded = e.target.result.toString().replace(/^data:(.*,)?/, '');
-                    if ((encoded.length % 4) > 0) {
-                        encoded += '='.repeat(4 - (encoded.length % 4));
-                    }
-                    let pagerequest = { 
-                        userId: thisthis.$store.state.user.editUser.id,
-                        name: thisthis.selectedFileName,
-                        photo: encoded
-                    }
-                    await thisthis.$store.dispatch({
-                        type:'user/uploadPicture',
-                        data: pagerequest
-                    });
-                    thisthis.$Message.success({content:'Archivo subido exitosamente.',duration:4});
-                });
-            }
-        }
-        readFile(file, onLoadCallback){
-            var reader = new FileReader();
-            reader.onload = onLoadCallback;
-            reader.readAsDataURL(file);
-        }
-        uploadClick(){
-            this.uploadButton.click();
-        }
-
-
-
         columns=[{
             title:'Usuario',
             key:'userName'
@@ -215,10 +178,11 @@
                     return h('span', moment(params.row.lastLoginTime).locale('es').format("DD/MM/YYYY, HH:mm"))
                 }
             }
-        },{
+        },
+        {
             title:this.L('Actions'),
             key:'Actions',
-            width:270,
+            width:190,
             render:(h:any,params:any)=>{
                 var toRender = [
                     h('Button',{
@@ -238,42 +202,27 @@
                     },this.L('Ver'))
                 ];
                 if(this.administratorRenderOnly){
-                    toRender.push(
-                        //Boton Editar:
-                        h('Button',{
-                            props:{
-                                type:'primary',
-                                size:'small'
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:()=>{
-                                    this.$store.commit('user/edit',params.row);
-                                    this.edit();
+                    //if(params.row.id!=2){
+                        toRender.push(
+                            //Boton Editar:
+                            h('Button',{
+                                props:{
+                                    type:'primary',
+                                    size:'small'
+                                },
+                                style:{
+                                    marginRight:'5px'
+                                },
+                                on:{
+                                    click:()=>{
+                                        this.$store.commit('user/edit',params.row);
+                                        this.edit();
+                                    }
                                 }
-                            }
-                        },this.L('Edit'))
-                    )
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'info',
-                                size:'small',
-                                icon:'ios-cloud-upload-outline'
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:()=>{
-                                    this.$store.commit('user/edit',params.row);
-                                    this.uploadClick();
-                                }
-                            }
-                        },this.L('Imagen'))
-                    )
+                            },this.L('Edit'))
+                        )    
+                    //}
+                    
                     toRender.push(
                         h('Button',{
                             props:{
@@ -308,9 +257,6 @@
             await this.$store.dispatch({
                 type:'user/getRoles'
             });
-        }
-        async mounted(){
-            this.uploadButton=document.getElementById('uploadFileElement');
         }
     }
 </script>
