@@ -15,6 +15,6 @@ namespace App.Caliset.LocationRecords
         void Update(UpdateLocationRecordInput input);
         GetLocationRecordOutput GetLocationRecordById(int IdLocationRecord);
         IEnumerable<GetLocationRecordOutput> GetLocationRecordByUserAndTime(long  IdUser, DateTime begin, DateTime end);
-        IEnumerable<CompareLocationOutput> ControlRecord(long IdUser, int IdHourRecord);
+        bool ControlRecord(long IdUser, int IdHourRecord);
     }
 }

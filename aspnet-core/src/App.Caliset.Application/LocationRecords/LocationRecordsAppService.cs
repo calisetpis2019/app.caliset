@@ -37,13 +37,13 @@ namespace App.Caliset.LocationRecords
 
         }
 
-        public IEnumerable<CompareLocationOutput> ControlRecord(long IdUser, int IdHourRecord)
+        public bool ControlRecord(long IdUser, int IdHourRecord)
         {
             var HorasRegistradas = _hoursRecordManager.GetHoursRecordById(IdHourRecord);
 
             var LocationOperation = _locationManager.GetLocationById(HorasRegistradas.Operation.LocationId);
             var HorasReales = this.GetLocationRecordByUserAndTime(IdUser, HorasRegistradas.StartDate, HorasRegistradas.EndDate);
-            List<CompareLocationOutput> resultado = new List<CompareLocationOutput>();
+            bool resultado = true;
 
             double lat1;
             double lon1;
@@ -51,20 +51,18 @@ namespace App.Caliset.LocationRecords
             double lonLocation = Convert.ToDouble(LocationOperation.Longitude);
             double Radio = Convert.ToDouble(LocationOperation.Radius);
             double Distancia;
+
             foreach (var CadaRegistro in HorasReales)
             {
                 lon1 = Convert.ToDouble(CadaRegistro.Latitude);
                 lat1 = Convert.ToDouble(CadaRegistro.Longitude);
 
                 Distancia =_locationRecordManager.GetDistance(lon1, lat1, latLocation, lonLocation);
-                CompareLocationOutput item = new CompareLocationOutput
+               
+                if(Distancia > Radio)
                 {
-                    IsThere = Distancia < Radio,
-                    LocationRegistrado = CadaRegistro
-                };
-
-                resultado.Add(item);
-
+                    resultado = false;
+                }
             }
 
             return resultado;
