@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -52,20 +54,38 @@ namespace Devil
             eventLog1.WriteEntry("Start ChangeOperationsState", EventLogEntryType.Information, eventId++);
 
             string mySetting = System.Configuration.ConfigurationManager.AppSettings["Client"];
+            string login_user = System.Configuration.ConfigurationManager.AppSettings["LoginUser"];
+            string login_pass = System.Configuration.ConfigurationManager.AppSettings["LoginPass"];
 
             var content = new StringContent("");
             content.Headers.ContentType = null;
 
             var client = new HttpClient { BaseAddress = new Uri(mySetting) };
-            
-            var response = client.PostAsync("/api/services/app/Operation/ActvateOperations", content).Result;
-            if (response.IsSuccessStatusCode)
+
+            var content_login = new StringContent("{'userNameOrEmailAddress': '" + login_user + "','password': '" + login_pass + "'}", UnicodeEncoding.UTF8, "application/json");
+
+            eventLog1.WriteEntry("Login", EventLogEntryType.Information, eventId);
+
+            var login = client.PostAsync("/api/TokenAuth/Authenticate", content_login);
+
+            if (login.Result.IsSuccessStatusCode)
             {
-                eventLog1.WriteEntry("Finish ChangeOperationState", EventLogEntryType.Information, eventId);
+                LoginResponse result = JsonConvert.DeserializeObject<LoginResponse>(login.Result.Content.ReadAsStringAsync().Result);
+                client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", result.Result.AccessToken);
+                var response = client.PostAsync("/api/services/app/Operation/ActvateOperations", content).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    eventLog1.WriteEntry("Finish ChangeOperationState", EventLogEntryType.Information, eventId);
+                }
+                else
+                {
+                    eventLog1.WriteEntry("Error " + response.StatusCode, EventLogEntryType.Information, eventId);
+                }
             } else
             {
-                eventLog1.WriteEntry("Error " + response.StatusCode, EventLogEntryType.Information, eventId);
+                eventLog1.WriteEntry("Login failed", EventLogEntryType.Information, eventId);
             }
+            
         }
     }
 }
