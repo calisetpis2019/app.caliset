@@ -44,6 +44,17 @@ class HoursRecordModule extends ListModule<HoursRecordState, any, HoursRecord>{
         async get(context: ActionContext<HoursRecordState, any>, payload: any) {
             let reponse = await Ajax.get('/api/services/app/HoursRecord/GetHoursRecordById?Id=' + payload.data.id);
             return reponse.data.result as HoursRecord;
+        },
+        async getAllByUserWithLocationControl(context: ActionContext<HoursRecordState, any>, payload: any) {
+            context.state.loading = true;
+            let reponse = await Ajax.get('/api/services/app/HoursRecord/GetAllByUser?IdUser=' + payload.data.id);
+            for (var i = 0, len = reponse.data.result.length; i < len; i++) {
+                let isThere = await Ajax.post('/api/services/app/LocationRecords/ControlRecord?IdUser=' + reponse.data.result[i].inspector.id +'&IdHourRecord=' + reponse.data.result[i].id);
+                reponse.data.result[i].isThere = isThere.data.result;
+            }
+            context.state.loading = false;
+            context.state.totalCount = reponse.data.result.length;
+            context.state.list = reponse.data.result;
         }
     };
     mutations = {

@@ -73,7 +73,7 @@
                     </TabPane>
                     <TabPane label="Registro de horas" name="hours">
                         
-                        <Table  :loading="loadingHours" 
+                        <Table  :loading="loadingHoursRecord" 
                                 :columns="hoursColumns"
                                 no-data-text="No se han ingresado horas" 
                                 border 
@@ -108,7 +108,6 @@
         @Prop({type:Boolean,default:false}) value:boolean;
         user:User=new User();
         hoursRecord:HoursRecord=new HoursRecord();
-        loadingHours:boolean = false;
 
         viewOperationModalShow:boolean = false;
 
@@ -138,6 +137,9 @@
         get loading(){
             return this.$store.state.assignation.loading;
         }
+        get loadingHoursRecord(){
+            return this.$store.state.hoursRecord.loading;
+        }
 
         get assignations(){
             let assignments = this.$store.state.assignation.assignmentsByUsers;
@@ -162,23 +164,7 @@
         }
 
         get hoursRecords() {
-            let records = this.$store.state.hoursRecord.list;
-            var recordsReturn;
-            records.forEach(record =>{
-                var entry = record;
-                let pagerequest = {
-                        idUser: this.user.id,
-                        idHourRecord: record.id
-                };
-                this.controlRecord(pagerequest).then(response =>{
-                    if (response.isThere != undefined){
-                        records.isThere = response.isThere;
-                    }else{
-                        records.isThere = false;
-                    }
-                });
-            })
-            return records;
+            return this.$store.state.hoursRecord.list;
         }
 
         get fileList(){
@@ -206,7 +192,7 @@
                 }
 
                 this.$store.dispatch({
-                    type: 'hoursRecord/getAllByUser',
+                    type: 'hoursRecord/getAllByUserWithLocationControl',
                     data: pagerequest
                 });
                 
@@ -248,14 +234,6 @@
                 type: 'locationRecord/getLocationRecordByUserAndTime',
                 data: pagerequest
             })
-        }
-
-        async controlRecord(pagerequest) {
-            let aux =await this.$store.dispatch({
-                type: 'locationRecord/controlRecord',
-                data: pagerequest
-            })    
-            return aux
         }
 
         viewOperationDetail(){
@@ -378,6 +356,12 @@
 
         hoursColumns=[
             {
+                title:'Ubicacion',
+                render:(h:any,params:any)=>{
+                    return h('span',params.row.operation.location.name)
+                }
+            },
+            {
                 title:'Entrada',
                 render:(h:any,params:any)=>{
                    return h('span',moment(params.row.startDate).locale('es').format("DD/MM/YYYY, HH:mm"))
@@ -390,8 +374,16 @@
                 }
             },
             {
-                title:'Operacion',
-                key: 'operationId'
+                title:'Ubicacion',
+                render:(h:any,params:any)=>{
+                    return h('span',params.row.operation.location.name)
+                }
+            },
+            {
+                title:'Mercaderia',
+                render:(h:any,params:any)=>{
+                    return h('span',params.row.operation.commodity)
+                }
             },
             {
                 title:'Se mantuvo en posicion',
@@ -400,7 +392,7 @@
                     let toRender;
                     let iconType = '';
                     let iconColor ='';
-
+                    console.log(params);
                     if(params.row.isThere){
                         iconType = 'md-checkmark-circle';
                         iconColor = 'green';
