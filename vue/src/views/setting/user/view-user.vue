@@ -288,7 +288,7 @@
             {
                 title:'Estado',
                 render:(h:any,params:any)=>{
-                   return h('span',params.row.operation.operationState.name)
+                   return h('span',params.row.operation.operationState["name"])
                 }
             },
             {
@@ -356,10 +356,35 @@
 
         hoursColumns=[
             {
-                title:'Ubicacion',
-                render:(h:any,params:any)=>{
-                    return h('span',params.row.operation.location.name)
-                }
+                title:'Operacion',
+                align: 'center',
+                children: [
+                    {
+                        title:'Id',
+                        width:50,
+                        render:(h:any,params:any)=>{
+                            return h('span',params.row.operation.id)
+                        }
+                    },
+                    {
+                        title:'Fecha inicio',
+                        render:(h:any,params:any)=>{
+                            return h('span',moment(params.row.operation.date).locale('es').format("DD/MM/YYYY, HH:mm"))
+                        }
+                    },
+                    {
+                        title:'Tipo',
+                        render:(h:any,params:any)=>{
+                            return h('span',params.row.operation.operationType.name)
+                        }
+                    },
+                    {
+                        title:'Ubicacion',
+                        render:(h:any,params:any)=>{
+                            return h('span',params.row.operation.location.name)
+                        }
+                    },
+                ]
             },
             {
                 title:'Entrada',
@@ -374,25 +399,14 @@
                 }
             },
             {
-                title:'Ubicacion',
-                render:(h:any,params:any)=>{
-                    return h('span',params.row.operation.location.name)
-                }
-            },
-            {
-                title:'Mercaderia',
-                render:(h:any,params:any)=>{
-                    return h('span',params.row.operation.commodity)
-                }
-            },
-            {
                 title:'Se mantuvo en posicion',
+                // width:30,
+                align: 'center',
                 render:(h:any,params:any)=>{
 
                     let toRender;
                     let iconType = '';
                     let iconColor ='';
-                    console.log(params);
                     if(params.row.isThere){
                         iconType = 'md-checkmark-circle';
                         iconColor = 'green';

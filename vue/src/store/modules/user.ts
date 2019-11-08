@@ -49,6 +49,12 @@ class UserModule extends ListModule<UserState,any,User>{
             context.state.loading=false;
             context.state.list = reponse.data.result;
         },
+        async getAllUsersFilter(context:ActionContext<UserState,any>,payload:any){
+            context.state.loading=true;
+            let reponse=await Ajax.get('/api/services/app/User/GetAllUsersFilter',{params:payload.data});
+            context.state.loading=false;
+            context.state.list = reponse.data.result;
+        },
         async getEligibleUsers(context:ActionContext<UserState,any>,payload:any){
             context.state.loading=true;
             let reponse=await Ajax.get('/api/services/app/UserDeviceToken/GetAllUserElegible',{});

@@ -55,7 +55,7 @@
 
     class  PageUserRequest extends PageRequest{
         keyword:string;
-        isActive:boolean=null;//nullable
+        Active:boolean=null;//nullable
         from:Date;
         to:Date;
     }
@@ -90,11 +90,11 @@
         }
         isActiveChange(val:string){
             if(val==='Actived'){
-                this.pagerequest.isActive=true;
+                this.pagerequest.Active=true;
             }else if(val==='NoActive'){
-                this.pagerequest.isActive=false;
+                this.pagerequest.Active=false;
             }else{
-                this.pagerequest.isActive=null;
+                this.pagerequest.Active=null;
             }
         }
         pageChange(page:number){
@@ -115,7 +115,7 @@
                 this.pagerequest.to=this.creationTime[1];
             }
             await this.$store.dispatch({
-                type:'user/getAll',
+                type:'user/getAllUsersFilter',
                 data:this.pagerequest
             })
         }

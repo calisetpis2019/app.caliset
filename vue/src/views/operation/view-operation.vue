@@ -192,7 +192,7 @@
                 key: 'location'
             },
             {
-                title: 'Fecha creación',
+                title: 'Fecha inicio',
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.date).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
@@ -254,7 +254,7 @@
                 }
             },
             {
-                title: 'Fecha creación',
+                title: 'Fecha inicio',
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.date).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
@@ -354,7 +354,7 @@
                 key: 'commentary'
             },
             {
-                title: 'Fecha creación',
+                title: 'Fecha inicio',
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.creationTime).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
