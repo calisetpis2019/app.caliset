@@ -15,6 +15,7 @@ using Abp.Collections.Extensions;
 using Abp.Extensions;
 using System.Linq.Dynamic.Core;
 using App.Caliset.Models.UserDeviceTokens;
+using System.Linq;
 
 namespace App.Caliset.Authorization.Users
 {
@@ -78,11 +79,13 @@ namespace App.Caliset.Authorization.Users
 
         public IEnumerable<User> GetAllFilter(string keyword, bool? active)
         {
-            return _userRepository.GetAllIncluding(x => x.Roles)
-                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.UserName.ToUpper().Contains(keyword.ToUpper()) || x.Name.ToUpper().Contains(keyword.ToUpper()) || x.Surname.ToUpper().Contains(keyword.ToUpper()) || x.EmailAddress.ToUpper().Contains(keyword.ToUpper()) )
-                .WhereIf(active.HasValue, x => x.IsActive == active); ;
-        }
+         
+                return _userRepository.GetAllIncluding(x => x.Roles)
+                .WhereIf(!keyword.IsNullOrWhiteSpace(), x => x.UserName.ToUpper().Contains(keyword.ToUpper()) || x.Name.ToUpper().Contains(keyword.ToUpper()) || x.Surname.ToUpper().Contains(keyword.ToUpper()) || x.EmailAddress.ToUpper().Contains(keyword.ToUpper()))
+                .WhereIf(active.HasValue, x => x.IsActive == active);     
 
+        }
+        
         public void SetUserRole(long IdUSer, int IdRole)
         {
         

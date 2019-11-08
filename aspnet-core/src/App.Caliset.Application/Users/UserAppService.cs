@@ -305,8 +305,11 @@ namespace App.Caliset.Users
 
         public IEnumerable<UserDtoOperation> GetAllUsersFilter(GetUserFiltersInput input)
         {
+
             var getAll = _userManager.GetAllFilter(input.Keyword, input.Active).ToList();
+
             List<UserDtoOperation> output = ObjectMapper.Map<List<UserDtoOperation>>(getAll);
+
             return output;
         }
 

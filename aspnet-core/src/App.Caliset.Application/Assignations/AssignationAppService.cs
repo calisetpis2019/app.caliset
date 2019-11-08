@@ -55,10 +55,13 @@ namespace App.Caliset.Assignations
                 throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             var inspectorId = _assignationManager.GetAssignationById(input.Id).InspectorId;
-            
+            var ManagerId = _assignationManager.GetAssignationById(input.Id).Operation.ManagerId;
+
+
             _assignationManager.Delete(input.Id);
             _notificationManager.sendNotification("Asignación", "Eliminación de asignación", inspectorId);
-            
+            _notificationManager.sendNotification("Asignación", "Se elimino una asignacion en una de sus operaciones", ManagerId);
+
         }
 
         [AbpAuthorize(PermissionNames.Operador)]

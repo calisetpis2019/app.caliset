@@ -93,7 +93,9 @@ namespace App.Caliset.Models.Assignations
 
         public Assignation GetAssignationById(int id)
         {
-            return _repositoryAssignation.Get(id);
+            var ret = _repositoryAssignation.Get(id);
+            ret.Operation = _operationManager.GetOperationById(ret.OperationId);
+            return ret;
         }
 
         public IEnumerable<Assignation> GetAssignmentsFilter(long? userId = null, int? operationId = null, DateTime? date = null, bool ? aware = null, bool ? pending = null)
