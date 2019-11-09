@@ -303,12 +303,27 @@ namespace App.Caliset.Users
             return output;
         }
 
-        public IEnumerable<UserDtoOperation> GetAllUsersFilter(GetUserFiltersInput input)
+        public IEnumerable<UserDto> GetAllUsersFilter(GetUserFiltersInput input)
         {
 
             var getAll = _userManager.GetAllFilter(input.Keyword, input.Active).ToList();
 
-            List<UserDtoOperation> output = ObjectMapper.Map<List<UserDtoOperation>>(getAll);
+            List<UserDto> output = ObjectMapper.Map<List<UserDto>>(getAll);
+
+            int max = getAll.Count();
+            User uservar;
+          
+
+
+           for (int iter = 0; iter < max; iter++)
+            {
+                uservar = _userManager.FindByIdAsync(output[iter].Id.ToString()).Result;
+
+                var roles = _roleManager.Roles.Where(r => uservar.Roles.Any(ur => ur.RoleId == r.Id)).Select(r => r.NormalizedName);
+                output[iter].RoleNames = roles.ToArray();
+
+              
+            }
 
             return output;
         }
