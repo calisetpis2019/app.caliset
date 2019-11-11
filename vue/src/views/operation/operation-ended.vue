@@ -13,7 +13,6 @@
                                 </Col>
                             </Row>
                             <Row>
-                                <Button @click="create" icon="android-add" type="primary" size="large" v-if="operatorRenderOnly">{{L('Add')}}</Button>
                                 <Button icon="ios-search" type="primary" size="large" @click="filter" class="toolbar-btn">{{L('Find')}}</Button>
                             </Row>
                         </Form>
@@ -61,22 +60,15 @@
                     </Col>
                 </Row>
                 <div class="margin-top-10">
-                    <h4>Operaciones Activas</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_active.sort(dynamicSort_asc('date'))">
-                    </Table>
-                </div>
-                <div class="margin-top-10">
-                    <h4>Operaciones Futuras</h4>
-                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_future.sort(dynamicSort_asc('date'))">
+                    <h4>Operaciones Finalizadas</h4>
+                    <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_finished.sort(dynamicSort_desc('date'))">
                     </Table>
                 </div>
                 <div><Page show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page></div>
             </div>
         </Card>
-        <create-operation v-model="createModalShow"  @save-success="getpage"></create-operation>
         <edit-operation v-model="editModalShow"  @save-success="getpage"></edit-operation>
         <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
-        <assign-operation v-model="assignModalShow" @save-success="getpage"></assign-operation>
         <comment-operation v-model="commentModalShow" ></comment-operation>
     </div>
 </template>
@@ -85,7 +77,6 @@
     import Util from '@/lib/util'
     import AbpBase from '@/lib/abpbase'
     import PageRequest from '@/store/entities/page-request'
-    import CreateOperation from './create-operation.vue'
     import EditOperation from './edit-operation.vue'
     import ViewOperation from './view-operation.vue'
     import CommentOperation from './comment-operation.vue'
@@ -118,9 +109,9 @@
     }
 
     @Component({
-        components: { CreateOperation, EditOperation, ViewOperation, AssignOperation, CommentOperation }
+        components: { EditOperation, ViewOperation,  CommentOperation }
     })
-    export default class Operations extends AbpBase {
+    export default class OperationsEnded extends AbpBase {
         edit(){
             this.editModalShow=true;
         }
@@ -137,22 +128,20 @@
        	assignModalShow: boolean = false;
         commentModalShow: boolean = false;
 
-        actionsWidth:number = 480;
-
         //datos hardcodeados en el backend:
         ended=3;
         active=2;
         future=1;
-
-    	get list_active() {
+        
+        get list_finished() {
             var auxOperations:Operation[];
             var auxLocations:Location[];
             var result = [];
             auxOperations = this.$store.state.operation.list;
             auxLocations = this.$store.state.location.list;
             auxOperations.forEach( (element) => {
-                //Active==2
-                if(element["operationState"]["id"]==2){
+                //Finished==3
+                if(element["operationState"]["id"]==3){
                     let locationName = "";
                     auxLocations.forEach( (location) =>{
                         if (location.id == element["location"]["id"]){
@@ -181,53 +170,7 @@
                         operationTypeId: element["operationType"]["id"],
                         operationType: element["operationType"]["name"],
                         package: element["package"],
-                        shipName: element["shipName"],
-                        assigments: element["assigments"]
-                    });
-                }
-            })
-            return result;
-        };
-
-        get list_future() {
-            var auxOperations:Operation[];
-            var auxLocations:Location[];
-            var result = [];
-            auxOperations = this.$store.state.operation.list;
-            auxLocations = this.$store.state.location.list;
-            auxOperations.forEach( (element) => {
-                //Future==1
-                if(element["operationState"]["id"]==1){
-                    let locationName = "";
-                    auxLocations.forEach( (location) =>{
-                        if (location.id == element["location"]["id"]){
-                            locationName = location.name;
-                        }
-                    })                    
-                    result.push({
-                        id: element["id"],
-                        bookingNumber: element["bookingNumber"],
-                        chargerId: element["charger"]["id"],
-                        chargerName: element["charger"]["name"],
-                        clientReference: element["clientReference"],
-                        commodity: element["commodity"],
-                        date: element["date"],
-                        destiny: element["destiny"],
-                        line: element["line"],
-                        location: locationName,
-                        locationId: element["location"]["id"],
-                        managerId: element["manager"]["id"],
-                        managerName: element["manager"]["name"],
-                        nominatorId: element["nominator"]["id"],
-                        nominatorName: element["nominator"]["name"],
-                        notes: element["notes"],
-                        operationState: element["operationState"]["name"],
-                        operationStateId: element["operationState"]["id"],
-                        operationTypeId: element["operationType"]["id"],
-                        operationType: element["operationType"]["name"],
-                        package: element["package"],
-                        shipName: element["shipName"],
-                        assigments: element["assigments"]
+                        shipName: element["shipName"]
                     });
                 }
             })
@@ -368,51 +311,10 @@
             {
                 title: this.L('Mercadería'),
                 key: 'commodity'
-            },
-            {
-                title: 'Asignaciones',
-                key: 'assignations',
-                align: 'center',
-                render:(h:any,params:any)=>{
-                    var warn = false;
-                    var counter = 0;
-                    var assigments = params.row.assigments;
-                    if(assigments.length !=0){
-                        while (counter < assigments.length && !warn){
-                            if (assigments[counter].aware == null ||
-                                assigments[counter].aware == false){
-                                warn = true;
-                            } 
-                            counter++;
-                        }
-                    }else{
-                        warn = true;
-                    }
-
-                    let iconType = '';
-                    let iconColor ='';
-                    if(warn){
-                        iconType = 'md-alert';
-                        iconColor = 'red';
-                    } else {
-                        iconType = 'md-checkmark-circle';
-                        iconColor = 'green';
-                    }
-                    return h('Icon', 
-                            { 
-                                attrs: 
-                                    { 
-                                        type : iconType,
-                                        size : 25,
-                                        color: iconColor
-                                    }
-                            });
-                }
-            },
-            {
+            },{
             title:this.L('Actions'),
             key:'Actions',
-            width:this.actionsWidth,
+            width:230,
             render:(h:any,params:any)=>{
                 var toRender = [
                     h('Button',{
@@ -452,93 +354,6 @@
                 else if(this.administratorRenderOnly){
                     toRender.push(botonEditar)
                 }
-                if(this.administratorRenderOnly == true && params.row.operationStateId != this.ended){
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'error',
-                                size:'small'
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:async ()=>{
-                                    this.$Modal.confirm({
-                                        title:this.L('Tips'),
-                                        content:this.L('DeleteOperationConfirm'),
-                                        okText:this.L('Yes'),
-                                        cancelText:this.L('No'),
-                                        onOk:async()=>{
-                                            await this.$store.dispatch({
-                                                type:'operation/delete',
-                                                data:params.row
-                                            })
-                                            await this.getpage();
-                                        }
-                                    })
-                                }
-                            }
-                        },'Eliminar')
-                    );
-                }
-                if(this.operatorRenderOnly == true && params.row.operationStateId == 1){
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'warning',
-                                size:'small',
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:async ()=>{
-                                    this.$store.dispatch('operation/activate',params.row);
-                                    await this.getpage();
-                                }
-                            }
-                        },'Activar')
-                    );
-                }
-                if(this.operatorRenderOnly == true && params.row.operationStateId != 3){
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'primary',
-                                size:'small'
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:()=>{
-                                    this.$store.commit('operation/edit',params.row);
-                                    this.assign();
-                                }
-                            }
-                        },'Asignar')
-                    );
-                }
-                if (params.row.operationStateId != 3){
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'error',
-                                size:'small',
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:async ()=>{
-                                    this.$store.dispatch('operation/end',params.row);
-                                    await this.getpage();
-                                }
-                            }
-                        },'Finalizar')
-                    );
-                }
 
                 if (Util.abp.auth.hasPermission('Pages.Administrador') || params.row.operationStateId != 3){
                     toRender.push(
@@ -546,9 +361,6 @@
                             props:{
                                 type:'warning',
                                 size:'small',
-                            },
-                            style:{
-                                marginRight:'5px'
                             },
                             on:{
                                 click:() =>{

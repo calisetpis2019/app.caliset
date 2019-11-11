@@ -67,7 +67,8 @@ export const appRouters: Array<Router> = [{
     icon: '&#xe68a;',
     component: main,
     children: [
-        { path: 'operation', permission: 'Pages.Operador', meta: { title: 'Operation' }, name: 'operation', component: () => import('../views/operation/operation.vue') }
+        { path: 'operation', permission: 'Pages.Operador', meta: { title: 'Activas / Futuras' }, name: 'operation', component: () => import('../views/operation/operation.vue') },
+        { path: 'operationEnded', permission: 'Pages.Operador', meta: { title: 'Finalizadas' }, name: 'operationEnded', component: () => import('../views/operation/operation-ended.vue') }
     ]
 }]
 export const routers = [
