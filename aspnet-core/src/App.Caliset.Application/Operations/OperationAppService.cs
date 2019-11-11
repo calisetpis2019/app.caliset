@@ -6,6 +6,7 @@ using Abp.UI;
 using App.Caliset.Assignations.Dto;
 using App.Caliset.Authorization;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Mails;
 using App.Caliset.Models.Assignations;
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Locations;
@@ -37,7 +38,7 @@ namespace App.Caliset.Operations
         private readonly IOperationTypeManager _operationTypeManager;
         private readonly IClientManager _clientManager;
         private readonly UserManager _userManager;
-
+        private readonly MailManager _mailManager;
 
 
         public OperationAppService(IOperationManager operationManager
@@ -50,6 +51,7 @@ namespace App.Caliset.Operations
                                     , IOperationTypeManager operationTypeManager
                                     , IClientManager clientManager
                                     , UserManager userManager
+                                    , MailManager mailManager
 
             )
         {
@@ -63,6 +65,7 @@ namespace App.Caliset.Operations
             _operationTypeManager = operationTypeManager;
             _clientManager = clientManager;
             _userManager = userManager;
+            _mailManager = mailManager;
         }
 
 
@@ -89,15 +92,17 @@ namespace App.Caliset.Operations
             //    userIds: new[] { userManager }
             //);
 
-            if(_userDeviceTokerManager.getById(input.ManagerId) != null)
+
+            if (_userDeviceTokerManager.getById(input.ManagerId) != null)
             {
                 _notificationManager.sendNotification("Operacion nueva", "Se le asigno como responsable en la operacion #"+ op, input.ManagerId);
+                
             }
                 
         }
 
         [AbpAuthorize(PermissionNames.Operador)]
-        public async Task Delete(DeleteOperationInput input)
+        public void Delete(DeleteOperationInput input)
         {
             var operation = _operationManager.GetOperationById(input.Id);
             if (operation.OperationStateId == 3)
@@ -153,10 +158,18 @@ namespace App.Caliset.Operations
         {
             var operation = _operationManager.GetOperationById(input.Id);
 
+            string locationName = operation.Location.Name;
+            string operationTypeName = operation.OperationType.Name;
+            string chargerName = operation.Charger.Name;
+            string date = operation.Date.ToString();
+
             String Cambios = "";
 
             if (input.Date != operation.Date)
-                Cambios += " - Fecha: " + input.Date.ToString();
+            {
+                date = input.Date.ToString();
+                Cambios += " - Fecha: " + date;
+            }                
             if (input.Commodity != operation.Commodity)
                 Cambios += " - Mercaderia: " + input.Commodity;
             if (input.Package != operation.Package)
@@ -174,13 +187,22 @@ namespace App.Caliset.Operations
             if (input.Notes != operation.Notes)
                 Cambios += " -  Notas: " + input.Notes;
             if (input.LocationId != operation.LocationId)
-                Cambios += " - Lugar: " + _locationManager.GetLocationById(input.LocationId).Name ;
+            {
+                locationName = _locationManager.GetLocationById(input.LocationId).Name;
+                Cambios += " - Lugar: " + locationName;
+            }                
             if (input.OperationTypeId != operation.OperationTypeId)
-                Cambios += " - Tipo: " +_operationTypeManager.GetOperationTypeById(input.OperationTypeId).Name ;
+            {
+                operationTypeName = _operationTypeManager.GetOperationTypeById(input.OperationTypeId).Name;
+                Cambios += " - Tipo: " + operationTypeName;
+            }                
             if (input.NominatorId != operation.NominatorId)
-                Cambios += " - Nominador: " + _clientManager.GetClientById(input.NominatorId).Name ;
+                Cambios += " - Nominador: " + _clientManager.GetClientById(input.NominatorId).Name;
             if (input.ChargerId != operation.ChargerId)
-                Cambios += " - Cargador: " + _clientManager.GetClientById(input.ChargerId).Name;
+            {
+                chargerName = _clientManager.GetClientById(input.ChargerId).Name;
+                Cambios += " - Cargador: " + chargerName;
+            }                
             if (input.ManagerId != operation.ManagerId)
                 Cambios += " - Responsable: " + _userManager.FindByIdAsync(input.ManagerId.ToString()).Result.Name;
 
@@ -201,7 +223,8 @@ namespace App.Caliset.Operations
                     {
                         if (!userNotify.Contains(x.InspectorId))
                         {
-                            _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #" + input.Id + " a la que esta asignado de la siguiente forma: " + Cambios, x.InspectorId);
+                            _notificationManager.sendNotification("Operación Modificada", "Se ha modificado la operación #" + input.Id + " a la que está asignado de la siguiente forma: " + Cambios, x.InspectorId);
+                            _mailManager.SendMail(x.Inspector.EmailAddress, "OPERACIÓN #" + input.Id + " MODIFICADA - " + operationTypeName + " - " + chargerName + " - " + locationName + " - " + date , "<h2>Se ha modificado la operación #" + input.Id + " a la que está asignado</h2><br/><h3>CAMBIOS:</h3>" + Cambios.Replace("-", "<br />"));
                             userNotify.Add(x.InspectorId);
                         }
 
@@ -210,7 +233,10 @@ namespace App.Caliset.Operations
 
 
                 if (_userDeviceTokerManager.getById(input.ManagerId) != null)
-                    _notificationManager.sendNotification("Operacion Modificada", "Se ha modificado la operacion #" + input.Id + " en la que es Responsable de la siguiente forma: " + Cambios, input.ManagerId);
+                {
+                    _notificationManager.sendNotification("Operación Modificada", "Se ha modificado la operación #" + input.Id + " en la que es Responsable de la siguiente forma: " + Cambios, input.ManagerId);
+                    _mailManager.SendMail(operation.Manager.EmailAddress, "Operación modificada", "<h2>Se ha modificado la operación #" + input.Id + " de la cual es Responsable</h2><br/><h3>CAMBIOS:</h3>" + Cambios.Replace("-", "<br />"));
+                }
 
             }//TERMINA NOTIFICACION DE MODIFICACION DE OPERACION-------------------------------------------------------
 

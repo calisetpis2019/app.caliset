@@ -27,7 +27,7 @@ namespace App.Caliset.Operations
         void UpdateFinishedOperation(UpdateOperationInput input);
 
 
-        Task Delete(DeleteOperationInput input);
+        void Delete(DeleteOperationInput input);
         GetOperationOutput GetOperationById(GetOperationInput input);
         void EndOperation(GetOperationInput input);
         IEnumerable<GetOperationOutput> GetAllFilters(GetOperationFiltersInput input);

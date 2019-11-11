@@ -10,6 +10,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20191102042840_Operation_HourRecords.cs" />
     <Compile Remove="Migrations\20191102042840_Operation_HourRecords.Designer.cs" />
+    <Compile Remove="Migrations\20191111151452_nada.cs" />
+    <Compile Remove="Migrations\20191111151452_nada.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.4" />

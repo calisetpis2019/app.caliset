@@ -25,6 +25,10 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
         async getAll(context: ActionContext<OperationState, any>) {
             context.state.loading = true;
             let reponse = await Ajax.get('/api/services/app/Operation/GetAll');
+            for (let i = 0; i < reponse.data.result.length; i++) {
+                let assigments = await Ajax.get('/api/services/app/Assignation/GetAssignmentsByOperation?operationId=' + reponse.data.result[i].id);
+                reponse.data.result[i].assigments = assigments.data.result;
+            }
             context.state.loading = false;
             context.state.totalCount = reponse.data.result.length;
             context.state.list = reponse.data.result;
