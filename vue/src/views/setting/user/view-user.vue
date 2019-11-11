@@ -86,7 +86,7 @@
                 <Button @click="cancel">{{L('Cancel')}}</Button>
             </div>
         </Modal>
-        <view-operation-dummy v-model="viewOperationModalShow" ></view-operation-dummy>
+        <view-operation-dummy v-model="viewOperationModalShow" @save-success="visibleChange(true)"></view-operation-dummy>
     </div>
 </template>
 <script lang="ts">
@@ -242,9 +242,9 @@
 
         stateFilter(val:number){
             let pagerequest = { 
-                                id: this.user.id,
-                                state: val
-                            }
+                id: this.user.id,
+                state: val
+            }
             this.getAssignationsByUserAndState(pagerequest);
         }
 
@@ -253,7 +253,7 @@
                 title:'Operación',
                 render:(h:any,params:any)=>{
                     return h('span',params.row.operation.id) 
-                    }
+                }
             },
             {
                 title:'Commodity',
@@ -314,8 +314,8 @@
                                 on:{
                                     click:()=>{
                                         let pagerequest = { 
-                                                id: params.row.operationId
-                                            }
+                                            id: params.row.operationId
+                                        }
                                         this.getOperation(pagerequest).then(result =>{
                                             let operation = {
                                                 id: result["id"],

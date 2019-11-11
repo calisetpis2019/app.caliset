@@ -18,6 +18,7 @@ import changepasswordentity from './modules/change-password'
 import hoursRecord from './modules/hoursRecord'
 import locationRecord from './modules/locationRecord'
 import userfile from './modules/user-file'
+import formulary from './modules/formulary'
 
 const store = new Vuex.Store({
     state: {
@@ -46,7 +47,8 @@ const store = new Vuex.Store({
         changepasswordentity,
         hoursRecord,
         locationRecord,
-        userfile
+        userfile,
+        formulary
     }
 });
 

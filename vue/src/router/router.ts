@@ -67,7 +67,8 @@ export const appRouters: Array<Router> = [{
     icon: '&#xe68a;',
     component: main,
     children: [
-        { path: 'operation', permission: 'Pages.Operador', meta: { title: 'Operation' }, name: 'operation', component: () => import('../views/operation/operation.vue') }
+        { path: 'operation', permission: 'Pages.Operador', meta: { title: 'Operation' }, name: 'operation', component: () => import('../views/operation/operation.vue') },
+        { path: 'formulary', permission: 'Pages.Operador', meta: { title: 'Formularios' }, name: 'formulary', component: () => import('../views/formulary/formulary.vue') }
     ]
 }]
 export const routers = [
