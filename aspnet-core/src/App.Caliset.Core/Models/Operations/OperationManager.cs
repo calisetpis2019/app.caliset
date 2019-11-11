@@ -11,6 +11,7 @@ using Abp.Extensions;
 using Abp.Notifications;
 using Abp.UI;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Mails;
 using App.Caliset.Models.Assignations;
 using App.Caliset.Models.Clients;
 using App.Caliset.Models.Forms;
@@ -40,6 +41,7 @@ namespace App.Caliset.Models.Operations
         private readonly IRepository<Client> _repositoryClient;
         private readonly IRepository<OperationState> _repositoryOperationState;
         private readonly SampleManager _sampleManager;
+        private readonly MailManager _mailManager;
 
 
 
@@ -47,7 +49,7 @@ namespace App.Caliset.Models.Operations
                                 NotificationManager notificationManager, NotificationPublisher notificationPublisher, UserManager userManager, 
                                 IRepository<Location> repositoryLocation , IRepository<OperationType> repositoryOperationType,
                                 IRepository<Client> repositoryClient, IRepository<OperationState> repositoryOperationState,
-                                SampleManager sampleManager, IRepository<Form> repositoryForms , FormOperationManager formOperationManager)
+                                SampleManager sampleManager, IRepository<Form> repositoryForms , FormOperationManager formOperationManager, MailManager mailManager)
         {
             _repositoryOperation = repositoryOperation;
             _repositoryAssignation = repositoryAssignation;
@@ -62,6 +64,7 @@ namespace App.Caliset.Models.Operations
             _sampleManager = sampleManager;
             _repositoryForms = repositoryForms;
             _formOperationManager = formOperationManager;
+            _mailManager = mailManager;
         }
 
 
@@ -75,7 +78,22 @@ namespace App.Caliset.Models.Operations
             }
             else
             {
-                return  await _repositoryOperation.InsertAndGetIdAsync(entity);
+                var op = await _repositoryOperation.InsertAndGetIdAsync(entity);
+
+                CurrentUnitOfWork.SaveChanges();
+                var aux = this.GetOperationById(op);
+
+                _mailManager.SendMail(aux.Manager.EmailAddress, "OPERACIÓN #" + op + " CREADA - " + aux.OperationType.Name + " - " + aux.Charger.Name + " - " + aux.Location.Name + " - " + aux.Date.ToString(),
+                                        "<h2>Se le asignó como responsable en la operación #" + op + "</h2><br/><h3>DATOS:</h3>"
+                                         + "Fecha: " + aux.Date
+                                         + "<br/>Tipo de Operación: " + aux.OperationType.Name
+                                         + "<br/>Nominador: " + aux.Nominator.Name
+                                         + "<br/>Cargador: " + aux.Charger.Name
+                                         + "<br/>Lugar de la Operación: " + aux.Location.Name
+                                         + "<br/>Mercadería: " + aux.Commodity
+                                         + "<br/>Empaque: " + aux.Package);
+
+                return op;
             }
         }
 
@@ -177,15 +195,18 @@ namespace App.Caliset.Models.Operations
             var inspectors = (from Insp in _userManager.GetAll()
                               join Assign in _repositoryAssignation.GetAll().Where(a => a.OperationId == idOperation && a.Aware == true).ToList()
                               on Insp.Id equals Assign.InspectorId
-                              select Insp.Id).Distinct();
+                              select Insp).Distinct();
 
             if (inspectors.Count() > 0)
             {
-                foreach (int insp in inspectors)
+                foreach (User insp in inspectors)
                 {
-                    if (_userDeviceTokenManager.getById(insp) != null)
+                    if (_userDeviceTokenManager.getById(insp.Id) != null)
                     {
-                        _notificationManager.sendNotification("Operacion Activa", "Se ha activado una operacion a la que está asignado.", insp);
+                        _notificationManager.sendNotification("Operacion Activa", "Se ha activado una operacion a la que está asignado.", insp.Id);
+
+                        _mailManager.SendMail(insp.EmailAddress, "OPERACIÓN #" + operation.Id + " ACTIVA - " + operation.OperationType.Name + " - " + operation.Charger.Name + " - " + operation.Location.Name + " - " + operation.Date.ToString(),
+                                                "<h2>Ya se encuentra activa la operación #" + operation.Id + " a la que está asignado.</h2>");
                     }
                 }
 
@@ -201,8 +222,10 @@ namespace App.Caliset.Models.Operations
             //);
 
             // NOTIFICACION A RESPONSABLE
+            _mailManager.SendMail(operation.Manager.EmailAddress, "OPERACIÓN #" + operation.Id + " ACTIVA - " + operation.OperationType.Name + " - " + operation.Charger.Name + " - " + operation.Location.Name + " - " + operation.Date.ToString(),
+                                                "<h2>Ya se encuentra activa la operación #" + operation.Id + " de la cual es responsable.</h2>");
             if (_userDeviceTokenManager.getById(manager) != null)
-                _notificationManager.sendNotification("Operacion Activa", "Se ha activado una operacion a la que está asignado.", manager);
+                _notificationManager.sendNotification("Operacion Activa", "Se ha activado una operacion de la cual es responsable.", manager);
         }
 
         public async Task ActvateOperations()

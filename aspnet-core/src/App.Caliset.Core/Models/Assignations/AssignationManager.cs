@@ -4,6 +4,7 @@ using Abp.Domain.Services;
 using Abp.Domain.Uow;
 using Abp.UI;
 using App.Caliset.Authorization.Users;
+using App.Caliset.Mails;
 using App.Caliset.Models.Notifications;
 using App.Caliset.Models.Operations;
 using Microsoft.EntityFrameworkCore;
@@ -20,12 +21,14 @@ namespace App.Caliset.Models.Assignations
         private readonly IRepository<Assignation> _repositoryAssignation;
         private readonly UserManager _userManager;
         private readonly OperationManager _operationManager;
+        private readonly MailManager _mailManager;
         
-        public AssignationManager(IRepository<Assignation> repositoryAssignation, UserManager userManager, OperationManager operationManager)
+        public AssignationManager(IRepository<Assignation> repositoryAssignation, UserManager userManager, OperationManager operationManager, MailManager mailManager)
         {
             _repositoryAssignation = repositoryAssignation;
             _userManager = userManager;
             _operationManager = operationManager;
+            _mailManager = mailManager;
         }
 
         public async Task<bool> Create(Assignation entity)
@@ -46,7 +49,15 @@ namespace App.Caliset.Models.Assignations
             try
             {
                     
-                  await _repositoryAssignation.InsertAsync(entity);
+                await _repositoryAssignation.InsertAsync(entity);
+                var inspector = _userManager.GetUserByIdAsync(entity.InspectorId).Result;
+                var operation = _operationManager.GetOperationById(entity.OperationId);
+
+                _mailManager.SendMail(inspector.EmailAddress, "NUEVA ASIGNACÓN - OPERACIÓN #" + entity.OperationId + " - " + operation.OperationType.Name + " - " + operation.Charger.Name + " - " + operation.Location.Name + " - " + operation.Date.ToString(),
+                                        "<h2>Se le ha asignado a la operación #" + entity.OperationId + "</h2><br/><h3>DATOS ASIGNACIÓN:</h3>"
+                                         + "Fecha Inicio: " + entity.Date.ToString()
+                                         + "<br/>Fecha Fin: " + entity.DateFin.ToString());
+
                 var allAssignUser = this.GetAll().Where(x => x.InspectorId == entity.InspectorId) ;
                 bool ret = false;
                foreach (var x in allAssignUser)
@@ -74,6 +85,13 @@ namespace App.Caliset.Models.Assignations
             else
             {
                 _repositoryAssignation.Delete(Assignation);
+                var inspector = Assignation.Inspector;
+                var operation = Assignation.Operation;
+
+                _mailManager.SendMail(inspector.EmailAddress, "ASIGNACÓN ELIMINADA - OPERACIÓN #" + operation.Id + " - " + operation.OperationType.Name + " - " + operation.Charger.Name + " - " + operation.Location.Name + " - " + operation.Date.ToString(),
+                                        "<h2>Se le ha asignado a la operación #" + operation.Id + "</h2><br/><h3>DATOS ASIGNACIÓN:</h3>"
+                                         + "Fecha Inicio: " + Assignation.Date.ToString()
+                                         + "<br/>Fecha Fin: " + Assignation.DateFin.ToString());
             }
         }
 

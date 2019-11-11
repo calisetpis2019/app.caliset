@@ -16,6 +16,7 @@ using App.Caliset.Models.Notifications;
 using Abp.Domain.Uow;
 using App.Caliset.Authorization.Users;
 using App.Caliset.Models.UserDeviceTokens;
+using App.Caliset.Mails;
 
 namespace App.Caliset.Assignations
 {
@@ -41,8 +42,9 @@ namespace App.Caliset.Assignations
             }
             var assignation = ObjectMapper.Map<Assignation>(input);
             bool resp = await _assignationManager.Create(assignation);
-            _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
 
+            _notificationManager.sendNotification("Asignación", "Nueva asignación", input.InspectorId);
+            
             return resp;
            
         }
