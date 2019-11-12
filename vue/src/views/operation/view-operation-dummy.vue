@@ -88,13 +88,13 @@
 
         visibleChange(value:boolean){
             if(!value){
+                this.$emit('save-success');
                 this.$emit('input',value);
             }
             else {
                 this.operation = Util.extend(true, {}, this.$store.state.operation.viewOperation);
                 this.pagerequest["id"] = this.operation.locationId;
                 this.getLocation().then(result => {
-                    this.pagerequest["id"] = this.operation.id;
                     this.getAssignations();
 
                     this.pagerequest["id"] = this.operation.id;
@@ -121,6 +121,7 @@
         }
 
         async getAssignations() {
+            this.pagerequest["id"] = this.operation.id;
             await this.$store.dispatch({
                 type: 'assignation/getAssignmentsByOperation',
                 data: this.pagerequest
@@ -148,6 +149,7 @@
                 type: 'assignation/delete',
                 data: this.pagerequest
             })
+            this.getAssignations();
         }
 
         commentEdit(){

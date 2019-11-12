@@ -277,9 +277,6 @@
                                 type:'error',
                                 size:'small'
                             },
-                            style:{
-                                marginRight:'5px'
-                            },
                             on:{
                                 click:()=>{
                                     this.deleteFile(params.row.id);
