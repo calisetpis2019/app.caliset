@@ -18,6 +18,8 @@ namespace App.Caliset.Models.Operations
         Task ActivateOperationById(int idOperation);
         Task ActvateOperations();
         void AddForm(FormOperation FO);
+        void AntiAddForm(FormOperation FO);
         IEnumerable<Form> GetFormsByOperation(int IdOperation);
+        IEnumerable<Form> NoGetFormsByOperation(int IdOperation);
     }
 }

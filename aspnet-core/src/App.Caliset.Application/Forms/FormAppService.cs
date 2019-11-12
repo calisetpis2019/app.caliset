@@ -38,6 +38,9 @@ namespace App.Caliset.Forms
                 throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             var FOperation = ObjectMapper.Map<FormOperation>(input);
+            FOperation.Form = _formManager.GetFormById(input.FormId);
+            FOperation.Operation = _operationManager.GetOperationById(input.OperationId);
+
             _operationManager.AddForm(FOperation);
         }
 
@@ -92,6 +95,14 @@ namespace App.Caliset.Forms
             return output;
         }
 
+        public IEnumerable<GetFormOutput> AntiGetAllFormByOperation(int IdOperation)
+        {
+            List<GetFormOutput> output = ObjectMapper.Map<List<GetFormOutput>>(_operationManager.NoGetFormsByOperation(IdOperation));
+
+            return output;
+        
+        }
+
         [AbpAuthorize(PermissionNames.Administrador)]
         public void Update(UpdateFormInput input)
         {
@@ -103,6 +114,17 @@ namespace App.Caliset.Forms
             var FormX = _formManager.GetFormById(input.Id);
             ObjectMapper.Map(input, FormX);
              _formManager.Update(FormX);
+        }
+
+        public void AntiAddFormToOperation(CreateFormOperationInput input)
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Error", "Por favor inicie sesión.");
+            }
+            var FOperation = ObjectMapper.Map<FormOperation>(input);
+            _operationManager.AntiAddForm(FOperation);
+
         }
     }
 }
