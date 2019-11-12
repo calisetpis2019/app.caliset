@@ -302,32 +302,26 @@
                 type: 'location/getAll',
                 data: this.pagerequest
             })
-
             await this.$store.dispatch({
                 type: 'operationType/getAll',
                 data: this.pagerequest
             })
-
             await this.$store.dispatch({
                 type: 'operation/getAll',
                 data: this.pagerequest
             })
-
             await this.$store.dispatch({
                 type: 'client/getAll',
                 data: this.pagerequest
             })
-
             await this.$store.dispatch({
                 type: 'operationState/getAll',
                 data: this.pagerequest
             })
-
             await this.$store.dispatch({
                 type: 'user/getAll',
                 data: this.pagerequest
             })
-
         }
 
         filter() {
@@ -424,8 +418,8 @@
                             marginRight:'5px'
                         },
                         on:{
-                            click:()=>{
-                                this.$store.commit('operation/view',params.row);
+                            click:async()=>{
+                                await this.$store.commit('operation/view',params.row);
                                 this.view();
                             }
                         }
@@ -440,8 +434,8 @@
                                         marginRight:'5px'
                                     },
                                     on:{
-                                        click:()=>{
-                                            this.$store.commit('operation/edit',params.row);
+                                        click:async()=>{
+                                            await this.$store.commit('operation/edit',params.row);
                                             this.edit();
                                         }
                                     }
@@ -474,7 +468,7 @@
                                                 type:'operation/delete',
                                                 data:params.row
                                             })
-                                            await this.getpage();
+                                            this.getpage();
                                         }
                                     })
                                 }
@@ -493,8 +487,8 @@
                                 marginRight:'5px'
                             },
                             on:{
-                                click:()=>{
-                                    this.$store.commit('operation/edit',params.row);
+                                click:async()=>{
+                                    await this.$store.commit('operation/edit',params.row);
                                     this.assign();
                                 }
                             }
@@ -513,8 +507,8 @@
                             },
                             on:{
                                 click:async ()=>{
-                                    this.$store.dispatch('operation/end',params.row);
-                                    await this.getpage();
+                                    await this.$store.dispatch('operation/end',params.row);
+                                    this.getpage();
                                 }
                             }
                         },'Finalizar')
@@ -532,8 +526,8 @@
                             },
                             on:{
                                 click:async ()=>{
-                                    this.$store.dispatch('operation/activate',params.row);
-                                    await this.getpage();
+                                    await this.$store.dispatch('operation/activate',params.row);
+                                    this.getpage();
                                 }
                             }
                         },'Activar')

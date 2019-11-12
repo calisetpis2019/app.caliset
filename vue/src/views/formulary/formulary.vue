@@ -128,8 +128,8 @@
                                 marginRight:'5px'
                             },
                             on:{
-                            click:()=>{
-                                this.$store.commit('formulary/downloadId',params.row.id);
+                            click:async ()=>{
+                                await this.$store.commit('formulary/setFormIdAction',params.row.id);
                                 this.downloadFile();
                             }
                         }
