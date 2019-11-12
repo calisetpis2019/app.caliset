@@ -180,6 +180,18 @@
             this.getAssignedForms();
             this.getAvailableForms();
         }
+        async unassignFormulary(){
+            let pagerequest = { 
+                operationId: this.operation.id,
+                formId: this.$store.state.formulary.formularyId
+            }
+            await this.$store.dispatch({
+                type: 'formulary/unassociateForm',
+                data: pagerequest
+            })
+            this.getAssignedForms();
+            this.getAvailableForms();
+        }
         //END Operation Formularies
 
 
@@ -298,7 +310,7 @@
                                 this.downloadFile();
                             }
                         }
-                        },this.L('Descargar'))/*,
+                        },this.L('Descargar')),
                         h('Button',{
                             props:{
                                 type:'warning',
@@ -310,10 +322,10 @@
                             on:{
                             click:()=>{
                                 this.$store.commit('formulary/setFormIdAction',params.row.id);
-                                this.downloadFile();
+                                this.unassignFormulary();
                             }
                         }
-                        },this.L('Desasociar'))*/
+                        },this.L('Desasociar'))
                     ])
                 }
             }

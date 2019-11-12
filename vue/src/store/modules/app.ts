@@ -53,7 +53,8 @@ class AppModule implements Module<AppState, any>{
         tagsList: [...otherRouters.children],
         messageCount: 0,
         dontCache: [],
-        noticeList: [{ read: false, type: 0, title: 'First notice', description: 'One day ago' }, { read: false, type: 1 }, { read: false, type: 0, title: 'Second notice', description: 'One month ago' }]
+        //noticeList: [{ read: false, type: 0, title: 'First notice', description: 'One day ago' }, { read: false, type: 1 }, { read: false, type: 0, title: 'Second notice', description: 'One month ago' }]
+        noticeList: []
     };
     mutations = {
         logout(state: AppState) {

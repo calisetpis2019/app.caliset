@@ -194,6 +194,17 @@
             window.open("https://accounts.google.com/signin/v2/identifier?continue=https%3A%2F%2Fphotos.google.com%2Fsearch%2FOperacion" + this.operation.id + "&flowName=GlifWebSignIn&flowEntry=AddSession", "_blank");
         }
 
+        sort_dates(){
+            return function(a,b,type){
+                if (type == 'asc') {
+                    return a > b? 1 : -1
+                }
+                else {
+                    return a > b? -1 : 1  
+                }
+            }
+        }
+
         columnsInfoOperacion = [
             {
                 title: 'Id',
@@ -279,6 +290,10 @@
             },
             {
                 title: 'Fecha inicio',
+                sortable: true,
+                sortType: 'desc',
+                key: 'date',
+                sortMethod: this.sort_dates(),
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.date).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
@@ -359,6 +374,10 @@
             },
             {
                 title: 'Fecha',
+                sortable: true,
+                sortType: 'desc',
+                key: 'creationTime',
+                sortMethod: this.sort_dates(),
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.creationTime).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
@@ -379,6 +398,10 @@
             },
             {
                 title: 'Fecha inicio',
+                sortable: true,
+                sortType: 'desc',
+                key: 'creationTime',
+                sortMethod: this.sort_dates(),
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.creationTime).locale('es').format("DD/MM/YYYY, HH:mm"));
                 }
@@ -424,7 +447,6 @@
                 title: 'Usuario',
                 key: 'user',
                 render:(h:any,params:any)=>{
-                    console.log(params);
                     return h('Span', params.row.cuentaGP);
                 }
             },

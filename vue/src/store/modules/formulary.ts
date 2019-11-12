@@ -48,16 +48,7 @@ class FormularyModule extends ListModule<FormularyState, any, Formulary>{
         },
         async getAvailable(context: ActionContext<FormularyState, any>, payload: any) {
             context.state.loadingAvailableForms = true;
-            let reponse = await Ajax.get('/api/services/app/Form/GetAll');
-            for (let i = 0; i < context.state.listAssignedForms.length; i++) {
-                var removeId=context.state.listAssignedForms[i].id;
-                for (let j = 0; j < reponse.data.result.length; j++) {
-                    if(removeId === reponse.data.result[j].id){
-                        reponse.data.result.splice(j, 1);
-                        break;
-                    }
-                }
-            }
+            let reponse = await Ajax.post('/api/services/app/Form/AntiGetAllFormByOperation?idOperation='+payload.data);
             context.state.listAvailableForms = reponse.data.result;
             context.state.loadingAvailableForms = false;
         },
@@ -71,6 +62,13 @@ class FormularyModule extends ListModule<FormularyState, any, Formulary>{
             context.state.loadingAssignedForms = true;
             context.state.loadingAvailableForms = true;
             let reponse = await Ajax.post('/api/services/app/Form/AddFormToOperation',payload.data);
+            context.state.loadingAssignedForms = false;
+            context.state.loadingAvailableForms = false;
+        },
+        async unassociateForm(context: ActionContext<FormularyState, any>, payload: any) {
+            context.state.loadingAssignedForms = true;
+            context.state.loadingAvailableForms = true;
+            let reponse = await Ajax.post('/api/services/app/Form/AntiAddFormToOperation',payload.data);
             context.state.loadingAssignedForms = false;
             context.state.loadingAvailableForms = false;
         }

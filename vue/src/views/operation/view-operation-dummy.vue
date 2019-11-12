@@ -152,6 +152,17 @@
             this.getAssignations();
         }
 
+        sort_dates(){
+            return function(a,b,type){
+                if (type == 'asc') {
+                    return a > b? 1 : -1
+                }
+                else {
+                    return a > b? -1 : 1  
+                }
+            }
+        }
+
         commentEdit(){
             this.editCommentOperationModalShow = true;
         }
@@ -239,9 +250,12 @@
             },
             {
                 title: 'Fecha de inicio',
+                sortable: true,
+                sortType: 'desc',
                 key: 'date',
+                sortMethod: this.sort_dates(),
                 render:(h:any,params:any)=>{
-                  return h('Span', params.row.date);
+                    return h('Span', params.row.date);
                 }
             },
             {
@@ -302,6 +316,10 @@
             },
             {
                 title: 'Fecha',
+                sortable: true,
+                sortType: 'desc',
+                key: 'creationTime',
+                sortMethod: this.sort_dates(),
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.creationTime).locale('es').format("DD [de] MMMM [del] YYYY, h:mm:ss a"));
                 }
@@ -322,6 +340,10 @@
             },
             {
                 title: 'Fecha',
+                sortable: true,
+                sortType: 'desc',
+                key: 'creationTime',
+                sortMethod: this.sort_dates(),
                 render:(h:any,params:any)=>{
                     return h('Span', moment(params.row.creationTime).locale('es').format("DD [de] MMMM [del] YYYY, h:mm:ss a"));
                 }
