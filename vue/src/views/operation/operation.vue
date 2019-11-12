@@ -540,25 +540,6 @@
                     );
                 }
 
-                if (Util.abp.auth.hasPermission('Pages.Administrador') || params.row.operationStateId != 3){
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'warning',
-                                size:'small',
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:() =>{
-                                    this.$store.commit('operation/edit',params.row);
-                                    this.comment();
-                                }
-                            }
-                        },'Comentar')
-                    );    
-                }
                 return h('div', toRender);    
             }
         }]

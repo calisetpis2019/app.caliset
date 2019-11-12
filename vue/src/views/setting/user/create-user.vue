@@ -41,8 +41,8 @@
                             <Input v-model="user.city"></Input>
                         </FormItem>
 
-                        <FormItem :label="L('Dirección')" prop="adress">
-                            <Input v-model="user.adress"></Input>
+                        <FormItem :label="L('Dirección')" prop="address">
+                            <Input v-model="user.address"></Input>
                         </FormItem>
 
                         <FormItem :label="L('Usuario de Google')" prop="cuentaGP" >

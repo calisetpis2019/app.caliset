@@ -30,8 +30,8 @@
                         <FormItem label="Ciudad" prop="city">
                             <input :readonly="true" v-model="user.city" style="width:100%"></input>
                         </FormItem>
-                        <FormItem label="Dirección" prop="adress">
-                            <input :readonly="true" v-model="user.adress" style="width:100%"></input>
+                        <FormItem label="Dirección" prop="address">
+                            <input :readonly="true" v-model="user.address" style="width:100%"></input>
                         </FormItem>
                         <FormItem label="Especialidad" prop="speciality">
                             <input :readonly="true" v-model="user.specialty" style="width:100%"></input>
@@ -361,7 +361,7 @@
                 children: [
                     {
                         title:'Id',
-                        width:50,
+                        width:100,
                         render:(h:any,params:any)=>{
                             return h('span',params.row.operation.id)
                         }

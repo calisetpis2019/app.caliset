@@ -32,8 +32,8 @@
                             <Input v-model="user.city"></Input>
                         </FormItem>
 
-                        <FormItem label="Dirección" prop="adress">
-                            <Input v-model="user.adress"></Input>
+                        <FormItem label="Dirección" prop="address">
+                            <Input v-model="user.address"></Input>
                         </FormItem>
 
                         <FormItem label="Especialidad">

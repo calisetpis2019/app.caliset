@@ -14,20 +14,22 @@
                         <Table :loading="loadingAssignation" :columns="columnsAssignation" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
                     </TabPane>
                     <TabPane label="Comentarios" name="comments">
-                       <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
+                        <Button @click="comment"  type="warning" size="large" style="margin-top: 10px; margin-bottom: 10px;" long>Comentar</Button>
+                        <Table :loading="loadingAssignation" :columns="columnsComments" no-data-text="No existen comentarios" border :data="comments" v-if="operatorRenderOnly"></Table>
                     </TabPane>
                     <TabPane label="Muestras" name="samples">
                         <Table :loading="loadingAssignation" :columns="columnsSamples" no-data-text="No existen muestras" border :data=operationReponse.samples v-if="operatorRenderOnly"></Table>
                     </TabPane>
                     <TabPane label="Fotos" name="photos">
-                        <Button @click="openGooglePhotos" long>Ver fotos de la operacion</Button>
-                        <Table :loading="loadingAssignation" :columns="columnsCredentials" no-data-text="No existen asignaciones" border :data="assignations" v-if="operatorRenderOnly"></Table>
+                        <google-signin-btn label="Iniciar sesión en Google Photos" customClass="my-button" @click="openGooglePhotos"></google-signin-btn>
+                        <Table :loading="loadingAssignation" :columns="columnsCredentials" no-data-text="No existen asignaciones" border :data="usersAssigned" v-if="operatorRenderOnly" ></Table>
                     </TabPane>
                 </Tabs>
             <div slot="footer">
             </div>
         </Modal>
         <edit-comment-operation v-model="editCommentOperationModalShow" @save-success="visibleChange(true)"></edit-comment-operation>
+        <comment-operation v-model="commentModalShow" ></comment-operation>
         <view-user v-model="viewUserAssignedToOperationModalShow" ></view-user>
     </div>
 </template>
@@ -47,12 +49,14 @@
     import EditCommentOperation from './edit-comment-operation.vue'
     import ViewUser from '../setting/user/view-user.vue'
     import moment from 'moment'
+    import CommentOperation from './comment-operation.vue'
+
 
     class PageViewOperationRequest extends UserRequest {
     }
 
     @Component({
-        components: { EditCommentOperation, ViewUser }
+        components: { CommentOperation,EditCommentOperation, ViewUser }
     })
     export default class ViewOperation extends AbpBase{
 
@@ -68,7 +72,7 @@
 
         editCommentOperationModalShow: boolean = false;
         viewUserAssignedToOperationModalShow: boolean = false;
-        // usersAssigned:Array<User> = new Array<User>();
+        commentModalShow: boolean = false;
 
         get loadingAssignation() {
             return this.$store.state.assignation.loading;
@@ -76,6 +80,11 @@
 
         get assignations() {
             return this.$store.state.assignation.assignmentsOfOperation;
+        }
+
+
+        get usersAssigned() {
+            return this.$store.state.assignation.usersAssignedToOperation;
         }
 
         get comments() {
@@ -102,6 +111,7 @@
                 this.pagerequest["id"] = this.operation.locationId;
                 this.getLocation().then(result => {
                     this.getAssignations();
+                    this.getUsersAssigned();
 
                     this.pagerequest["id"] = this.operation.id;
                     this.getComments();
@@ -135,6 +145,15 @@
 
         }
 
+        async getUsersAssigned() {
+            this.pagerequest["id"] = this.operation.id;
+            await this.$store.dispatch({
+                type: 'assignation/getUsersByOperation',
+                data: this.pagerequest
+            })
+
+        }
+
         async getComments() {
             await this.$store.dispatch({
                 type: 'comment/getCommentsByOperation',
@@ -156,6 +175,11 @@
                 data: this.pagerequest
             })
             this.getAssignations();
+        }
+
+        comment(){
+            this.$store.commit('operation/edit',this.operation);
+            this.commentModalShow = true;
         }
 
         commentEdit(){
@@ -400,16 +424,25 @@
                 title: 'Usuario',
                 key: 'user',
                 render:(h:any,params:any)=>{
-                    return h('Span', params.row.inspector.cuentaGP);
+                    console.log(params);
+                    return h('Span', params.row.cuentaGP);
                 }
             },
             {
                 title: 'Contraseña',
                 key: 'password',
                 render:(h:any,params:any)=>{
-                    return h('Span', params.row.inspector.passwordGP);
+                    return h('Span', params.row.passwordGP);
                 }
             }
         ]
     }
 </script>
+
+<style>
+.my-button {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 5%;
+}
+</style>
