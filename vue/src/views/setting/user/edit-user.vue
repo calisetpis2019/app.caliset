@@ -39,6 +39,15 @@
                         <FormItem label="Especialidad">
                             <Input v-model="user.specialty"></Input>
                         </FormItem>
+
+                        <FormItem :label="L('Usuario de Google')" prop="cuentaGP" >
+                            <Input v-model="user.cuentaGP" :maxlength="32" :minlength="2"></Input>
+                        </FormItem>
+                        
+                        <FormItem :label="L('Contraseña de Google')" prop="passwordGP">
+                            <Input v-model="user.passwordGP" type="password" ></Input>
+                        </FormItem>
+                        
                         <FormItem label="Rol" prop="roleNames" >
                             <RadioGroup v-model="user.roleNames">
                                 <Radio v-for="role in roles" :label="normalize_role(role.normalizedName)" :key="role.id"></Radio>

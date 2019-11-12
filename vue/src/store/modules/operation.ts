@@ -44,6 +44,10 @@ class OperationModule extends ListModule<OperationState, any, Operation>{
             });
             responseString = responseString.slice(0,-1);
             let reponse = await Ajax.get('/api/services/app/Operation/GetAllFilters?' + responseString);
+            for (let i = 0; i < reponse.data.result.length; i++) {
+                let assigments = await Ajax.get('/api/services/app/Assignation/GetAssignmentsByOperation?operationId=' + reponse.data.result[i].id);
+                reponse.data.result[i].assigments = assigments.data.result;
+            }
             context.state.loading = false;
             context.state.totalCount = reponse.data.result.length;
             context.state.list = reponse.data.result;
