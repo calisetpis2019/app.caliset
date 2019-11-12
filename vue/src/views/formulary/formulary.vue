@@ -86,7 +86,6 @@
             });
         }
         async deleteForm(idFile){
-            console.log(idFile);
             await this.$store.dispatch({
                 type: 'formulary/delete',
                 data: idFile

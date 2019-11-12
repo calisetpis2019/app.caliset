@@ -465,6 +465,6 @@
 .my-button {
     margin-top: 10px;
     margin-bottom: 10px;
-    margin-left: 5%;
+    margin-left: 10px;
 }
 </style>

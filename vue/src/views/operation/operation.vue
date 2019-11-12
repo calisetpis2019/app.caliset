@@ -8,7 +8,7 @@
                             <Row :gutter="10">
                                 <Col span="24">
                                 <FormItem :label="L('Keyword')+':'" style="width:100%">
-                                    <Input v-model="pagerequest.Keyword" :placeholder="L('OperationName')"></Input>
+                                    <Input v-model="pagerequest.Keyword" placeholder="Término a buscar"></Input>
                                 </FormItem>
                                 </Col>
                             </Row>
@@ -41,16 +41,16 @@
                                             <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
+                                    <FormItem label="Responsable" style="width:100%">
+                                        <Select @on-change="getpagefilters" v-model="pagerequest.ManagerId"  filterable clearable>
+                                            <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
                                 </Col>
                                 <Col span="8">
                                     <FormItem label="Nominador" style="width:100%">
                                         <Select v-model="pagerequest.NominatorId"  filterable clearable>
                                             <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                                        </Select>
-                                    </FormItem>
-                                    <FormItem label="Responsable" style="width:100%">
-                                        <Select @on-change="getpagefilters" v-model="pagerequest.ManagerId"  filterable clearable>
-                                            <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
                                 </Col>
@@ -70,7 +70,7 @@
                     <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_future.sort(dynamicSort_asc('date'))">
                     </Table>
                 </div>
-                <div><Page show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page></div>
+                
             </div>
         </Card>
         <create-operation v-model="createModalShow"  @save-success="getpage"></create-operation>
@@ -137,7 +137,7 @@
        	assignModalShow: boolean = false;
         commentModalShow: boolean = false;
 
-        actionsWidth:number = 480;
+        actionsWidth:number = 380;
 
         //datos hardcodeados en el backend:
         ended=3;
@@ -482,25 +482,6 @@
                         },'Eliminar')
                     );
                 }
-                if(this.operatorRenderOnly == true && params.row.operationStateId == 1){
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'warning',
-                                size:'small',
-                            },
-                            style:{
-                                marginRight:'5px'
-                            },
-                            on:{
-                                click:async ()=>{
-                                    this.$store.dispatch('operation/activate',params.row);
-                                    await this.getpage();
-                                }
-                            }
-                        },'Activar')
-                    );
-                }
                 if(this.operatorRenderOnly == true && params.row.operationStateId != 3){
                     toRender.push(
                         h('Button',{
@@ -537,6 +518,25 @@
                                 }
                             }
                         },'Finalizar')
+                    );
+                }
+                if(this.operatorRenderOnly == true && params.row.operationStateId == 1){
+                    toRender.push(
+                        h('Button',{
+                            props:{
+                                type:'warning',
+                                size:'small',
+                            },
+                            style:{
+                                marginRight:'5px'
+                            },
+                            on:{
+                                click:async ()=>{
+                                    this.$store.dispatch('operation/activate',params.row);
+                                    await this.getpage();
+                                }
+                            }
+                        },'Activar')
                     );
                 }
 
