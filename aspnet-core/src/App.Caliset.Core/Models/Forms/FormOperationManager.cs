@@ -41,9 +41,9 @@ namespace App.Caliset.Models.Forms
         public  void Delete(int id)
         {
             var FO = _repositoryFormOperation.FirstOrDefault(id);
-            if (FO != null)
+            if (FO == null)
             {
-                throw new UserFriendlyException("Error", "Ya se adjunto ese Formulario a la operacion.");
+                throw new UserFriendlyException("Error", "No existe esa asignacion entre formulario y operacion");
             }
             else
             {

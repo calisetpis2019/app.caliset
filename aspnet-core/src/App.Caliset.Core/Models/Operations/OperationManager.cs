@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Abp;
 using Abp.Collections.Extensions;
@@ -22,6 +23,7 @@ using App.Caliset.Models.OperationTypes;
 using App.Caliset.Models.Samples;
 using App.Caliset.Models.UserDeviceTokens;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace App.Caliset.Models.Operations
 {
@@ -243,7 +245,15 @@ namespace App.Caliset.Models.Operations
             _formOperationManager.Create(FO);
         }
 
-    public IEnumerable<Form> GetFormsByOperation(int IdOperation)
+        public void AntiAddForm(FormOperation FO)
+        {
+           var all = _formOperationManager.GetAll().Where(x => x.OperationId == FO.OperationId && x.FormId == FO.FormId) ;
+
+            foreach (var x in all)
+                _formOperationManager.Delete(x.Id);
+        }
+
+        public IEnumerable<Form> GetFormsByOperation(int IdOperation)
         {
              var all = _formOperationManager.GetAll().Where(x => x.OperationId == IdOperation) ;
 
@@ -253,6 +263,28 @@ namespace App.Caliset.Models.Operations
                 ret.Add(x.Form);
 
             return ret;
+        }
+
+        public IEnumerable<Form> NoGetFormsByOperation(int IdOperation)
+        {
+
+            var fbo = this.GetFormsByOperation(IdOperation);
+
+
+            var FormRet = _repositoryForms.GetAll().ToList();
+
+
+            var algo = _repositoryForms.GetAll();
+
+            foreach (var x in algo)
+            {
+                if (fbo.Contains(x))
+                    FormRet.Remove(x);
+            }
+
+
+            return FormRet;
+
         }
     }
 }

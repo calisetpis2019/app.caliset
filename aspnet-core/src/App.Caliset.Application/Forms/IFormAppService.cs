@@ -15,6 +15,8 @@ namespace App.Caliset.Forms
         void Delete(int input);
         GetFormOutput GetFormById(int input);
         void AddFormToOperation(CreateFormOperationInput input);
+        void AntiAddFormToOperation(CreateFormOperationInput input);
         IEnumerable<GetFormOutput> GetAllFormByOperation(int IdOperation);
+        IEnumerable<GetFormOutput> AntiGetAllFormByOperation(int IdOperation);
     }
 }
