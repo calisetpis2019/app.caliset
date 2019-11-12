@@ -192,7 +192,7 @@
         async getUsers() {
 
             await this.$store.dispatch({
-                type: 'user/getAll',
+                type: 'user/getAllUsersFilter',
                 data: this.pagerequest
             })
 

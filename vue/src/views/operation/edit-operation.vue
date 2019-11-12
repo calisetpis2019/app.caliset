@@ -262,7 +262,7 @@
 
         async getClients() {
             await this.$store.dispatch({
-                type: 'client/getAll',
+                type: 'client/getAllUsersFilter',
                 data: this.pagerequest
             })
         }
