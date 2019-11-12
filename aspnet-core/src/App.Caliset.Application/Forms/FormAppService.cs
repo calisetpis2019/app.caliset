@@ -66,14 +66,14 @@ namespace App.Caliset.Forms
         }
 
         [AbpAuthorize(PermissionNames.Administrador)]
-        public IEnumerable<GetFormOutput> GetAll()
+        public IEnumerable<GetReducedFormOutput> GetAll()
         {
             if (_abpSession.UserId == null)
             {
                 throw new UserFriendlyException("Error", "Por favor inicie sesión.");
             }
             var getAll = _formManager.GetAll().ToList();
-            List<GetFormOutput> output = ObjectMapper.Map<List<GetFormOutput>>(getAll);
+            List<GetReducedFormOutput> output = ObjectMapper.Map<List<GetReducedFormOutput>>(getAll);
             return output;
         }
 

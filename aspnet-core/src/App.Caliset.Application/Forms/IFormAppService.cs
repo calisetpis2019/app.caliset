@@ -9,7 +9,7 @@ namespace App.Caliset.Forms
 {
     public interface IFormAppService : IApplicationService
     {
-        IEnumerable<GetFormOutput> GetAll();
+        IEnumerable<GetReducedFormOutput> GetAll();
         Task Create(CreateFormInput input);
         void Update(UpdateFormInput input);
         void Delete(int input);

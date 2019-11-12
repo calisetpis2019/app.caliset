@@ -103,6 +103,7 @@ namespace App.Caliset
                 //Forms
                 mapper.CreateMap<CreateFormInput, Form>().ReverseMap();
                 mapper.CreateMap<GetFormOutput, Form>().ReverseMap();
+                mapper.CreateMap<GetReducedFormOutput, Form>().ReverseMap();
                 mapper.CreateMap<UpdateFormInput, Form>().ReverseMap();
 
                 //FormOperations
