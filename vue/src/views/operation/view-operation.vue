@@ -424,7 +424,6 @@
                 title: 'Usuario',
                 key: 'user',
                 render:(h:any,params:any)=>{
-                    console.log(params);
                     return h('Span', params.row.cuentaGP);
                 }
             },
@@ -443,6 +442,6 @@
 .my-button {
     margin-top: 10px;
     margin-bottom: 10px;
-    margin-left: 5%;
+    margin-left: 10px;
 }
 </style>

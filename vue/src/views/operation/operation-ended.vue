@@ -40,16 +40,16 @@
                                             <Option v-for="item in listOfLocations" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
+                                    <FormItem label="Responsable" style="width:100%">
+                                        <Select @on-change="getpagefilters" v-model="pagerequest.ManagerId"  filterable clearable>
+                                            <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
+                                        </Select>
+                                    </FormItem>
                                 </Col>
                                 <Col span="8">
                                     <FormItem label="Nominador" style="width:100%">
                                         <Select v-model="pagerequest.NominatorId"  filterable clearable>
                                             <Option v-for="item in listOfClients" :value="item.id" :key="item.id">{{ item.name }}</Option>
-                                        </Select>
-                                    </FormItem>
-                                    <FormItem label="Responsable" style="width:100%">
-                                        <Select @on-change="getpagefilters" v-model="pagerequest.ManagerId"  filterable clearable>
-                                            <Option v-for="item in listOfUsers" :value="item.id" :key="item.id">{{ item.name }}</Option>
                                         </Select>
                                     </FormItem>
                                 </Col>
@@ -64,12 +64,11 @@
                     <Table :loading="loading" :columns="columns" no-data-text="No existen registros" border :data="list_finished.sort(dynamicSort_desc('date'))">
                     </Table>
                 </div>
-                <div><Page show-sizer class-name="fengpage" :total="totalCount" class="margin-top-10" @on-change="pageChange" @on-page-size-change="pagesizeChange" :page-size="pageSize" :current="currentPage"></Page></div>
+                
             </div>
         </Card>
         <edit-operation v-model="editModalShow"  @save-success="getpage"></edit-operation>
         <view-operation v-model="viewModalShow" @save-success="getpage"></view-operation>
-        <comment-operation v-model="commentModalShow" ></comment-operation>
     </div>
 </template>
 <script lang="ts">
@@ -355,22 +354,6 @@
                     toRender.push(botonEditar)
                 }
 
-                if (Util.abp.auth.hasPermission('Pages.Administrador') || params.row.operationStateId != 3){
-                    toRender.push(
-                        h('Button',{
-                            props:{
-                                type:'warning',
-                                size:'small',
-                            },
-                            on:{
-                                click:() =>{
-                                    this.$store.commit('operation/edit',params.row);
-                                    this.comment();
-                                }
-                            }
-                        },'Comentar')
-                    );    
-                }
                 return h('div', toRender);    
             }
         }]
