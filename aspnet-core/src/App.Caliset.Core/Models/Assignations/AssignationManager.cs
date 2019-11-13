@@ -85,11 +85,11 @@ namespace App.Caliset.Models.Assignations
             else
             {
                 _repositoryAssignation.Delete(Assignation);
-                var inspector = Assignation.Inspector;
+                var inspector =_userManager.FindByIdAsync(Assignation.InspectorId.ToString()).Result ;
                 var operation = Assignation.Operation;
 
                 _mailManager.SendMail(inspector.EmailAddress, "ASIGNACÓN ELIMINADA - OPERACIÓN #" + operation.Id + " - " + operation.OperationType.Name + " - " + operation.Charger.Name + " - " + operation.Location.Name + " - " + operation.Date.ToString(),
-                                        "<h2>Se le ha asignado a la operación #" + operation.Id + "</h2><br/><h3>DATOS ASIGNACIÓN:</h3>"
+                                        "<h2>Se le ha desasignado a la operación #" + operation.Id + "</h2><br/><h3>DATOS ASIGNACIÓN:</h3>"
                                          + "Fecha Inicio: " + Assignation.Date.ToString()
                                          + "<br/>Fecha Fin: " + Assignation.DateFin.ToString());
             }
