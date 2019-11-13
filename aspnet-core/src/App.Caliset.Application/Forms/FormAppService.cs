@@ -77,9 +77,9 @@ namespace App.Caliset.Forms
             return output;
         }
 
-        public IEnumerable<GetFormOutput> GetAllFormByOperation(int IdOperation)
+        public IEnumerable<GetReducedFormOutput> GetAllFormByOperation(int IdOperation)
         {
-            List<GetFormOutput> output = ObjectMapper.Map<List<GetFormOutput>>(_operationManager.GetFormsByOperation(IdOperation));
+            List<GetReducedFormOutput> output = ObjectMapper.Map<List<GetReducedFormOutput>>(_operationManager.GetFormsByOperation(IdOperation));
 
             return output;
         }
@@ -95,9 +95,9 @@ namespace App.Caliset.Forms
             return output;
         }
 
-        public IEnumerable<GetFormOutput> AntiGetAllFormByOperation(int IdOperation)
+        public IEnumerable<GetReducedFormOutput> AntiGetAllFormByOperation(int IdOperation)
         {
-            List<GetFormOutput> output = ObjectMapper.Map<List<GetFormOutput>>(_operationManager.NoGetFormsByOperation(IdOperation));
+            List<GetReducedFormOutput> output = ObjectMapper.Map<List<GetReducedFormOutput>>(_operationManager.NoGetFormsByOperation(IdOperation));
 
             return output;
         

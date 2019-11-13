@@ -16,7 +16,7 @@ namespace App.Caliset.Forms
         GetFormOutput GetFormById(int input);
         void AddFormToOperation(CreateFormOperationInput input);
         void AntiAddFormToOperation(CreateFormOperationInput input);
-        IEnumerable<GetFormOutput> GetAllFormByOperation(int IdOperation);
-        IEnumerable<GetFormOutput> AntiGetAllFormByOperation(int IdOperation);
+        IEnumerable<GetReducedFormOutput> GetAllFormByOperation(int IdOperation);
+        IEnumerable<GetReducedFormOutput> AntiGetAllFormByOperation(int IdOperation);
     }
 }
