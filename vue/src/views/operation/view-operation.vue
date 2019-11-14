@@ -29,7 +29,7 @@
             </div>
         </Modal>
         <edit-comment-operation v-model="editCommentOperationModalShow" @save-success="visibleChange(true)"></edit-comment-operation>
-        <comment-operation v-model="commentModalShow" ></comment-operation>
+        <comment-operation v-model="commentModalShow" @save-success="visibleChange(true)"></comment-operation>
         <view-user v-model="viewUserAssignedToOperationModalShow" ></view-user>
     </div>
 </template>
