@@ -69,7 +69,7 @@ export const appRouters: Array<Router> = [{
     children: [
         { path: 'operation', permission: 'Pages.Operador', meta: { title: 'Activas / Futuras' }, name: 'operation', component: () => import('../views/operation/operation.vue') },
         { path: 'operationEnded', permission: 'Pages.Operador', meta: { title: 'Finalizadas' }, name: 'operationEnded', component: () => import('../views/operation/operation-ended.vue') },
-	    { path: 'formulary', permission: 'Pages.Operador', meta: { title: 'Formularios' }, name: 'formulary', component: () => import('../views/formulary/formulary.vue') }
+	    { path: 'formulary', permission: 'Pages.Administrador', meta: { title: 'Formularios' }, name: 'formulary', component: () => import('../views/formulary/formulary.vue') }
     ]
 }]
 export const routers = [
