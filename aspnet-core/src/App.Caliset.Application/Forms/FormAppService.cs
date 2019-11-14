@@ -30,6 +30,7 @@ namespace App.Caliset.Forms
 
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public void AddFormToOperation(CreateFormOperationInput input)
         {
 
@@ -77,6 +78,7 @@ namespace App.Caliset.Forms
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetReducedFormOutput> GetAllFormByOperation(int IdOperation)
         {
             List<GetReducedFormOutput> output = ObjectMapper.Map<List<GetReducedFormOutput>>(_operationManager.GetFormsByOperation(IdOperation));
@@ -84,6 +86,7 @@ namespace App.Caliset.Forms
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public GetFormOutput GetFormById(int input)
         {
             if (_abpSession.UserId == null)
@@ -95,6 +98,7 @@ namespace App.Caliset.Forms
             return output;
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public IEnumerable<GetReducedFormOutput> AntiGetAllFormByOperation(int IdOperation)
         {
             List<GetReducedFormOutput> output = ObjectMapper.Map<List<GetReducedFormOutput>>(_operationManager.NoGetFormsByOperation(IdOperation));
@@ -116,6 +120,7 @@ namespace App.Caliset.Forms
              _formManager.Update(FormX);
         }
 
+        [AbpAuthorize(PermissionNames.Operador)]
         public void AntiAddFormToOperation(CreateFormOperationInput input)
         {
             if (_abpSession.UserId == null)
