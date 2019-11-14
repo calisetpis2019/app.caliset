@@ -31,9 +31,7 @@
     export default class EditCommentOperation extends AbpBase{
         @Prop({type:Boolean,default:false}) value:boolean;
         comment:Comment=new Comment();
-        created(){
-
-        }
+        created(){ }
 
         pagerequest: PageEditCommentOperationRequest = new PageEditCommentOperationRequest();
 
@@ -57,7 +55,8 @@
         visibleChange(value:boolean){
             if(!value){
                 this.$emit('input',value);
-            } else {
+            }
+            else {
                 this.comment = Util.extend(true, {}, this.$store.state.comment.editComment);
             }
         }
