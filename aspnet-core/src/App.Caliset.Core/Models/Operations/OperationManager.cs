@@ -206,10 +206,9 @@ namespace App.Caliset.Models.Operations
                     if (_userDeviceTokenManager.getById(insp.Id) != null)
                     {
                         _notificationManager.sendNotification("Operacion Activa", "Se ha activado una operacion a la que está asignado.", insp.Id);
-
-                        _mailManager.SendMail(insp.EmailAddress, "OPERACIÓN #" + operation.Id + " ACTIVA - " + operation.OperationType.Name + " - " + operation.Charger.Name + " - " + operation.Location.Name + " - " + operation.Date.ToString(),
-                                                "<h2>Ya se encuentra activa la operación #" + operation.Id + " a la que está asignado.</h2>");
                     }
+                    _mailManager.SendMail(insp.EmailAddress, "OPERACIÓN #" + operation.Id + " ACTIVA - " + operation.OperationType.Name + " - " + operation.Charger.Name + " - " + operation.Location.Name + " - " + operation.Date.ToString(),
+                                                "<h2>Ya se encuentra activa la operación #" + operation.Id + " a la que está asignado.</h2>");
                 }
 
             }
