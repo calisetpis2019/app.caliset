@@ -308,7 +308,7 @@
         columnsSamples =[
             {
                 title: 'Código Muestra',
-                key: 'id'
+                key: 'idSample'
             },
             {
                 title: 'Comentario',
