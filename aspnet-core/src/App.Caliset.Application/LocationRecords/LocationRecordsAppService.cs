@@ -43,6 +43,12 @@ namespace App.Caliset.LocationRecords
 
             var LocationOperation = _locationManager.GetLocationById(HorasRegistradas.Operation.LocationId);
             var HorasReales = this.GetLocationRecordByUserAndTime(IdUser, HorasRegistradas.StartDate, HorasRegistradas.EndDate);
+
+            if (HorasReales.Count() == 0 )
+            {
+                throw new UserFriendlyException("Error", "No hay registros de horas en ese periodo");
+            }
+
             bool resultado = true;
 
             double lat1;
