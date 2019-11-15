@@ -170,8 +170,8 @@
             title:"Último Login",
             width:135,
             render:(h:any,params:any)=>{
-                if(params.row.lastLoginTime=="Nunca"){
-                    return h('span',params.row.lastLoginTime)  
+                if(params.row.lastLoginTime=="0001-01-01T00:00:00"){
+                    return h('span',"Nunca")
                 }
                 else{
                     return h('span', moment(params.row.lastLoginTime).locale('es').format("DD/MM/YYYY, HH:mm"))
