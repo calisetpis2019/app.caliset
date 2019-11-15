@@ -256,7 +256,7 @@
                 }
             },
             {
-                title:'Commodity',
+                title:'Mercadería',
                 render:(h:any,params:any)=>{
                     return h('span',params.row.operation.commodity)
                 }
