@@ -248,6 +248,17 @@
             this.getAssignationsByUserAndState(pagerequest);
         }
 
+        sort_dates(){
+            return function(a,b,type){
+                if (type == 'asc') {
+                    return a > b? 1 : -1
+                }
+                else {
+                    return a > b? -1 : 1  
+                }
+            }
+        }
+
         assColumns=[
             {
                 title:'Operación',
@@ -356,7 +367,7 @@
 
         hoursColumns=[
             {
-                title:'Operacion',
+                title:'Operación',
                 align: 'center',
                 children: [
                     {
@@ -368,6 +379,10 @@
                     },
                     {
                         title:'Fecha inicio',
+                        sortable: true,
+                        sortType: 'desc',
+                        key: 'date',
+                        sortMethod: this.sort_dates(),
                         render:(h:any,params:any)=>{
                             return h('span',moment(params.row.operation.date).locale('es').format("DD/MM/YYYY, HH:mm"))
                         }
@@ -399,7 +414,7 @@
                 }
             },
             {
-                title:'Se mantuvo en posicion',
+                title:'Mantuvo posición',
                 // width:30,
                 align: 'center',
                 render:(h:any,params:any)=>{

@@ -46,32 +46,33 @@ namespace App.Caliset.LocationRecords
 
             if (HorasReales.Count() == 0 )
             {
-                throw new UserFriendlyException("Error", "No hay registros de horas en ese periodo");
-            }
+                return false;
+            } else {
 
-            bool resultado = true;
+                bool resultado = true;
 
-            double lat1;
-            double lon1;
-            double latLocation = Convert.ToDouble(LocationOperation.Latitude);
-            double lonLocation = Convert.ToDouble(LocationOperation.Longitude);
-            double Radio = Convert.ToDouble(LocationOperation.Radius);
-            double Distancia;
+                double lat1;
+                double lon1;
+                double latLocation = Convert.ToDouble(LocationOperation.Latitude);
+                double lonLocation = Convert.ToDouble(LocationOperation.Longitude);
+                double Radio = Convert.ToDouble(LocationOperation.Radius);
+                double Distancia;
 
-            foreach (var CadaRegistro in HorasReales)
-            {
-                lon1 = Convert.ToDouble(CadaRegistro.Latitude);
-                lat1 = Convert.ToDouble(CadaRegistro.Longitude);
-
-                Distancia =_locationRecordManager.GetDistance(lon1, lat1, latLocation, lonLocation);
-               
-                if(Distancia > Radio)
+                foreach (var CadaRegistro in HorasReales)
                 {
-                    resultado = false;
-                }
-            }
+                    lon1 = Convert.ToDouble(CadaRegistro.Latitude);
+                    lat1 = Convert.ToDouble(CadaRegistro.Longitude);
 
-            return resultado;
+                    Distancia =_locationRecordManager.GetDistance(lon1, lat1, latLocation, lonLocation);
+                   
+                    if(Distancia > Radio)
+                    {
+                        resultado = false;
+                    }
+                }
+
+                return resultado;
+            }
         }
 
         public async Task Create(CreateLocationRecordInput input)
